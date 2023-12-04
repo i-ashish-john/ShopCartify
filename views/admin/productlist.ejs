@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2d2d2d; /* Dark background color for the entire page */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      color: #fff; /* Text color for better contrast */
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      margin: 0;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+    }
+
+    nav {
+      width: 200px;
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #7d892b;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #3a3a3a; /* Darker background for even rows */
+    }
+
+    tr:hover {
+      background-color: #555; /* Darker background on hover */
+    }
+
+    td a {
+      display: inline-block;
+      text-decoration: none;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    td a:hover {
+      background-color: #0056b3;
+    }
+
+    .create-button {
+      display: inline-block;
+      text-decoration: none;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: #fff;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+      margin-right: 10px;
+    }
+
+    .create-button:hover {
+      background-color: #0efb41;
+    }
+
+    .search-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .search-input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 300px;
+      margin-right: 10px;
+    }
+
+    .search-button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .search-button:hover {
+      background-color: #0056b3;
+    }
+
+    #logout {
+      background-color: red;
+    }
+
+    .product-button,
+    .category-button {
+      display: inline-block;
+      text-decoration: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      margin-right: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .product-button {
+      background-color: #ffc107;
+      color: #212529;
+    }
+
+    .product-button:hover {
+      background-color: #ffca2c;
+    }
+
+    .category-button {
+      background-color: #17a2b8;
+      color: #fff;
+    }
+
+    .category-button:hover {
+      background-color: #138496;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Product list Management</h1>
+  </header>
+
+  <div class="container flex">
+    <nav>
+      <ul class="nav flex-column">
+        <!-- Your navigation links go here -->
+      </ul>
+    </nav>
+
+    <main>
+      <!-- <h2 style="color:rgb(135, 78, 128)">USER MANAGEMENT</h2> -->
+      <nav>
+        <button id="dashboardBtn" class="btn btn-primary" onclick="redirectToDashboard()">&#8592; Dashboard</button>
+        <ul class="nav flex-column">
+          <!-- Your navigation links go here -->
+        </ul>
+      </nav>
+      <!-- <div class="search-container">
+        <form action="/admin/usermanagement" method="Get">
+          <input type="text" name="search" id="search-input" class="search-input" placeholder="Search...">
+          <button type="submit" class="search-button">Search</button>
+        </form>
+      </div> -->
+
+      <!-- Uncomment the following section if needed -->
+      <!-- <h3>Search Results for: <%= locals.searchQuery %></h3> -->
+
+      <table>
+        <thead>
+          <tr>
+            <!-- Define your table headers -->
+            <th>Product name</th>
+            <th>price</th>
+            <th>description</th>
+            <th>stock</th>
+            <th>category</th>
+            <th>action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% product.forEach(row => { %>
+            <tr>
+              <td><%= row.name %></td>
+              <td><%= row.price %></td>
+              <td><%= row.description %></td>
+              <td><%= row.stock %></td>
+              <td><%= row.category %></td>
+              <td>
+              <form method="post" action="/admin/deleteproduct/<%= row.id %>" style="display:inline;">
+                <button class="btn btn-danger" type="submit">Delete</button>
+                </td>
+            </form>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <!-- Bootstrap JS and Popper.js (for Bootstrap) -->
+  <script>
+    function redirectToDashboard() {
+      // Add your instructions or redirect code here
+      window.location.href = '/admin/dashboard'; // Redirect to the dashboard URL
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd

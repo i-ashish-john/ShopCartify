@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <style>
+        body {
+           background-color: #f5f5f5;
+        }
+        
+        .container {
+           background-color: #ffffff;
+           border-radius: 5px;
+           padding: 20px;
+           box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-control {
+           border-radius: 5px;
+           border-color: #b3b3b3;
+        }
+        
+        .btn-primary {
+           background-color: #800080;
+           border-color: #800080;
+        }
+        
+        .btn-primary:hover {
+           background-color: #c71585;
+           border-color: #c71585;
+        }
+        </style>
+        
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <form id="addressForm" action="/NewAddressAddedForUser" method="POST">
+                    <div class="form-group">
+                       <label for="Street">Street</label>
+                       <input type="name" class="form-control" id="Street" placeholder="Enter Street" name="street" >
+                    </div>
+                    <div class="form-group">
+                       <label for="Country">Country</label>
+                       <input type="text" class="form-control" id="Country" placeholder="Enter Country" name="country" >
+                    </div>
+                    <div class="form-group">
+                       <label for="City">City</label>
+                       <input type="name" class="form-control" id="City" placeholder="Enter City" name="city" >
+                    </div>
+                    <div class="form-group">
+                       <label for="State">State</label>
+                       <input type="text" class="form-control" id="State" placeholder="Enter State" name="state">
+                    </div>
+                    <div class="form-group">
+                       <label for="Zip">Zip Code</label>
+                       <input type="text" class="form-control" id="Zip" placeholder="Zip Code" name="zip" >
+                    </div>
+                    <div class="form-group">
+                       <input type="submit" class="btn btn-primary" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+     </div>
+     <script>
+        $(document).ready(function() {
+           $('#addressForm').on('submit', function(e) {
+               e.preventDefault();
+               // Add your routing code here
+               alert('Form submitted');
+           });
+        });
+        </script>
+        
+
+     
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

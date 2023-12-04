@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    main {
+      padding: 20px;
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+  
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+  
+    th {
+      background-color: rgb(224, 121, 121);
+      color: #fff;
+      border-radius: 10px;
+    }
+  
+    tr:nth-child(even) {
+      background-color: rgb(255, 255, 255);
+    }
+  
+    tr:hover {
+      background-color: #f5c0c0;
+    }
+  
+    td a {
+      display: inline-block;
+      text-decoration: none;
+      padding: 5px 10px;
+      background-color: #feffff;
+      color: #fff;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+  
+    td a:hover {
+      background-color: #0056b3;
+    }
+  
+    .btn-block {
+      width: 100%;
+    }
+  
+    @media (max-width: 768px) {
+      nav {
+        width: 100%;
+        order: -1;
+      }
+  
+      .container {
+        padding: 0;
+      }
+    }
+  </style>
+  </head>
+  
+  <body>
+    <header>
+      <h1 style="margin-left: 200px;">User Management</h1>
+    </header>
+  
+    <div class="container">
+      <nav>
+        <ul class="nav flex-column">
+          <!-- Your navigation links go here -->
+        </ul>
+      </nav>
+  
+      <table class="table" style="margin-left:70px;">
+        <thead>
+          <tr>
+            <!-- Define your table headers -->
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+          <tbody>
+            <% users.forEach(user=> { %>
+              <tr>
+                <td>
+                  <%= user.name %>
+                </td>
+                <td>
+                  <%= user.email %>
+                </td>
+                <td>
+                  <% if (user.isblocked) { %>
+                    <!-- User is blocked, show unblock button -->
+                    <form method="post" action="/admin/unblock/<%= user._id %>">
+                      <button type="submit" class="btn btn-success btn-block">Unblock</button>
+                    </form>
+                    <% } else { %>
+                      <!-- User is not blocked, show block button -->
+                      <form method="post" action="/admin/block/<%= user._id %>">
+                        <button type="submit" class="btn btn-danger btn-block">Block</button>
+                      </form>
+                      <% } %>
+                </td>
+              </tr>
+              <% }); %>
+          </tbody>
+        </table>
+    <main>
+    
+      <%-include("../partials/adminnavigation.ejs")-%>
+ 
+    </main>
+  </div>
+
+  <!-- Bootstrap JS and Popper.js (for Bootstrap) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

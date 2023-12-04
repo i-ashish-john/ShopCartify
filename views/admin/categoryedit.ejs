@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Category</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="font-sans text-center p-20">
+
+    <h2 class="text-3xl mb-8">Edit Category</h2>
+
+    <form action="/admin/categoryManagementedit/<%=categoriesData.id %>" method="post" class="max-w-md mx-auto">
+        <!-- Category Name -->
+        <label for="categoryName" class="block mb-2 text-left">Category Name:</label>
+        <input type="text" id="categoryName" name="categoryName" value="<%=categoriesData.categoryName%>" required class="w-full p-2 mb-4 border border-gray-300 rounded">
+      
+        <!-- Category Description -->
+        <label for="categoryDescription" class="block mb-2 text-left">Category Description:</label>
+        <textarea id="categoryDescription" name="categoryDescription" rows="4" required class="w-full p-2 mb-4 border border-gray-300 rounded"><%= categoriesData.categoryDescription %></textarea>
+    
+        <!-- Submit Button -->
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Edit Category</button>
+    </form>
+   
+
+</body>
+</html>
