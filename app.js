@@ -53,7 +53,7 @@ app.use('/', usersRouter);
 app.use('/admin', indexRouter);
 
 app.use((req, res) => {
-//  res.render('user/404');
+ res.render('user/404');
 });
 
 app.listen(port, () => {

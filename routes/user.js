@@ -13,7 +13,7 @@ router.post('/signup', userController.signupPost)
 
 // router.get('/OTP',userController.otpGet)
 router.post('/OTP', userController.sendOTPByEmail)
-router.get('/productdetails', session, userController.productdetails);
+router.get('/productdetails',userController.productdetails);
 router.get('/backToHome', userController.back);
 router.get('/Totallistpro', userController.Totalproductlist);
 router.get('/cartload', session, userController.cartload)
@@ -24,10 +24,11 @@ router.post('/removeitems/:id', userController.cartItemRemove);
 router.post('/updateQuantity/:productId/:action',userController. updateCartItem);
 // router.get("/singleproduct/:id",userController.getSingleProduct);
 //increase cart quatity
-router.post('/increaseq/:id',userController.incCart)
-//decrease cart quantity
-router.post('/decreaseq/:id',userController.decCart);
+router.get('/increaseq/:id',userController.incCart)
+router.get('/decreaseq/:id',userController.decCart);
+
 router.get('/checkout',userController.checkout);
+router.post('/checkoutpost',userController.checkoutPost);
 router.post('/submitAddress',userController.submitAddress);
 // router.post('/ordersuccess-xyz',userController.orderSuccess);
 // router.get('/userprofile',userController.userProfile);//this route to rendering the userprofile
@@ -36,7 +37,8 @@ router.post('/Userdetails',userController.UserDetails)
 router.get('/profile',userController.profile)//this is for updating the user profile values
 router.get('/addAddressUser',userController.addAddressUserPage);
 router.post('/NewAddressAddedForUser',userController.NewAddressAddedForUser);
-
+router.get('/addCheckoutAddress',userController.addCheckoutAddress);
+router.post('/addCheckoutAddress',userController.addCheckoutAddress);
 
 
 module.exports = router;

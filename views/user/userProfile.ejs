@@ -64,6 +64,8 @@ color: #bcd0f7;
 
                 <div class="card h-100">
                     <div class="card-body">
+
+
                         <div class="account-settings">
                             <div class="user-profile">
                                 <div class="user-avatar">
@@ -75,23 +77,25 @@ color: #bcd0f7;
 
     
                             <div>
-                                <button id="getButton" type="button" class="btn btn-light btn-lg">
-                                    <i class="fas fa-info me-2"></i>Orders
-                                </button>
-                            </div><br>
+                                <a href="#" id="getButton" class="btn btn-glacier btn-lg" style="background-color: aqua;">
+                                    <i class="fas fa-info me-2"></i> order list
+                                </a>
+                            </div>
+                            
 
                             <div>
-                                <button id="getButton" type="button" class="btn btn-light btn-lg">
+                                <a href="#" id="getButton" class="btn btn-glacier btn-lg"  style="background-color: aqua;">
                                     <i class="fas fa-info me-2"></i> Wallet
-                                </button>
+                                </a>
+                            </div>
+                            
+
+                            <div>
+                                <a href="/addAddressUser" id="getButton" class="btn btn-glacier btn-lg" style="background-color: aqua;">
+                                    <i class="fas fa-info me-2"></i> Add Address
+                                </a>
                             </div>
 
-
-                            <div>
-                                <a href="/addAddressUser" id="getButton" class="btn btn-light btn-lg">
-                                    <i class="fas fa-info me-2"></i> Add address
-                                </a>
-                             </div>
                              
 
 
@@ -105,6 +109,8 @@ color: #bcd0f7;
                                 <button style="background-color: #272E48;color: azure;"></button>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -143,41 +149,41 @@ color: #bcd0f7;
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="Street">Street</label>
-                                        <input type="name" class="form-control" id="Street" placeholder="Enter Street" name="street" value="<%= (user.address && user.address[0]) ? user.address[0].street : '' %>">
+                                        <input type="name" class="form-control" id="Street" placeholder="Enter Street" name="street" value="<%= (user.address && user.address[0]) ? user.address[0].street : '' %>" readonly>
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="sTate">Country</label>
-                                        <input type="text" class="form-control" id="sTate" placeholder="Enter State" name="country"value="<%= (user.address && user.address[0]) ? user.address[0].country : '' %>" >
+                                        <input type="text" class="form-control" id="sTate" placeholder="Enter State" name="country"value="<%= (user.address && user.address[0]) ? user.address[0].country : '' %>"readonly >
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="ciTy">City</label>
-                                        <input type="name" class="form-control" id="ciTy" placeholder="Enter City" name="city" value="<%= (user.address && user.address[0]) ? user.address[0].city : '' %>">
+                                        <input type="name" class="form-control" id="ciTy" placeholder="Enter City" name="city" value="<%= (user.address && user.address[0]) ? user.address[0].city : '' %>" readonly>
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="sTate">State</label>
-                                        <input type="text" class="form-control" id="sTate" placeholder="Enter State" name="state"   value="<%= (user.address && user.address[0]) ? user.address[0].state : '' %>">
+                                        <input type="text" class="form-control" id="sTate" placeholder="Enter State" name="state"   value="<%= (user.address && user.address[0]) ? user.address[0].state : '' %>" readonly>
                                     </div>
                                 </div>
         
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="zip">Zip Code</label>
-                                        <input type="text" class="form-control" id="zip" placeholder="Zip Code" name="zip"  value="<%= (user.address && user.address[0]) ? user.address[0].zip : '' %>%>">
+                                        <input type="text" class="form-control" id="zip" placeholder="Zip Code" name="zip"  value="<%= (user.address && user.address[0]) ? user.address[0].zip : '' %>" readonly>
                                     </div>
                                 </div>
                             </div>
     
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="text-right">
                                     <button type="submit" id="submit" name="submit" class="btn btn-primary">Update</button>
                                 </div>
-                            </div>
+                            </div> -->
                         </form>
 
                     </div>

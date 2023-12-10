@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// const Schema = mongoose.Schema;
 
 // Define the product schema
 const productSchema = new mongoose.Schema({
@@ -36,6 +37,6 @@ const productSchema = new mongoose.Schema({
 });
 
 // Create a Product model based on the schema
-const ProductCollection =new mongoose.model('collectionOfProduct', productSchema);
+const ProductCollection = new mongoose.model('collectionOfProduct', productSchema);
 
 module.exports = ProductCollection;

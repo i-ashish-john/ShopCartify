@@ -273,10 +273,15 @@ h1, h2, h3, h4, h5, h6 {
                 </div>
                 <br />
                 <div class="btn-ground text-xs-center" style="padding-bottom: 30px">
-                  <a  href="/addToCart?id=<%= products[i].id %>"  class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add</a>
-                  <a   href="/productdetails?id=<%= products[i].id %>" class="btn btn-primary" data-toggle="modal" data-target="#productmodal2"><i class="fa fa-info"></i> Info</a>
-               </div>
-               
+                    <a href="/addToCart?id=<%= products[i].id %>" class="btn btn-primary">
+                        <i class="fa fa-shopping-cart"></i> Add
+                    </a>
+                    <a href="/productdetails?id=<%= products[i].id %>" class="btn btn-primary">
+                        <i class="fa fa-info"></i> Info
+                    </a>
+                    
+                </div>
+                
             </div>
         </div>
         <% } %>

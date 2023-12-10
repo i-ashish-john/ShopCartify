@@ -2,31 +2,55 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
 
-  orderId: {
+  username: {
     type: String,
     required: true,
   },
-  addressId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'adressCollection',
-    required: true,
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'userCollection',
-    required: true,
-  },
-  cartId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'productCollection',
-    required: true,
-  },
-  paymentMethod: {
+  email: {
     type: String,
-    enum: ['Cash on Delivery', 'Net Banking', 'Wallet'],
     required: true,
+  },
+  productdetails: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'collectionOfProduct', 
+  }],
+  paymentType: {
+    type: String,
+    required: true,
+  },
+  address: {
+    street: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+    zip: {
+      type: String,
+      required: true,
+    },
+  },
+  totalPrice: {
+    type: String,
+    required :true,
+  },
+  orderStatus: {
+    type: String,
+    default: 'Pending',
   }
+
 });
+
 
 const orderCollection = mongoose.model('collectionOfOrder', orderSchema);
 

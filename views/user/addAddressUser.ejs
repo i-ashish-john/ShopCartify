@@ -22,11 +22,11 @@
         
         .form-control {
            border-radius: 5px;
-           border-color: #b3b3b3;
+           border-color: #000000;
         }
-        
+      
         .btn-primary {
-           background-color: #800080;
+           background-color: rgb(204, 12, 226), 99, 150);
            border-color: #800080;
         }
         
@@ -41,46 +41,44 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6">
+
                 <form id="addressForm" action="/NewAddressAddedForUser" method="POST">
+
                     <div class="form-group">
                        <label for="Street">Street</label>
                        <input type="name" class="form-control" id="Street" placeholder="Enter Street" name="street" >
                     </div>
+
                     <div class="form-group">
                        <label for="Country">Country</label>
                        <input type="text" class="form-control" id="Country" placeholder="Enter Country" name="country" >
                     </div>
+                    
                     <div class="form-group">
                        <label for="City">City</label>
                        <input type="name" class="form-control" id="City" placeholder="Enter City" name="city" >
                     </div>
+
                     <div class="form-group">
                        <label for="State">State</label>
                        <input type="text" class="form-control" id="State" placeholder="Enter State" name="state">
                     </div>
+
                     <div class="form-group">
                        <label for="Zip">Zip Code</label>
                        <input type="text" class="form-control" id="Zip" placeholder="Zip Code" name="zip" >
                     </div>
+
                     <div class="form-group">
                        <input type="submit" class="btn btn-primary" value="Submit">
                     </div>
+
                 </form>
+                
             </div>
         </div>
      </div>
-     <script>
-        $(document).ready(function() {
-           $('#addressForm').on('submit', function(e) {
-               e.preventDefault();
-               // Add your routing code here
-               alert('Form submitted');
-           });
-        });
-        </script>
-        
-
-     
+   
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>

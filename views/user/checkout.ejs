@@ -33,8 +33,7 @@
         <a class="navbar-brand" href="#">Shop Cartify</a>
     
         <!-- Responsive navbar toggle button for small screens -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+           <span class="navbar-toggler-icon"></span>
         </button>
     
         <!-- Right side of the navbar -->
@@ -57,259 +56,162 @@
       </div>
     </nav>
   </header>
-  
   <section class="bg-light py-5">
     <div class="container">
       <div class="row">
-        <div class="col-xl-12 col-lg-6 mb-5">
-       
-  
-          <!-- Checkout -->
-          <div class="shadow-lg p-3 mb-5 bg-body rounded ">
-            
-            
-            <div class="p-4">
-              <h5 class="card-title mb-3" style="color: #2f2c01;"> CHECK OUT SECTION</h5>
-             
-            <div class="row">
- <div class="col-5 mb-4">
-   <p class="mb-0">Name</p>
-   <div class="form-outline">
-     <input type="text" id="typeText" placeholder="Type here" class="form-control" value="<%= addresses?.userId?.name || '' %>" readonly/><p><%= addresses?.userId?.name || '' %></p>
-   </div>
- </div>
+        <!-- Checkout Details -->
+        <div class="col-xl-8 col-lg-8 mb-4">
+          <div class="card mb-4 border shadow-0">
+            <!-- Checkout Form -->
 
- <div class="col-6 mb-3">
-   <p class="mb-0">Email</p>
-   <div class="form-outline">
-     <input type="email" id="typeEmail" placeholder="example@gmail.com" class="form-control" value="<%= addresses?.userId?.email || '' %>" readonly/>
-   </div>
- </div>
-</div>
+            <form action="/checkoutpost" method="post">
+              <!-- User Information -->
+              <div class="card shadow-0 border">
+                <div class="p-4">
+                  <h5 class="card-title mb-3">Check out page</h5>
+                  <!-- User Name -->
+                  <div class="row">
+                    <div class="col-6 mb-3">
+                      <p class="mb-0">User name</p>
+                      <div class="form-outline">
+                        <input type="text" id="typename" name="username" class="form-control" value="<%= user.name %>" readonly />
+                      </div>
+                    </div>
+                    <!-- Email -->
+                    <div class="col-6 mb-3">
+                      <p class="mb-0">Email</p>
+                      <div class="form-outline">
+                        <input type="email" id="typeemail"  name="email" class="form-control" value="<%= user.email %>" readonly />
+                      </div>
+                    </div>
+                  </div>
+                  <hr class="my-4" />
+                  <!-- Payment Type -->
+                  <h5 class="card-title mb-3">Choose payment type</h5>
+                  <!-- Payment Options -->
+                  <div class="row mb-3">
+                    <!-- Cash on Delivery -->
 
-<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Select an option
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <% addresses.forEach(address=> { %>
-      
-        <a class="dropdown-item" href="#"><%= address.street %> <%= address.country %> <%= address.state %></a>
-   
-    <% }); %>
-  </div>
- </div>
- 
- 
+                    <div class="col-lg-4 mb-3">
+                      <div class="form-check h-100 border rounded-3">
+                        <div class="p-3">
+                          <input class="form-check-input" type="radio" value="CashOnDelivery" name="paymentType" id="flexRadioDefault1"  checked />
+                          <label class="form-check-label" for="flexRadioDefault1">Cash on delivery<br /></label>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Net Banking -->
+                    <div class="col-lg-4 mb-3">
+                      <div class="form-check h-100 border rounded-3">
+                        <div class="p-3">
+                          <input class="form-check-input" type="radio"   value="NetBanking"   name="paymentType" id="flexRadioDefault2" checked />
+                          <label class="form-check-label" for="flexRadioDefault2">Net banking <br /></label>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Other Payment Option -->
+                    <div class="col-lg-4 mb-3">
+                      <!-- Add more payment options if needed -->
+                    </div>
+                  </div>
+                  <!-- Address Selection -->
+                  <div>
+                    <% if (addresses && addresses.length > 0) { %>
+                      <h5 class="card-title mb-3">Choose address</h5>
+                      <!-- Address Selection Dropdown -->
+                      <div class="mb-3">
+                        <label for="addressSelect" class="form-label">Select Address</label>
 
-           <!-- add adress and edit adress -->
+                        <select class="form-select" id="addressSelect" name="selectedAddressId">
+                          <option value="" disabled>Select an address</option>
+                          <% addresses.forEach(address => { %>
+                            <option value="<%= address._id %>" data-street="<%= address %>" data-city="<%= address %>" data-state="<%= address %>" data-zip="<%= address %>" data-country="<%= address %>">
+                              <%= address.street %>: <%= address.city %>: <%= address.state %> :<%= address.zip %>: <%= address.country %>
+                            </option>
+                          <% }) %>
+                        </select>
+                        
 
-<!-- Button to Open the Modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-  Add Address
- </button>
- 
- <!-- The Modal -->
- <div class="modal" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
- 
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Add Address</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
- 
-      <!-- Modal body -->
-      <div class="modal-body">
-        <form id="addAddressForm">
-          <div class="form-group">
-            <label for="street">Street:</label>
-            <input type="text" class="form-control" id="street" required>
-          </div>
-          <div class="form-group">
-            <label for="city">City:</label>
-            <input type="text" class="form-control" id="city" required>
-          </div>
-          <div class="form-group">
-            <label for="state">State:</label>
-            <input type="text" class="form-control" id="state" required>
-          </div>
-          <div class="form-group">
-            <label for="country">Country:</label>
-            <input type="text" class="form-control" id="country" required>
-          </div>
-          <div class="form-group">
-            <label for="zip">Zip:</label>
-            <input type="text" class="form-control" id="zip" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      </div>
- 
-    </div>
-  </div>
- </div>
- 
- <!-- Button to Open the Modal -->
- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-  Edit Address
- </button>
- 
- <!-- The Modal -->
- <div class="modal" id="editModal" action="/your-route-here" method="POST">
-  <% if (addresses){ %>
-    <% addresses.forEach(address=> { %>
+                        <div>
+                          <button type="button" class="btn btn-primary" id="addAddressBtn">Add Address</button>
+                          <button class="btn btn-success shadow-0 border" type="submit">Continue</button>
 
-  <div class="modal-dialog">
-    <div class="modal-content">
- 
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Edit Address</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
- 
-      <!-- Modal body -->
-      <div class="modal-body">
-        <form id="editAddressForm">
-          <div class="form-group">
-            <label for="street">Street:</label>
-            <input type="text" class="form-control" id="street" value="<%=  addresses.address.street %>" required>
-          </div>
-          <div class="form-group">
-            <label for="city">City:</label>
-            <input type="text" class="form-control" id="city" value="<%=  addresses.address.city %>"  required>
-          </div>
-          <div class="form-group">
-            <label for="state">State:</label>
-            <input type="text" class="form-control" id="state" value="<%=  addresses.address.state %>" required>
-          </div>
-          <div class="form-group">
-            <label for="country">Country:</label>
-            <input type="text" class="form-control" id="country" value="<%=  addresses.address.country %>"  required>
-          </div>
-          <div class="form-group">
-            <label for="zip">Zip:</label>
-            <input type="text" class="form-control" id="zip" value="<%=  addresses.address.zip %>"  required>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      </div>
- 
-    </div>
-  </div>
-  <% }); %> 
-  <% } %>
- </div>
+                        </div>
 
- <!-- ------ -->
+                        <!-- Add Address Button -->
+                      </div>
+                      <!-- Checkout Buttons -->
+                      <!-- <div class="float-end">
+                        <button class="btn btn-light border">Cancel</button>
+                      </div> -->
+                    <% } else { %>
+                      <p>No addresses found. Please add an address.</p>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+          
 
- <div class="row mb-3">
-  <div class="col-lg-4 mb-3">
-    <!-- Default checked radio -->
-    <div class="form-check h-100 border rounded-3">
-      <div class="p-3">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked />
-        <label class="form-check-label" for="flexRadioDefault1">
-          Cash on delivery <br />
-          <!-- <small class="text-muted">3-4 days via Fedex </small> -->
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-4 mb-3">
-    <!-- Default radio -->
-    <div class="form-check h-100 border rounded-3">
-      <div class="p-3">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
-        <label class="form-check-label" for="flexRadioDefault2">
-          Net banking <br />
-          <!-- <small class="text-muted"> </small> -->
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-4 mb-3">
-    <!-- Default radio -->
-    <div class="form-check h-100 border rounded-3">
-      <div class="p-3">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" />
-        <label class="form-check-label" for="flexRadioDefault3">
-          Wallet <br />
-          <!-- <small class="text-muted"></small> -->
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-12 mb-3">
-    <a href="/orderstatus" class="btn btn-primary">Proceed</a>
-  </div>
-  
- </div>
- 
-           
-
-        <!-- Button to Open the Modal -->
-
-     <!-- add adress and edit adress ending-->
-
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
+        <div class="ms-lg-4 mt-4 mt-lg-0" style="max-width: 320px;">
+          <h6 class="mb-3">Summary</h6>
+          <div class="d-flex justify-content-between">
+            <p class="mb-2">Total price:</p>
+            <p class="mb-2">₹ <%= cartFound.total %></p>
+          </div>
+          <!-- <div class="d-flex justify-content-between">
+            <p class="mb-2">Discount:</p>
+            <p class="mb-2 text-danger">- ₹60.00</p>
+          </div> -->
+          <div class="d-flex justify-content-between">
+            <p class="mb-2">Shipping cost:</p>
+            <p class="mb-2">+ ₹14.00</p>
+          </div>
+          <hr />
+          <div class="d-flex justify-content-between">
+            <p class="mb-2">Total price:</p>
+            <input type="hidden" name="totalPrice" value="<%= cartFound.total+14 %>" /> ₹<%= cartFound.total+14 %>/-
           </div>
           
-          <!-- Checkout -->
-        </div>
-        <div class="shadow p-4 mb-4 bg-body rounded">
-          <div class="ms-lg-5 mt-5 mt-lg-0" style="max-width: 320px;">
-            <h6 class="mb-3">Summary</h6>
-            <div class="d-flex justify-content-between">
-              <p class="mb-2">Total price:</p>
-              <p class="mb-2">$195.90</p>
+        </form>
+          <!-- <div class="input-group mt-3 mb-4">
+            <input type="text" class="form-control border" name="" placeholder="Promo code" />
+            <button class="btn btn-light text-primary border">Apply</button>
+          </div> -->
+
+          <hr />
+          <h6 class="text-dark my-4">Items in cart</h6>
+          <% cartFound.products.forEach((product) => { %>
+          <div class="d-flex align-items-center mb-4">
+            <div class="me-3 position-relative">
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
+                <%= product.quantity %>
+              </span>
+              <img src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>" style="height: 96px; width: 96x;" class="img-sm rounded border" />
             </div>
-            <div class="d-flex justify-content-between">
-              <p class="mb-2">Discount:</p>
-              <p class="mb-2 text-danger">- $60.00</p>
+            <div class="">
+              <a href="#" class="nav-link">
+              <%= product.productId.name %><br />
+              <!-- <%= product.productId.description %> -->
+              </a>
+              <div class="price text-muted">Price:₹ <%= product.price%></div>
             </div>
-            <div class="d-flex justify-content-between">
-              <p class="mb-2">Shipping cost:</p>
-              <p class="mb-2">+ $14.00</p>
-            </div>
-            <hr />
-            <div class="d-flex justify-content-between">
-              <p class="mb-2">Total price:</p>
-              <p class="mb-2 fw-bold">$149.90</p>
-            </div>
-  
-            <div class="input-group mt-3 mb-4">
-              <input type="text" class="form-control border" name="" placeholder="Promo code" />
-              <button class="btn btn-light text-primary border">Apply</button>
-            </div>
-  
-            <hr />
-            <h6 class="text-dark my-4">Items in cart</h6>
-  
-            <div class="d-flex align-items-center mb-4">
-              <div class="me-3 position-relative">
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                  1
-                </span>
-                <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/7.webp" style="height: 96px; width: 96x;" class="img-sm rounded border" />
-              </div>
-              <div class="">
-                <a href="#" class="nav-link">
-                  Gaming Headset with Mic <br />
-                  Darkblue color
-                </a>
-                <div class="price text-muted">Total: $295.99</div>
-              </div>
-            </div>
-  
-  
-  
           </div>
+          <% }); %>
+
+     
+
+         
         </div>
+
       </div>
     </div>
+  </div>
   </section>
+  
+  
   
   <footer class="text-center text-lg-start text-muted mt-3" style="background-color: rgb(181, 134, 225);">
     <!-- Section: Links  -->
@@ -438,7 +340,18 @@
     </div>
   </footer>
   
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#addAddressBtn').click(function() {
+        // Assuming you want to redirect to a new page
+        window.location.href = '/addAddressUser';
+      });
+    });
 
+  </script>
+  
+  
   
 </body>
 </html>
