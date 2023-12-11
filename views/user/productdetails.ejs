@@ -1,336 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Product Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+  <style>
+        body {
+    background: #fbfbfd;
+}
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-<style>
-    .icon-hover:hover {
-    border-color: #3b71ca !important;
-    background-color: white !important;
-    color: #3b71ca !important;
+.new_footer_area {
+    background: #fbfbfd;
+}
+
+
+.new_footer_top {
+    padding: 120px 0px 270px;
+    position: relative;
+      overflow-x: hidden;
+}
+.new_footer_area .footer_bottom {
+    padding-top: 5px;
+    padding-bottom: 50px;
+}
+.footer_bottom {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 20px;
+    color: #7f88a6;
+    padding: 27px 0px;
+}
+.new_footer_top .company_widget p {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 28px;
+    color: #6a7695;
+    margin-bottom: 20px;
+}
+.new_footer_top .company_widget .f_subscribe_two .btn_get {
+    border-width: 1px;
+    margin-top: 20px;
+}
+.btn_get_two:hover {
+    background: transparent;
+    color: #5e2ced;
+}
+.btn_get:hover {
+    color: #fff;
+    background: #6754e2;
+    border-color: #6754e2;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+a:hover, a:focus, .btn:hover, .btn:focus, button:hover, button:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+
+
+.new_footer_top .f_widget.about-widget .f_list li a:hover {
+    color: #5e2ced;
+}
+.new_footer_top .f_widget.about-widget .f_list li {
+    margin-bottom: 11px;
+}
+.f_widget.about-widget .f_list li:last-child {
+    margin-bottom: 0px;
+}
+.f_widget.about-widget .f_list li {
+    margin-bottom: 15px;
+}
+.f_widget.about-widget .f_list {
+    margin-bottom: 0px;
+}
+.new_footer_top .f_social_icon a {
+    width: 44px;
+    height: 44px;
+    line-height: 43px;
+    background: transparent;
+    border: 1px solid #e2e2eb;
+    font-size: 24px;
+}
+.f_social_icon a {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 45px;
+    color: #858da8;
+    display: inline-block;
+    background: #ebeef5;
+    text-align: center;
+    -webkit-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+.ti-facebook:before {
+    content: "\e741";
+}
+.ti-twitter-alt:before {
+    content: "\e74b";
+}
+.ti-vimeo-alt:before {
+    content: "\e74a";
+}
+.ti-pinterest:before {
+    content: "\e731";
+}
+
+.btn_get_two {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background: #5e2ced;
+    border-color: #5e2ced;
+    color: #fff;
+}
+
+.btn_get_two:hover {
+    background: transparent;
+    color: #5e2ced;
+}
+
+.new_footer_top .f_social_icon a:hover {
+    background: #5e2ced;
+    border-color: #5e2ced;
+  color:white;
+}
+.new_footer_top .f_social_icon a + a {
+    margin-left: 4px;
+}
+.new_footer_top .f-title {
+    margin-bottom: 30px;
+    color: #263b5e;
+}
+.f_600 {
+    font-weight: 600;
+}
+.f_size_18 {
+    font-size: 18px;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #4b505e;
+}
+.new_footer_top .f_widget.about-widget .f_list li a {
+    color: #6a7695;
+}
+
+
+.new_footer_top .footer_bg {
+    position: absolute;
+    bottom: 0;
+    background: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEigB8iI5tb8WSVBuVUGc9UjjB8O0708X7Fdic_4O1LT4CmLHoiwhanLXiRhe82yw0R7LgACQ2IhZaTY0hhmGi0gYp_Ynb49CVzfmXtYHUVKgXXpWvJ_oYT8cB4vzsnJLe3iCwuzj-w6PeYq_JaHmy_CoGoa6nw0FBo-2xLdOPvsLTh_fmYH2xhkaZ-OGQ/s16000/footer_bg.png") no-repeat scroll center 0;
+    width: 100%;
+    height: 266px;
+}
+
+.new_footer_top .footer_bg .footer_bg_one {
+    background: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEia0PYPxwT5ifToyP3SNZeQWfJEWrUENYA5IXM6sN5vLwAKvaJS1pQVu8mOFFUa_ET4JuHNTFAxKURFerJYHDUWXLXl1vDofYXuij45JZelYOjEFoCOn7E6Vxu0fwV7ACPzArcno1rYuVxGB7JY6G7__e4_KZW4lTYIaHSLVaVLzklZBLZnQw047oq5-Q/s16000/volks.gif") no-repeat center center;
+    width: 330px;
+    height: 105px;
+  background-size:100%;
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    -webkit-animation: myfirst 22s linear infinite;
+    animation: myfirst 22s linear infinite;
+}
+
+.new_footer_top .footer_bg .footer_bg_two {
+    background: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhyLGwEUVwPK6Vi8xXMymsc-ZXVwLWyXhogZxbcXQYSY55REw_0D4VTQnsVzCrL7nsyjd0P7RVOI5NKJbQ75koZIalD8mqbMquP20fL3DxsWngKkOLOzoOf9sMuxlbyfkIBTsDw5WFUj-YJiI50yzgVjF8cZPHhEjkOP_PRTQXDHEq8AyWpBiJdN9SfQA/s16000/cyclist.gif") no-repeat center center;
+    width: 88px;
+    height: 100px;
+  background-size:100%;
+    bottom: 0;
+    left: 38%;
+    position: absolute;
+    -webkit-animation: myfirst 30s linear infinite;
+    animation: myfirst 30s linear infinite;
+}
+
+
+
+@-moz-keyframes myfirst {
+  0% {
+    left: -25%;
   }
-  
-  .icon-hover:hover i {
-    color: #3b71ca !important;
+  100% {
+    left: 100%;
   }
-</style>
+}
+
+@-webkit-keyframes myfirst {
+  0% {
+    left: -25%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes myfirst {
+  0% {
+    left: -25%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+    .sub-image {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+    }
+
+    .main-image {
+      max-width: 100%;
+      max-height: 400px;
+      margin: auto;
+    }
+    
+  </style>
 </head>
-<body>
-  
-  <header>
-    <!-- Jumbotron -->
-    <div class="p-3 text-center bg-white border-bottom">
-      <div class="container">
-        <div class="row gy-3">
-          <!-- Left elements -->
-          <div class="col-lg-2 col-sm-4 col-4">
-            <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-              <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
-            </a>
-          </div>
-          <!-- Left elements -->
-  
-          <!-- Center elements -->
-          <div class="order-lg-last col-lg-5 col-sm-8 col-8">
-            <div class="d-flex float-end">
-              <!-- <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign in</p> </a>
-              <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="fas fa-heart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a> -->
-              <a href="/cartload" class="border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </a>
-            </div>
-          </div>
-          <!-- Center elements -->
-  
-          <!-- Right elements -->
-          <div class="col-lg-5 col-md-12 col-12">
-            <div class="input-group float-center">
-              <div class="form-outline">
-                <input type="search" id="form1" class="form-control" />
-                <label class="form-label" for="form1">Search</label>
-              </div>
-              <button type="button" class="btn btn-primary shadow-0">
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
-          </div>
-          <!-- Right elements -->
+
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-purple"   style="background-color: #0c0c0c;">
+      <div class="container" >
+        <!-- Left side of the navbar -->
+        <a class="navbar-brand" href="/">Shop Cartify</a>
+    
+        <!-- Responsive navbar toggle button for small screens -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <!-- Right side of the navbar -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <!-- Wishlist -->
+            <li class="nav-item">
+              <a class="nav-link" href="/wishlist">Wishlist</a>
+            </li>
+            <!-- My Cart -->
+            <li class="nav-item">
+              <a class="nav-link" href="/cartload">My Cart</a>
+            </li>
+            <!-- Logout -->
+            <li class="nav-item">
+              <a class="nav-link" href="/signout">Logout</a>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
-    <!-- Jumbotron -->
+    </nav>
+</header>
+
+<body>
   
-    <!-- Heading -->
-    <div class="bg-primary">
-      <div class="container py-4">
-        <!-- Breadcrumb -->
-        <nav class="d-flex">
-          <h6 class="mb-0">
-            <a href="" class="text-white-50">Home</a>
-            <span class="text-white-50 mx-2"> > </span>
-            <a href="" class="text-white-50">Library</a>
-            <span class="text-white-50 mx-2"> > </span>
-            <a href="" class="text-white"><u>Data</u></a>
-          </h6>
-        </nav>
-        <!-- Breadcrumb -->
-      </div>
-    </div>
-    <!-- Heading -->
-  </header>
-  
-  <!-- content -->
   <section class="py-5">
+    
     <div class="container">
       <div class="row gx-5">
         <aside class="col-lg-6">
           <div class="border rounded-4 mb-3 d-flex justify-content-center">
-            <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/detail1/big.webp">
-              <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="<%= product.Images[0].slice(6) %>" />
-            </a>
+            <img id="mainImage" class="rounded-4 fit main-image" src="<%= product.Images[0].slice(6) %>" data-lightbox="product-gallery" data-title="<%= product.name %>">
           </div>
           <div class="d-flex justify-content-center mb-3">
             <% for (let i = 0; i < product.Images.length; i++) { %>
-              <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/detail1/big1.webp" class="item-thumb">
-                <img width="60" height="60" class="rounded-2" src="<%= product.Images[i].slice(6) %>" />
-              </a>
+            <img data-fslightbox="mygallery" class="border mx-1 rounded-2 sub-image" target="_blank" data-type="image"
+              src="<%= product.Images[i].slice(6) %>" />
             <% } %>
           </div>
-          <!-- thumbs-wrap.// -->
-          <!-- gallery-wrap .end// -->
         </aside>
         <main class="col-lg-6">
-          <div class="ps-lg-3">
-            <h4 class="title text-dark"><%= product.name %></h4>
-            <div class="d-flex flex-row my-3">
-              <div class="text-warning mb-1 me-2">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span class="ms-1">
-                  4.5
-                </span>
+          <div class="d-flex flex-column h-100">
+            <div>
+              <h2 class="fw-bold mb-3"><%=product.name %></h2>
+              <p class="text-muted">Category:<%=product.category %> <span class="fw-bold"></span></p>
+  
+              <div class="mb-3">
+                <h4 class="fw-bold">Product Details:</h4>
+                <p><%=product.description %></p>
               </div>
-              <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
-              <span class="text-success ms-2">In stock</span>
-            </div>
   
-            <div class="mb-3">
-              <span class="h5"><%= product.currency %>:<%= product.price %></span>
-              <span class="text-muted">/per box</span>
-            </div>
-  
-            <h2><%= product.description %></h2>
-            <h4>Available stocks  :<%= product.stock %></h4>
-  
-            <div class="row">
-              <dt class="col-3">Type:</dt>
-              <dd class="col-9">Regular</dd>
-  
-              <dt class="col-3">Color</dt>
-              <dd class="col-9">Brown</dd>
-  
-              <dt class="col-3">Material</dt>
-              <dd class="col-9">Cotton, Jeans</dd>
-  
-              <dt class="col-3">Brand</dt>
-              <dd class="col-9">Reebook</dd>
-            </div>
-  
-            <hr />
-  
-            <div class="row mb-4">
-              <div class="col-md-4 col-6">
-                <label class="mb-2">Size</label>
-                <select class="form-select border border-secondary" style="height: 35px;">
-                  <option>Small</option>
-                  <option>Medium</option>
-                  <option>Large</option>
-                </select>
+              <div class="mb-3">
+                <h4 class="fw-bold">Stock:</h4>
+                <p><span class="text-success fw-bold"><%=product.stock %></span></p>
               </div>
-              <!-- col.// -->
-              <div class="col-md-4 col-6 mb-3">
-                <label class="mb-2 d-block">Quantity</label>
-                <div class="input-group mb-3" style="width: 170px;">
-                  <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon1" data-mdb-ripple-color="dark">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <input type="text" class="form-control text-center border border-secondary" placeholder="14" aria-label="Example text with button addon" aria-describedby="button-addon1" />
-                  <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon2" data-mdb-ripple-color="dark">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                </div>
+  
+              <div class="mb-3">
+                <h4 class="fw-bold">Price:</h4>
+                <p class="text-danger fw-bold"> ₹.<%=product.price %></p>
               </div>
             </div>
-            <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
-            <a href="/addToCart" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
-            <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a>
+  
+            <div class="btn-ground text-xs-center" style="padding-bottom: 30px">
+              <a href="/addToCart?id=<%= product.id %>" class="btn btn-primary">
+                  <i class="fa fa-shopping-cart"></i> Add
+              </a>
+              
+          </div>
+            
           </div>
         </main>
       </div>
     </div>
-  </section>
-  <!-- content -->
-  
-  <section class="bg-light border-top py-4">
-    <div class="container">
-      <div class="row gx-4">
-        <div class="col-lg-8 mb-4">
-          <div class="border rounded-2 px-3 py-2 bg-white">
-            <!-- Pills navs -->
-            <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-              <li class="nav-item d-flex" role="presentation">
-                <a class="nav-link d-flex align-items-center justify-content-center w-100 active" id="ex1-tab-1" data-mdb-toggle="pill" href="#ex1-pills-1" role="tab" aria-controls="ex1-pills-1" aria-selected="true">Specification</a>
-              </li>
-              <li class="nav-item d-flex" role="presentation">
-                <a class="nav-link d-flex align-items-center justify-content-center w-100" id="ex1-tab-2" data-mdb-toggle="pill" href="#ex1-pills-2" role="tab" aria-controls="ex1-pills-2" aria-selected="false">Warranty info</a>
-              </li>
-              <li class="nav-item d-flex" role="presentation">
-                <a class="nav-link d-flex align-items-center justify-content-center w-100" id="ex1-tab-3" data-mdb-toggle="pill" href="#ex1-pills-3" role="tab" aria-controls="ex1-pills-3" aria-selected="false">Shipping info</a>
-              </li>
-              <li class="nav-item d-flex" role="presentation">
-                <a class="nav-link d-flex align-items-center justify-content-center w-100" id="ex1-tab-4" data-mdb-toggle="pill" href="#ex1-pills-4" role="tab" aria-controls="ex1-pills-4" aria-selected="false">Seller profile</a>
-              </li>
-            </ul>
-            <!-- Pills navs -->
-  
-            <!-- Pills content -->
 
-            <div class="tab-content" id="ex1-content">
-              <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                <p>
-                <%= product.description %>
-                </p>
-                <div class="row mb-2">
-                  <div class="col-12 col-md-6">
-                    <ul class="list-unstyled mb-0">
-                      <li><i class="fas fa-check text-success me-2"></i>Some great feature name here</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Lorem ipsum dolor sit amet, consectetur</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Duis aute irure dolor in reprehenderit</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Optical heart sensor</li>
-                    </ul>
-                  </div>
-                  <div class="col-12 col-md-6 mb-0">
-                    <ul class="list-unstyled">
-                      <li><i class="fas fa-check text-success me-2"></i>Easy fast and ver good</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Some great feature name here</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Modern style and design</li>
-                    </ul>
-                  </div>
-                </div>
-                <table class="table border mt-3 mb-2">
-                  <tr>
-                    <th class="py-2">Display:</th>
-                    <td class="py-2">13.3-inch LED-backlit display with IPS</td>
-                  </tr>
-                  <tr>
-                    <th class="py-2">Processor capacity:</th>
-                    <td class="py-2">2.3GHz dual-core Intel Core i5</td>
-                  </tr>
-                  <tr>
-                    <th class="py-2">Camera quality:</th>
-                    <td class="py-2">720p FaceTime HD camera</td>
-                  </tr>
-                  <tr>
-                    <th class="py-2">Memory</th>
-                    <td class="py-2">8 GB RAM or 16 GB RAM</td>
-                  </tr>
-                  <tr>
-                    <th class="py-2">Graphics</th>
-                    <td class="py-2">Intel Iris Plus Graphics 640</td>
-                  </tr>
-                </table>
-              </div>
-              <div class="tab-pane fade mb-2" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                Tab content or sample information now <br />
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              </div>
-              <div class="tab-pane fade mb-2" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-                Another tab content or sample information now <br />
-                Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum.
-              </div>
-              <div class="tab-pane fade mb-2" id="ex1-pills-4" role="tabpanel" aria-labelledby="ex1-tab-4">
-                Some other tab content or sample information now <br />
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                officia deserunt mollit anim id est laborum.
-              </div>
-            </div>
-
-            <!-- Pills content -->
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="px-0 border rounded-2 shadow-0">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Similar items</h5>
-                <div class="d-flex mb-3">
-                  <a href="#" class="me-3">
-                    <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/8.webp" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                  </a>
-                  <div class="info">
-                    <a href="#" class="nav-link mb-1">
-                      Rucksack Backpack Large <br />
-                      Line Mounts
-                    </a>
-                    <strong class="text-dark"> $38.90</strong>
-                  </div>
-                </div>
-  
-                <div class="d-flex mb-3">
-                  <a href="#" class="me-3">
-                    <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/9.webp" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                  </a>
-                  <div class="info">
-                    <a href="#" class="nav-link mb-1">
-                      Summer New Men's Denim <br />
-                      Jeans Shorts
-                    </a>
-                    <strong class="text-dark"> $29.50</strong>
-                  </div>
-                </div>
-  
-                <div class="d-flex mb-3">
-                  <a href="#" class="me-3">
-                    <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/10.webp" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                  </a>
-                  <div class="info">
-                    <a href="#" class="nav-link mb-1"> T-shirts with multiple colors, for men and lady </a>
-                    <strong class="text-dark"> $120.00</strong>
-                  </div>
-                </div>
-  
-                <div class="d-flex">
-                  <a href="#" class="me-3">
-                    <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/11.webp" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                  </a>
-                  <div class="info">
-                    <a href="#" class="nav-link mb-1"> Blazer Suit Dress Jacket for Men, Blue color </a>
-                    <strong class="text-dark"> $339.90</strong>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </section>
-  <!-- Footer -->
-  <footer class="text-center text-lg-start text-muted bg-primary mt-3">
+
+  <!-- Include your Swiper script here if needed -->
+
+
+  <footer class="text-center text-lg-start text-muted mt-3" style="background-color: rgb(181, 134, 225);">
     <!-- Section: Links  -->
     <section class="">
       <div class="container text-center text-md-start pt-4 pb-4">
@@ -339,16 +326,14 @@
           <!-- Grid column -->
           <div class="col-12 col-lg-3 col-sm-12 mb-2">
             <!-- Content -->
-            <a href="https://mdbootstrap.com/" target="_blank" class="text-white h2">
-              MDB
+            <a href="#" target="_blank" class="text-white h2">
+              SHOP CARTIFY
             </a>
             <p class="mt-1 text-white">
-              © 2023 Copyright: MDBootstrap.com
+              © 2023 Copyright: shopCartify
             </p>
           </div>
-          <!-- Grid column -->
-  
-          <!-- Grid column -->
+          <!-- Grid column  Grid column -->
           <div class="col-6 col-sm-4 col-lg-2">
             <!-- Links -->
             <h6 class="text-uppercase text-white fw-bold mb-2">
@@ -362,7 +347,7 @@
             </ul>
           </div>
           <!-- Grid column -->
-  
+
           <!-- Grid column -->
           <div class="col-6 col-sm-4 col-lg-2">
             <!-- Links -->
@@ -377,7 +362,7 @@
             </ul>
           </div>
           <!-- Grid column -->
-  
+
           <!-- Grid column -->
           <div class="col-6 col-sm-4 col-lg-2">
             <!-- Links -->
@@ -392,26 +377,15 @@
             </ul>
           </div>
           <!-- Grid column -->
-  
-          <!-- Grid column -->
-          <div class="col-12 col-sm-12 col-lg-3">
-            <!-- Links -->
-            <h6 class="text-uppercase text-white fw-bold mb-2">Newsletter</h6>
-            <p class="text-white">Stay in touch with latest updates about our products and offers</p>
-            <div class="input-group mb-3">
-              <input type="email" class="form-control border" placeholder="Email" aria-label="Email" aria-describedby="button-addon2" />
-              <button class="btn btn-light border shadow-0" type="button" id="button-addon2" data-mdb-ripple-color="dark">
-                Join
-              </button>
-            </div>
-          </div>
+
+
           <!-- Grid column -->
         </div>
         <!-- Grid row -->
       </div>
     </section>
     <!-- Section: Links  -->
-  
+
     <div class="">
       <div class="container">
         <div class="d-flex justify-content-between py-4 border-top">
@@ -423,16 +397,20 @@
             <i class="fab fa-lg fa-cc-paypal text-white"></i>
           </div>
           <!--- payment --->
-  
+
           <!--- language selector --->
           <div class="dropdown dropup">
-            <a class="dropdown-toggle text-white" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
-  
+            <a class="dropdown-toggle text-white" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown"
+              aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
+
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="Dropdown">
               <li>
-                <a class="dropdown-item" href="#"><i class="flag-united-kingdom flag"></i>English <i class="fa fa-check text-success ms-2"></i></a>
+                <a class="dropdown-item" href="#"><i class="flag-united-kingdom flag"></i>English <i
+                    class="fa fa-check text-success ms-2"></i></a>
               </li>
-              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
               <li>
                 <a class="dropdown-item" href="#"><i class="flag-poland flag"></i>Polski</a>
               </li>
@@ -464,24 +442,36 @@
       </div>
     </div>
   </footer>
-  <!-- Footer -->
-  
-  
 
-  <!-- Footer -->
-  
 
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-    crossorigin="anonymous"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var gallery = new Swiper('.swiper-container', {
+        // Add your Swiper settings here
+      });
 
+      // Add event listener for sub-image click
+      var subImages = document.querySelectorAll('.sub-image');
+      subImages.forEach(function (subImage, index) {
+        subImage.addEventListener('click', function () {
+          // Set the clicked sub-image as the main image
+          document.getElementById('mainImage').src = this.src;
+
+          // Optional: If using Swiper, you may want to change the active slide
+          gallery.slideTo(index);
+        });
+      });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+  crossorigin="anonymous"></script>
+  
 </body>
+
 </html>

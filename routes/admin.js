@@ -39,7 +39,9 @@ router.get('/categorymanage', adminController.categorymanage);
 router.post('/categoryManagementdelete/:id', adminController.categorydelete);
 router.post('/categoryeditpage/:id', adminController.categoryeditpage);
 router.post('/categoryManagementedit/:id', adminController.categoryedit);
-router.post('/orders',adminController.orders)
+router.get('/orders',adminController.orders);
+router.post('/ordersPost/:id',adminController.ordersPost);
+
 
 
 

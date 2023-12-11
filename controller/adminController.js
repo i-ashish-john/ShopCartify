@@ -2,7 +2,10 @@ const session = require('express-session');
 const adminCollection = require('../model/adminCollection')
 const userCollection = require('../model/userCollection');
 const productCollection = require('../model/productCollection');
-const CategoryCollection = require('../model/categoryCollection')
+const CategoryCollection = require('../model/categoryCollection');
+const orderCollection = require('../model/orderCollection');
+const sharp = require('sharp');
+
 const { log } = require('console');
 
 const multer = require('multer');
@@ -120,6 +123,7 @@ const logout = (req, res) => {
   });
 };
 
+
 const productmanage = async (req, res) => {
   try {
     res.render("admin/productAdd");
@@ -129,21 +133,69 @@ const productmanage = async (req, res) => {
 };
 
 
+// const productmanagePost = async (req, res) => {
+//   try {
+//     // Call the Multer middleware to handle file uploads
+
+
+//     console.log("req.files", req.files);
+//     const uploadedImages = req.files.map(file => {
+//       console.log(file);
+//       let imagepath = file.path
+//       return imagepath;
+//     });
+//     console.log("uploadedImages ", uploadedImages)
+
+
+//     // Your existing code for handling product details and database insertion
+//     console.log('body', req.body);
+//     const productDetails = {
+//       name: req.body.name,
+//       price: req.body.price,
+//       currency: req.body.currency,
+//       category: req.body.category,
+//       stock: req.body.stock,
+//       description: req.body.description,
+//       Images: uploadedImages
+
+//     };
+
+//     const Product = await productCollection.insertMany([productDetails]);
+
+//     if (productDetails && Product) {
+//       res.redirect('/admin/productlist');
+//     } else {
+//       res.redirect('/admin/productAdd');
+//     }
+//   } catch (error) {
+//     console.log('error in add post*');
+//     console.log(error);
+//   }
+// };
+
+
 const productmanagePost = async (req, res) => {
   try {
     // Call the Multer middleware to handle file uploads
-
-
     console.log("req.files", req.files);
-    const uploadedImages = req.files.map(file => {
+
+    // Array to store paths of cropped images
+    const croppedImages = [];
+
+    // Loop through each uploaded image and crop it
+    for (const file of req.files) {
       console.log(file);
-      let imagepath = file.path
-      return imagepath;
-    });
-    console.log("uploadedImages ", uploadedImages)
 
+      const croppedImagePath = `public/images${file.filename}`; 
+      await sharp(file.path)
+        .resize({ width: 300, height: 300 })
+        .toFile(croppedImagePath);
 
-    // Your existing code for handling product details and database insertion
+      croppedImages.push(croppedImagePath);
+    }
+
+    console.log("croppedImages", croppedImages);
+
     console.log('body', req.body);
     const productDetails = {
       name: req.body.name,
@@ -152,19 +204,9 @@ const productmanagePost = async (req, res) => {
       category: req.body.category,
       stock: req.body.stock,
       description: req.body.description,
-      Images: uploadedImages
-
+      Images: croppedImages
     };
 
-    // if (req.files && req.files.length > 0) {
-    //   const uploadedImages = req.files.map(file => {
-    //     let imagepath = file.path;
-    //     return imagepath;
-    //   });
-    //   productDetails.images = uploadedImages;
-    // }
-
-    // Place 'await' here
     const Product = await productCollection.insertMany([productDetails]);
 
     if (productDetails && Product) {
@@ -179,73 +221,15 @@ const productmanagePost = async (req, res) => {
 };
 
 
-// const productmanagePost = async (req, res) => {
-//   try {
-//     console.log('body', req.body);
-//     const productDetails = {
-//       name: req.body.name,
-//       price: req.body.price,
-//       currency: req.body.currency,
-//       category: req.body.category,
-//       stock: req.body.stock,
-//       description: req.body.description,
-//     };
-
-//     if (req.files && req.files.length > 0) {
-//       const uploadedImages = req.files.map(file => {
-//         let imagepath = file.path;
-//         return imagepath;
-//       });
-//       productDetails.images = uploadedImages;
-//     }
-//     const result = await productCollection.insertOne(productDetails);
-
-//     if (result.acknowledged) {
-//       // Product added successfully
-//       res.redirect("/admin/productManagement");
-//     } else {
-//       // Insertion failed
-//       res.status(500).send("Failed to add product");
-//     }
-//   } catch (error) {
-//     console.error("Error in add post:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
-
-
-// const productmanagePost= async (req, res) => {
-//   const { categoryName, categoryDescription } = req.body;
-
-//   try {
-//     // Check if a category with the same name (case-sensitive) already exists
-//     const existingCategory = await CategoryCollection.findOne({
-//       categoryName: { $regex: new RegExp("^" + categoryName + "$", "i") },
-//     });
-
-//     if (existingCategory) {
-//       // If a category with the same name exists, handle the case here (e.g., send an error response)
-//       return res.status(400).send("Category with the same name already exists.");
-//     }
-
-//     // If the category with the same name doesn't exist, insert into the database
-//     await CategoryCollection.create({
-//       categoryName,
-//       categoryDescription,
-//     });
-
-//     res.redirect("/admin/dashboard");
-//   } catch (error) {
-//     console.log(error);
-//     // Handle the error as needed
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
-
 
 const productlist = async (req, res) => {
   try {
-    const store = await productCollection.find();
+    let query = {};
+    const searchTerm = req.query.search;
+    if (searchTerm) {
+      query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }] };
+    }
+    const store = await productCollection.find(query);
     res.render("admin/productManagement", { store });
   } catch (error) {
     console.log("error in productlist", error);
@@ -384,7 +368,8 @@ const categoryaddPost = async (req, res) => {
 const categorymanage = async (req, res) => {
   try {
     // Assuming categoryCollection is your MongoDB collection
-    const categories = await CategoryCollection.find({ deleted: false });
+    // const categories = await CategoryCollection.find({ deleted: false });
+    const categories = await CategoryCollection.find();
 
     res.render("admin/categoryManagement", { categories });
   } catch (error) {
@@ -407,7 +392,7 @@ const categorymanage = async (req, res) => {
 const categorydelete = async (req, res) => {
   try {
     const categoryId = req.params.id;
-    const result = await CategoryCollection.findByIdAndUpdate(categoryId, { deleted: true });
+    const result = await CategoryCollection.findByIdAndDelete(categoryId, { deleted: true });
 
     if (result) {
       res.redirect('/admin/categorymanage');
@@ -456,9 +441,41 @@ const categoryedit = async (req, res) => {
     // Handle the error
   }
 };
-const orders = async (req, res) => {
 
-}
+const orders = async (req, res) => {
+  try {
+    const orders = await orderCollection.find().populate('productdetails');
+    res.render('admin/orders', { orders });
+  } catch (error) {
+    console.error(error.message);
+    res.send(error.message);
+  }
+
+};
+
+const ordersPost = async (req, res) => {
+  try {
+      const orderId = req.params.id;
+      const newStatus = req.body.orderStatus;
+
+      const updatedOrder = await orderCollection.findByIdAndUpdate(
+          orderId,
+          { $set: { orderStatus: newStatus } },
+          { new: true }
+      );
+
+      console.log("Updated Order:", updatedOrder);
+      res.redirect("/admin/dashboardForAdmin");
+  } catch (error) {
+      console.error(error.message);
+      res.send(error.message);
+  }
+};
+
+
+
+
+
 
 
 module.exports = {
@@ -484,6 +501,7 @@ module.exports = {
   categoryedit,
   categoryaddPost,
   logout,
-  orders
+  orders,
+  ordersPost
 
 }

@@ -2,131 +2,584 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    main {
-      padding: 20px;
-    }
-  
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-  
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-    }
-  
-    th {
-      background-color: rgb(224, 121, 121);
-      color: #fff;
-      border-radius: 10px;
-    }
-  
-    tr:nth-child(even) {
-      background-color: rgb(255, 255, 255);
-    }
-  
-    tr:hover {
-      background-color: #f5c0c0;
-    }
-  
-    td a {
-      display: inline-block;
-      text-decoration: none;
-      padding: 5px 10px;
-      background-color: #feffff;
-      color: #fff;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
-  
-    td a:hover {
-      background-color: #0056b3;
-    }
-  
-    .btn-block {
-      width: 100%;
-    }
-  
-    @media (max-width: 768px) {
-      nav {
-        width: 100%;
-        order: -1;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Responsive Dashboard Design #2 | AsmrProg</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+      :root {
+          --light: #f6f6f9;
+          --primary: #1976D2;
+          --light-primary: #CFE8FF;
+          --grey: #eee;
+          --dark-grey: #AAAAAA;
+          --dark: #363949;
+          --danger: #D32F2F;
+          --light-danger: #FECDD3;
+          --warning: #FBC02D;
+          --light-warning: #FFF2C6;
+          --success: #388E3C;
+          --light-success: #BBF7D0;
       }
-  
-      .container {
-        padding: 0;
+
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Poppins', sans-serif;
       }
+
+      .bx {
+          font-size: 1.7rem;
+      }
+
+      a {
+          text-decoration: none;
+      }
+
+      li {
+          list-style: none;
+      }
+
+      html {
+          overflow-x: hidden;
+      }
+
+      body.dark {
+          --light: #181a1e;
+          --grey: #25252c;
+          --dark: #fbfbfb
+      }
+
+      body {
+          background: var(--grey);
+          overflow-x: hidden;
+      }
+
+      .sidebar {
+          position: fixed;
+          top: 7%;
+          left: 0;
+          background: rgba(255, 255, 255, 1);
+          width: 230px;
+          height: 100%;
+          z-index: 2000;
+          overflow-x: hidden;
+          scrollbar-width: none;
+          transition: all 0.3s ease;
+      }
+
+      .sidebar::-webkit-scrollbar {
+          display: none;
+      }
+
+      .sidebar.close {
+          width: 60px;
+      }
+
+      .sidebar .logo {
+          font-size: 24px;
+          font-weight: 700;
+          height: 56px;
+          display: flex;
+          align-items: center;
+          color: var(--primary);
+          z-index: 500;
+          padding-bottom: 20px;
+          box-sizing: content-box;
+      }
+
+      .sidebar .logo .logo-name span {
+          color: var(--dark);
+      }
+
+      .sidebar .logo .bx {
+          min-width: 60px;
+          display: flex;
+          justify-content: center;
+          font-size: 2.2rem;
+      }
+
+      .sidebar .side-menu {
+          width: 100%;
+          margin-top: 48px;
+      }
+
+      .sidebar .side-menu li {
+          height: 48px;
+          background: transparent;
+          margin-left: 6px;
+          border-radius: 48px 0 0 48px;
+          padding: 4px;
+      }
+
+      .sidebar .side-menu li.active {
+          background: var(--grey);
+          position: relative;
+      }
+
+      .sidebar .side-menu li.active::before {
+          content: "";
+          position: absolute;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          top: -40px;
+          right: 0;
+          box-shadow: 20px 20px 0 var(--grey);
+          z-index: -1;
+      }
+
+      .sidebar .side-menu li.active::after {
+          content: "";
+          position: absolute;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          bottom: -40px;
+          right: 0;
+          box-shadow: 20px -20px 0 var(--grey);
+          z-index: -1;
+      }
+
+      .sidebar .side-menu li a {
+          width: 100%;
+          height: 100%;
+          background: var(--light);
+          display: flex;
+          align-items: center;
+          border-radius: 48px;
+          font-size: 16px;
+          color: var(--dark);
+          white-space: nowrap;
+          overflow-x: hidden;
+          transition: all 0.3s ease;
+      }
+
+      .sidebar .side-menu li.active a {
+          color: var(--success);
+      }
+
+      .sidebar.close .side-menu li a {
+          width: calc(48px - (4px * 2));
+          transition: all 0.3s ease;
+      }
+
+      .sidebar .side-menu li a .bx {
+          min-width: calc(60px - ((4px + 6px) * 2));
+          display: flex;
+          font-size: 1.6rem;
+          justify-content: center;
+      }
+
+      .sidebar .side-menu li a.logout {
+          color: var(--danger);
+      }
+
+      .content {
+    position: relative;
+    width: calc(100% - 230px);
+    left: 230px;
+    padding-left: 15px; /* Add padding to the left */
+    transition: all 0.3s ease;
+}
+
+.sidebar.close~.content {
+    width: calc(100% - 60px);
+    left: 60px;
+    padding-left: 0; /* Remove padding when sidebar is closed */
+}
+
+
+      .content nav {
+          height: 56px;
+          background: var(--light);
+          padding: 0 24px 0 0;
+          display: flex;
+          align-items: center;
+          grid-gap: 24px;
+          position: sticky;
+          top: 0;
+          left: 0;
+          z-index: 1000;
+      }
+
+      .content nav::before {
+          content: "";
+          position: absolute;
+          width: 40px;
+          height: 40px;
+          bottom: -40px;
+          left: 0;
+          border-radius: 50%;
+          box-shadow: -20px -20px 0 var(--light);
+      }
+
+      .content nav a {
+          color: var(--dark);
+      }
+
+      .content nav .bx.bx-menu {
+          cursor: pointer;
+          color: var(--dark);
+      }
+
+      .content nav form {
+          max-width: 400px;
+          width: 100%;
+          margin-right: auto;
+      }
+
+      .content nav form .form-input {
+          display: flex;
+          align-items: center;
+          height: 36px;
+      }
+
+      .content nav form .form-input input {
+          flex-grow: 1;
+          padding: 0 16px;
+          height: 100%;
+          border: none;
+          background: var(--grey);
+          border-radius: 36px 0 0 36px;
+          outline: none;
+          width: 100%;
+          color: var(--dark);
+      }
+
+      .content nav form .form-input button {
+          width: 80px;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: var(--primary);
+          color: var(--light);
+          font-size: 18px;
+          border: none;
+          outline: none;
+          border-radius: 0 36px 36px 0;
+          cursor: pointer;
+      }
+
+      .content nav .notif {
+          font-size: 20px;
+          position: relative;
+      }
+
+      .content nav .notif .count {
+          position: absolute;
+          top: -6px;
+          right: -6px;
+          width: 20px;
+          height: 20px;
+          background: var(--danger);
+          border-radius: 50%;
+          color: var(--light);
+          border: 2px solid var(--light);
+          font-weight: 700;
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .content nav .profile img {
+          width: 36px;
+          height: 36px;
+          object-fit: cover;
+          border-radius: 50%;
+      }
+
+      .content nav .theme-toggle {
+          display: block;
+          min-width: 50px;
+          height: 25px;
+          background: var(--grey);
+          cursor: pointer;
+          position: relative;
+          border-radius: 25px;
+      }
+
+      .content nav .theme-toggle::before {
+          content: "";
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          bottom: 2px;
+          width: calc(25px - 4px);
+          background: var(--primary);
+          border-radius: 50%;
+          transition: all 0.3s ease;
+      }
+
+      .content nav #theme-toggle:checked+.theme-toggle::before {
+          left: calc(100% - (25px - 4px) - 2px);
+      }
+
+      .content main {
+          width: 100%;
+          padding: 36px 24px;
+          max-height: calc(100vh - 56px);
+      }
+
+      .content main .header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          grid-gap: 16px;
+          flex-wrap: wrap;
+      }
+
+      .content main .header .left h1 {
+          font-size: 36px;
+          font-weight: 600;
+          margin-bottom: 10px;
+          color: var(--dark);
+      }
+
+      .content main .header .left .breadcrumb {
+          display: flex;
+          align-items: center;
+          grid-gap: 16px;
+      }
+
+      .content main .header .left .breadcrumb li {
+          color: var(--dark);
+      }
+
+      .content main .header .left .breadcrumb li a {
+          color: var(--dark-grey);
+          pointer-events: none;
+      }
+
+      .content main .header .left .breadcrumb li a.active {
+          color: var(--primary);
+          pointer-events: none;
+      }
+
+      /* Other styles remain unchanged */
+
+      @media screen and (max-width: 768px) {
+          .sidebar {
+              width: 200px;
+          }
+
+          .content {
+              width: calc(100% - 60px);
+              left: 200px;
+          }
+      }
+
+      @media screen and (min-width: 576px) {
+          .content nav form .form-input input {
+              display: block;
+              width: 100%;
+              max-width: 300px; /* Adjust this value as needed */
+          }
+
+          .content nav form .form-input button {
+              width: auto;
+              height: auto;
+              background: transparent;
+              color: var(--dark);
+              border-radius: none;
+          }
+
+          .content nav form.show .form-input input {
+              width: 100%;
+          }
+
+          .content nav form.show .form-input button {
+              width: 36px;
+              height: 100%;
+              color: var(--light);
+              background: var(--danger);
+              border-radius: 0 36px 36px 0;
+          }
+
+          .content nav form.show~.notif,
+          .content nav form.show~.profile {
+              display: none;
+          }
+      }
+
+      .user-list-box {
+          width: 100%;
+      }
+
+      @media screen and (min-width: 1200px) {
+          .user-list-box {
+              width: 80%;
+          }
+      }
+
+      @media screen and (min-width: 1600px) {
+          .user-list-box {
+              width: 60%;
+          }
+      }
+      .content {
+        margin-left: 230px; /* Adjust this value to match the width of your sidebar */
+    }
+
+    @media screen and (max-width: 768px) {
+        .content {
+            margin-left: 60px; /* Adjust this value to match the collapsed width of your sidebar */
+        }
     }
   </style>
-  </head>
-  
-  <body>
-    <header>
-      <h1 style="margin-left: 200px;">User Management</h1>
-    </header>
-  
-    <div class="container">
-      <nav>
-        <ul class="nav flex-column">
-          <!-- Your navigation links go here -->
-        </ul>
-      </nav>
-  
-      <table class="table" style="margin-left:70px;">
-        <thead>
-          <tr>
-            <!-- Define your table headers -->
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
 
-          <tbody>
-            <% users.forEach(user=> { %>
-              <tr>
-                <td>
-                  <%= user.name %>
-                </td>
-                <td>
-                  <%= user.email %>
-                </td>
-                <td>
-                  <% if (user.isblocked) { %>
-                    <!-- User is blocked, show unblock button -->
-                    <form method="post" action="/admin/unblock/<%= user._id %>">
-                      <button type="submit" class="btn btn-success btn-block">Unblock</button>
-                    </form>
-                    <% } else { %>
-                      <!-- User is not blocked, show block button -->
-                      <form method="post" action="/admin/block/<%= user._id %>">
-                        <button type="submit" class="btn btn-danger btn-block">Block</button>
-                      </form>
-                      <% } %>
-                </td>
-              </tr>
-              <% }); %>
-          </tbody>
-        </table>
-    <main>
-    
-      <%-include("../partials/adminnavigation.ejs")-%>
- 
-    </main>
-  </div>
+</head>
 
-  <!-- Bootstrap JS and Popper.js (for Bootstrap) -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<body>
+ <!-- Sidebar -->
+ <div class="sidebar">
+  <a href="#" class="logo">
+      <i class='bx bx-code-alt'></i>
+      <div class="logo-name"><span>Shop</span>Cartify</div>
+  </a>
+  <ul class="side-menu">
+      <li><a href="/admin/dashboardForAdmin"><i class='bx bxs-dashboard'></i>Dashboard</a></li>
+      <li><a href="/admin/usermanage"><i class='bx bx-store-alt'></i>user manage</a></li>
+      <li><a href="/admin/productlist"><i class='bx bx-cog'></i>product manage</a></li>
+      <li><a href="/admin/categorymanage "><i class='bx bx-message-square-dots'></i>category manage</a></li>
+      <li><a href="/admin/orders"><i class='bx bx-group'></i>order status</a></li>
+  </ul>
+  <ul class="side-menu">
+      <li>
+          <a href="/admin/logout" class="logout">
+              <i class='bx bx-log-out-circle'></i>
+              Logout
+          </a>
+      </li>
+      
+  </ul>
+</div>
+
+
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">User</th>
+                      <th scope="col">email</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   
+                      <% users.forEach(user=> { %>
+                        <tr>
+                          <th scope="row"></th>
+                          <td><%= user.name %></td>
+                          <td><%= user.email %></td>
+                          <td>
+                            <% if (user.isblocked) { %>
+                              <!-- User is blocked, show unblock button -->
+                              <form method="post" action="/admin/unblock/<%= user._id %>">
+                                <button type="submit" class="btn btn-success btn-block">Unblock</button>
+                              </form>
+                              <% } else { %>
+                                <!-- User is not blocked, show block button -->
+                                <form method="post" action="/admin/block/<%= user._id %>">
+                                  <button type="submit" class="btn btn-danger btn-block">Block</button>
+                                </form>
+                                <% } %>
+                          </td>                        </tr>
+                      <% }) %>
+                 
+                    
+                  </tbody>
+
+                </table>
+
+            
+
+ <script >
+document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.querySelector('.sidebar');
+            const content = document.querySelector('.content');
+
+            document.addEventListener('mousemove', function (e) {
+                const mouseX = e.clientX;
+
+                // Adjust the threshold value as needed
+                const threshold = 50;
+
+                // Check if the mouse is within the threshold on the left side
+                if (mouseX <= threshold) {
+                    sidebar.classList.remove('close');
+                    content.style.marginLeft = '230px'; // Adjust this value to match the width of your sidebar
+                } else {
+                    sidebar.classList.add('close');
+                    content.style.marginLeft = '60px'; // Adjust this value to match the collapsed width of your sidebar
+                }
+            });
+        });
+const sideLinks = document.querySelectorAll('.sidebar .side-menu li a:not(.logout)');
+
+sideLinks.forEach(item => {
+    const li = item.parentElement;
+    item.addEventListener('click', () => {
+        sideLinks.forEach(i => {
+            i.parentElement.classList.remove('active');
+        })
+        li.classList.add('active');
+    })
+});
+
+const menuBar = document.querySelector('.content nav .bx.bx-menu');
+const sideBar = document.querySelector('.sidebar');
+
+menuBar.addEventListener('click', () => {
+    sideBar.classList.toggle('close');
+});
+
+const searchBtn = document.querySelector('.content nav form .form-input button');
+const searchBtnIcon = document.querySelector('.content nav form .form-input button .bx');
+const searchForm = document.querySelector('.content nav form');
+
+searchBtn.addEventListener('click', function (e) {
+    if (window.innerWidth < 576) {
+        e.preventDefault;
+        searchForm.classList.toggle('show');
+        if (searchForm.classList.contains('show')) {
+            searchBtnIcon.classList.replace('bx-search', 'bx-x');
+        } else {
+            searchBtnIcon.classList.replace('bx-x', 'bx-search');
+        }
+    }
+});
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth < 768) {
+        sideBar.classList.add('close');
+    } else {
+        sideBar.classList.remove('close');
+    }
+    if (window.innerWidth > 576) {
+        searchBtnIcon.classList.replace('bx-x', 'bx-search');
+        searchForm.classList.remove('show');
+    }
+});
+
+const toggler = document.getElementById('theme-toggle');
+
+toggler.addEventListener('change', function () {
+    if (this.checked) {
+        document.body.classList.add('dark');
+    } else {
+        document.body.classList.remove('dark');
+    }
+});
+
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
-
 </html>

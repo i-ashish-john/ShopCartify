@@ -39,6 +39,8 @@ router.get('/addAddressUser',userController.addAddressUserPage);
 router.post('/NewAddressAddedForUser',userController.NewAddressAddedForUser);
 router.get('/addCheckoutAddress',userController.addCheckoutAddress);
 router.post('/addCheckoutAddress',userController.addCheckoutAddress);
+router.get('/ListOfOrders',userController.orderList);
+
 
 
 module.exports = router;

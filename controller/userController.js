@@ -794,6 +794,16 @@ const checkoutPost = async (req, res) => {
   }
 };
 
+const orderList = async(req,res)=>{
+    try{
+      const orders = await orderCollection.find().populate('productdetails');
+      res.render('user/orderList', { orders });
+    }catch(error){
+      console.log(error.message);
+      res.send(error.message)
+    }
+
+};
 
 
 module.exports = {
@@ -803,5 +813,6 @@ module.exports = {
   Totalproductlist, cartItemRemove, addToCart,
   updateCartItem, incCart, decCart, checkout,
   submitAddress, orderStatus, UserDetails, profile,
-  addAddressUserPage, NewAddressAddedForUser, addCheckoutAddress, addCheckoutAddressPost,checkoutPost
+  addAddressUserPage, NewAddressAddedForUser, addCheckoutAddress,
+   addCheckoutAddressPost,checkoutPost,orderList
 };
