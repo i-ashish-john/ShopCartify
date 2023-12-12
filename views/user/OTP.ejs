@@ -9,9 +9,7 @@
   <style>
     body {
       background-color: #3498db;
-      /* Background color */
       color: #fff;
-      /* Text color */
     }
 
     .container {
@@ -20,7 +18,6 @@
 
     .form-container {
       background-color: #fff;
-      /* Form background color */
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -42,18 +39,20 @@
             <button type="submit" class="btn btn-primary btn-block" id="sub">Verify OTP</button>
             <div id="countdown" style="color: black;">00:59</div>
             <div>
-            <% if (error) { %>
-              <p style="color: red;padding: 50px;">
-                <%= error %> <a href="user/signup"></a>Signup again to continue
-              </p>
+              <% if (error) { %>
+                <p style="color: red;padding: 50px;">
+                  <%= error %> <a href="user/signup"></a>Signup again to continue
+                </p>
               <% } %>
             </div>
-                <div id="hiddenButton" style="display: none;">Resend Button</div>
+            <div id="hiddenButton" style="display: none;">Resend Button</div>
           </form>
         </div>
       </div>
     </div>
   </div>
+
+
 
   <script>
     let seconds = 59;
@@ -68,7 +67,7 @@
           clearInterval(interval);
           submitBtn.setAttribute("disabled", true);
           countdownDisplay.textContent = "OTP expired. Try Resend";
-          showResendButton();  // Call the function to show the resend button
+          showResendButton();
         } else {
           seconds--;
         }
@@ -83,13 +82,13 @@
 
     function showResendButton() {
       const hiddenButton = document.getElementById('hiddenButton');
-      hiddenButton.style.display = 'block'; // Show the hidden button
+      hiddenButton.style.display = 'block';
+      submitBtn.removeAttribute("disabled");
+      seconds = 59; // Reset the countdown
+      countdown(); // Start the countdown again
     }
 
     countdown();  // Start the countdown
-
-    // Set a timeout to call the function after 1 minute (60,000 milliseconds)
-    setTimeout(showResendButton, 60000);
   </script>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

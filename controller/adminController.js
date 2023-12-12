@@ -4,6 +4,8 @@ const userCollection = require('../model/userCollection');
 const productCollection = require('../model/productCollection');
 const CategoryCollection = require('../model/categoryCollection');
 const orderCollection = require('../model/orderCollection');
+const addressCollection = require('../model/addressCollection');
+
 const sharp = require('sharp');
 
 const { log } = require('console');
@@ -133,47 +135,6 @@ const productmanage = async (req, res) => {
 };
 
 
-// const productmanagePost = async (req, res) => {
-//   try {
-//     // Call the Multer middleware to handle file uploads
-
-
-//     console.log("req.files", req.files);
-//     const uploadedImages = req.files.map(file => {
-//       console.log(file);
-//       let imagepath = file.path
-//       return imagepath;
-//     });
-//     console.log("uploadedImages ", uploadedImages)
-
-
-//     // Your existing code for handling product details and database insertion
-//     console.log('body', req.body);
-//     const productDetails = {
-//       name: req.body.name,
-//       price: req.body.price,
-//       currency: req.body.currency,
-//       category: req.body.category,
-//       stock: req.body.stock,
-//       description: req.body.description,
-//       Images: uploadedImages
-
-//     };
-
-//     const Product = await productCollection.insertMany([productDetails]);
-
-//     if (productDetails && Product) {
-//       res.redirect('/admin/productlist');
-//     } else {
-//       res.redirect('/admin/productAdd');
-//     }
-//   } catch (error) {
-//     console.log('error in add post*');
-//     console.log(error);
-//   }
-// };
-
-
 const productmanagePost = async (req, res) => {
   try {
     // Call the Multer middleware to handle file uploads
@@ -184,7 +145,7 @@ const productmanagePost = async (req, res) => {
 
     // Loop through each uploaded image and crop it
     for (const file of req.files) {
-      console.log(file);
+      console.log("file is:",file);
 
       const croppedImagePath = `public/images${file.filename}`; 
       await sharp(file.path)
@@ -247,42 +208,6 @@ const productDelete = async (req, res) => {
   }
 };
 
-// const updateproduct = async (req, res) => {
-//   try {
-//     const paramToUpdate = req.body.params;
-//     console.log("Param to Update:", paramToUpdate);
-
-
-//     // Construct the filter based on paramToUpdate
-//     const filter = { _id: paramToUpdate }; // Assuming paramToUpdate is the product ID
-
-//     const update = {
-//       $set: {
-//         name: req.body.name,
-//         price: req.body.price,
-//         currency: req.body.currency,
-//         description: req.body.description,
-//         // Add other fields to update as needed
-//       },
-//     };
-
-//     // Use updateOne instead of updateMany if you want to update a single document
-//     await productCollection.updateMany(filter, update);
-//     // const store=await productCollection.find();
-//     console.log("store is",store);
-//     const product = await productCollection.find(filter);
-//     console.log("PRODUCT", product);
-//     if (product) {
-//       res.render("admin/productManagement",{store});
-//     } else {
-//       res.redirect("/admin/productlist");
-//     }
-//   } catch (error) {
-//     console.log("error in updateproduct:", error);
-//     res.send(error);
-//   }
-// };
-
 
 const updateproduct = async (req, res) => {
   try {
@@ -306,18 +231,6 @@ const updateproduct = async (req, res) => {
     res.send(error);
   }
 };
-
-// const editproduct=async(req,res)=>{
-//  const paramToEdit=req.params.id;
-//  const body=req.body;
-//   const productEditted=await productCollection.findByIdAndUpdate(paramToEdit,body);
-//   // const product=await productCollection.find();
-//   if(productEditted){
-//     res.render("admin/productlist");
-//   }else{
-//     res.redirect("/admin/editproduct");
-//   }
-// };
 
 const editproduct = async (req, res) => {
   try {
@@ -378,16 +291,6 @@ const categorymanage = async (req, res) => {
   }
 };
 
-// const categorydelete = async (req, res) => {
-//   const data1 = req.params.id;
-//   const result1 = await CategoryCollection.findByIdAndDelete(data1);
-//   if (result1) {
-//     res.redirect('/admin/categorymanage');
-//   } else {
-//     res.send(error);
-//     console.log("product deleted");
-//   }
-// };
 
 const categorydelete = async (req, res) => {
   try {

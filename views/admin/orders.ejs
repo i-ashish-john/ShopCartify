@@ -750,7 +750,7 @@ body{
                 <!-- <td data-label="Quantity">10</td> -->
 
                 <td data-label="Order status">
-                    <select name="orderStatus" id="orderStatus" onchange="updateOrderStatus('<%= order._id %>')">
+                    <select name="orderStatus" id="orderStatus-<%= order._id %>" onchange="updateOrderStatus('<%= order._id %>')">
                         <option value="Pending" <%= order.orderStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
                         <option value="Confirm Order" <%= order.orderStatus === 'Confirm Order' ? 'selected' : '' %>>Confirm Order</option>
                         <option value="Shipped" <%= order.orderStatus === 'Shipped' ? 'selected' : '' %>>Shipped</option>
@@ -774,7 +774,7 @@ body{
 
 <script >
     function updateOrderStatus(orderId) {
-    const selectedStatus = document.getElementById('orderStatus').value;
+        const selectedStatus = document.getElementById(`orderStatus-${orderId}`).value;
 
     // Use fetch to send an asynchronous request to update the order status
     fetch(`/admin/ordersPost/${orderId}`, {

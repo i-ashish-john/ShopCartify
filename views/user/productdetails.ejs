@@ -7,9 +7,24 @@
   <title>Product Details</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- Include Swiper CSS -->
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
+  <!-- Include Lightbox CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
+  <!-- Include ElevateZoom CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.css">
+
+  <!-- Your existing styles go here -->
+
+  <!-- Add ElevateZoom script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+
   <style>
         body {
     background: #fbfbfd;
@@ -269,7 +284,8 @@ h1, h2, h3, h4, h5, h6 {
       <div class="row gx-5">
         <aside class="col-lg-6">
           <div class="border rounded-4 mb-3 d-flex justify-content-center">
-            <img id="mainImage" class="rounded-4 fit main-image" src="<%= product.Images[0].slice(6) %>" data-lightbox="product-gallery" data-title="<%= product.name %>">
+            <img id="mainImage" class="rounded-4 fit main-image" src="<%= product.Images[0].slice(6) %>" data-lightbox="product-gallery"
+              data-imagezoom="true" data-title="<%= product.name %>">
           </div>
           <div class="d-flex justify-content-center mb-3">
             <% for (let i = 0; i < product.Images.length; i++) { %>
@@ -445,14 +461,15 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      var gallery = new Swiper('.swiper-container', {
-        // Add your Swiper settings here
+      // Initialize ElevateZoom
+      $('#mainImage').elevateZoom({
+        gallery: 'gallery',
+        cursor: 'pointer',
+        galleryActiveClass: 'active',
+        imageCrossfade: true,
+        loadingIcon: 'https://cdn.rawgit.com/elevateweb/elevatezoom/master/src/loading.gif'
       });
 
       // Add event listener for sub-image click
@@ -462,16 +479,25 @@ h1, h2, h3, h4, h5, h6 {
           // Set the clicked sub-image as the main image
           document.getElementById('mainImage').src = this.src;
 
-          // Optional: If using Swiper, you may want to change the active slide
-          gallery.slideTo(index);
+          // Re-initialize ElevateZoom for the new main image
+          $('#mainImage').elevateZoom({
+            gallery: 'gallery',
+            cursor: 'pointer',
+            galleryActiveClass: 'active',
+            imageCrossfade: true,
+            loadingIcon: 'https://cdn.rawgit.com/elevateweb/elevatezoom/master/src/loading.gif'
+          });
         });
       });
     });
   </script>
+
+  <!-- Include Bootstrap and Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-  crossorigin="anonymous"></script>
-  
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
 </body>
 
 </html>
