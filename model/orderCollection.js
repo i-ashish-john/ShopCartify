@@ -1,7 +1,18 @@
 const mongoose = require('mongoose');
+const uuid = require('uuid');
 
 const orderSchema = new mongoose.Schema({
 
+  orderId: {
+    type: String,
+    default: () => {
+      const randomNumbers = Math.floor(1000 + Math.random() * 9000); // here iam generating random number
+      const randomAlphabets = Math.random().toString(36).substring(2, 4).toUpperCase(); // generating here. 1 or 2 random alphabets
+      return `ODR-${randomNumbers}${randomAlphabets}`;
+    },
+    unique: true,
+    required: true,
+  },
   username: {
     type: String,
     required: true,
@@ -49,6 +60,11 @@ const orderSchema = new mongoose.Schema({
     default: 'Pending',
   }
 
+});
+
+orderSchema.pre('find', function (next) {
+  this.populate('productdetails'); //populating the product details
+  next();
 });
 
 

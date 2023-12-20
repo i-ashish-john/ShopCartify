@@ -38,10 +38,14 @@
         
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-8 col-lg-6">
-
+   <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <% if (noData) { %>
+          <div class="alert alert-danger" role="alert">
+            <%= noData %>
+          </div>
+        <% } %>
+    
                 <form id="addressForm" action="/NewAddressAddedForUser" method="POST">
 
                     <div class="form-group">

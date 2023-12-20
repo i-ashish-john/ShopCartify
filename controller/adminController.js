@@ -135,27 +135,60 @@ const productmanage = async (req, res) => {
 };
 
 
+// const productmanagePost = async (req, res) => {
+//   try {
+//     // Call the Multer middleware to handle file uploads
+//     console.log("req.files", req.files);
+
+//     // Array to store paths of cropped images
+//     const croppedImages = [];
+
+//     // Loop through each uploaded image and crop it
+//     for (const file of req.files) {
+//       console.log("file is:",file);
+
+//       const croppedImagePath = `public/uploads/cropped${file.filename}`; 
+//       // const croppedImagePath = path.join('public', 'uploads', 'cropped', `${file.filename}`);
+
+//       await sharp(file.path)
+//         .resize({ width: 300, height: 300 })
+//         .toFile(croppedImagePath);
+
+//       croppedImages.push(croppedImagePath);
+//     }
+
+//     console.log("croppedImages", croppedImages);
+
+//     console.log('body', req.body);
+//     const productDetails = {
+//       name: req.body.name,
+//       price: req.body.price,
+//       currency: req.body.currency,
+//       category: req.body.category,
+//       stock: req.body.stock,
+//       description: req.body.description,
+//       Images: croppedImages
+//     };
+
+//     const Product = await productCollection.insertMany([productDetails]);
+
+//     if (productDetails && Product) {
+//       res.redirect('/admin/productlist');
+//     } else {
+//       res.redirect('/admin/productAdd');
+//     }
+//   } catch (error) {
+//     console.log('error in add post*');
+//     console.log(error);
+//   }
+// };
+
+
 const productmanagePost = async (req, res) => {
   try {
-    // Call the Multer middleware to handle file uploads
     console.log("req.files", req.files);
 
-    // Array to store paths of cropped images
-    const croppedImages = [];
-
-    // Loop through each uploaded image and crop it
-    for (const file of req.files) {
-      console.log("file is:",file);
-
-      const croppedImagePath = `public/images${file.filename}`; 
-      await sharp(file.path)
-        .resize({ width: 300, height: 300 })
-        .toFile(croppedImagePath);
-
-      croppedImages.push(croppedImagePath);
-    }
-
-    console.log("croppedImages", croppedImages);
+    const images = req.files.map(file => `public/uploads/${file.filename}`);
 
     console.log('body', req.body);
     const productDetails = {
@@ -165,7 +198,7 @@ const productmanagePost = async (req, res) => {
       category: req.body.category,
       stock: req.body.stock,
       description: req.body.description,
-      Images: croppedImages
+      Images: images,
     };
 
     const Product = await productCollection.insertMany([productDetails]);
@@ -180,6 +213,10 @@ const productmanagePost = async (req, res) => {
     console.log(error);
   }
 };
+
+// module.exports = {
+//   productmanagePost,
+// };
 
 
 
@@ -203,7 +240,7 @@ const productDelete = async (req, res) => {
   if (result) {
     res.redirect('/admin/productlist');
   } else {
-    res.send(error);
+    // res.send(error);
     console.log("product deleted");
   }
 };

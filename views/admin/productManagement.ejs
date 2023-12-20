@@ -14,18 +14,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --light: #f6f6f9;
+    --light: #eff324;
     --primary: #1976D2;
-    --light-primary: #CFE8FF;
-    --grey: #eee;
+    --light-primary: #e5db4b;
+    --grey: #fff943;
     --dark-grey: #AAAAAA;
     --dark: #363949;
     --danger: #D32F2F;
-	--light-danger: #FECDD3;
+	--light-danger: #ffff5d;
     --warning: #FBC02D;
-    --light-warning: #FFF2C6;
+    --light-warning: #ebe15b;
     --success: #388E3C;
-    --light-success: #BBF7D0;
+    --light-success: #fcff52;
 }
 
 *{
@@ -194,9 +194,9 @@ body{
     left: 60px;
 }
 
-.content nav{
+.content nav {
     height: 56px;
-    background: var(--light);
+    background: --yellow; /* Change this line to set the background color */
     padding: 0 24px 0 0;
     display: flex;
     align-items: center;
@@ -698,6 +698,86 @@ body{
 
 <body>
 
+
+       <!-- Favicon -->
+       <link href="img/favicon.ico" rel="icon">
+    
+
+
+       <!-- Google Web Fonts -->
+       <link rel="preconnect" href="https://fonts.gstatic.com">
+       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
+   
+       <!-- Font Awesome -->
+       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+   
+       <!-- Libraries Stylesheet -->
+       <link href="/NEW TEMP/online-shop-website-template/lib/animate/animate.min.css" rel="stylesheet">
+       <link href="/NEW TEMP/online-shop-website-template/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+   
+       <!-- Customized Bootstrap Stylesheet -->
+       <link href="/NEW TEMP/online-shop-website-template/css/style.css" rel="stylesheet">
+   
+   </head>
+   
+   <body>
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row bg-secondary py-1 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center h-100">
+                    <a class="text-body mr-3" href="">shop cartify</a>
+                    <a class="text-body mr-3" href=""></a>
+    
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="/signout" class="dropdown-item">Logout</a>
+                        </div>
+                    </div>
+
+                </div>
+     
+            </div>
+        </div>
+        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+            <div class="col-lg-4">
+                <a href="" class="text-decoration-none">
+                    <span class="h1 text-uppercase text-primary bg-dark px-2">Shop</span>
+                    <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Cartify</span>
+                </a>
+            </div>
+          
+          
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-dark mb-30">
+        <div class="row px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a class="btn d-flex align-items-center justify-content-between bg-primary w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; padding: 0 30px;">
+                    <!-- <h6 class="text-dark m-0"><i class="fa fa-bars mr-2"></i>Categories</h6>
+                    <i class="fa fa-angle-down text-dark"></i> -->
+                </a>
+          
+            </div>
+
+        
+
+
+
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="#" class="logo">
@@ -739,43 +819,44 @@ body{
        </div>
 
     <!-- End of Sidebar -->
-    <% store.forEach(product=> { %>
-    <div class="table-responsive">
-      <table class="table">
-          <thead>
-              <tr>
-                <th scope="col">#</th>
-
-                  <th scope="col">product Id</th>
-                  <th scope="col">Product Name</th>
-                  <th scope="col">Category</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Stock</th>
-                  <!-- <th scope="col">Action</th> -->
-              </tr>
-          </thead>
-          <tbody>
-              <tr>
-                <td data-label="#">#></td>
-
-                <td data-label="Product ID"><%= product._id %></td>
-                <td data-label="Product Name"><%= product.name %></td>
-                <td data-label="Category"><%= product.category  %></td>
-                <td data-label="Price"><%= product.price %></td>
-                  <td data-label="Stock"><%= product.stock %></td>
-                  <td data-label="Action">
-                    <form method="post" action="/admin/deleteproduct/<%= product.id %>" style="display:inline;">
-                      <button class="btn btn-success" type="submit">Delete</button>
-                    </form><br><br>
-                    <form method="get" action="/admin/editproduct/<%= product.id %>">
-                      <button type="submit" class="btn btn-warning ">EDIT</button>
-                    </form>                  </td>
-              </tr>
-              <!-- Add more rows as needed -->
-          </tbody>
-        </table>
-      </div>
-      <% }) %>
+   <!-- Inside the loop where you're iterating over products -->
+   <div class="table-responsive">
+       <table class="table table-bordered">
+           <thead class="thead-dark">
+               <tr>
+                   <th scope="col"></th>
+                   <th scope="col">Product ID</th>
+                   <th scope="col">Product Name</th>
+                   <th scope="col">Category</th>
+                   <th scope="col">Price</th>
+                   <th scope="col">Stock</th>
+                   <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% store.forEach(product => { %>
+          <tr>
+            <td data-label="#"></td>
+            <td data-label="Product ID"><%= product._id %></td>
+            <td data-label="Product Name"><%= product.name %></td>
+            <td data-label="Category"><%= product.category %></td>
+            <td data-label="Price">₹<%= product.price %></td>
+            <td data-label="Stock"><%= product.stock %></td>
+            <td data-label="Action">
+              <form method="post" action="/admin/deleteproduct/<%= product.id %>" style="display:inline;">
+                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+              </form>
+              <form method="get" action="/admin/editproduct/<%= product.id %>" style="display:inline;">
+                <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  
    
     <!-- Main Content -->
 

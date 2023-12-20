@@ -4,7 +4,7 @@ const orderCollection = require('../model/orderCollection');
 const productCollection = require('../model/productCollection');
 const addressCollection = require('../model/addressCollection');
 const categoryCollection = require('../model/categoryCollection');
-
+const mongoose = require('mongoose');
 
 const submitAddress = async (req, res) => {
     try {
@@ -125,6 +125,8 @@ const submitAddress = async (req, res) => {
   
       if (order.paymentType === 'CashOnDelivery') {
         return res.render('user/ordersuccess');
+      }else if(order.paymentType === 'NetBanking'){
+          return res.send('RAZORPAY NEXT WEEK TASK');
       }
   
       res.status(201).json({ message: 'Order saved successfully' });
@@ -133,12 +135,11 @@ const submitAddress = async (req, res) => {
       res.send(error.message);
     }
   };
-  
   const orderList = async(req,res)=>{
       try{
         const email = req.session.user;
         const orders = await orderCollection.find({email:email}).populate('productdetails');
-        res.render('user/orderList', { orders });
+        res.render("user/orderList", { orders });
       }catch(error){
         console.log(error.message);
         res.send(error.message)
@@ -169,14 +170,84 @@ const submitAddress = async (req, res) => {
   //     res.send(error.message);
   //   }
   // };
-  
-
   const addCheckoutAddress = async (req, res) => {
     res.render("user/AddingCheckoutAddress");
-  }
+  };
+
+  const SingleOrderlist = async (req, res) => {
+    try {
+      const orderId = req.params.id;
+       console.log(" the order in the single order list function is here :",orderId);
+      // Fetch order details with product details populated
+      const orderDetails = await orderCollection
+      .findOne({ _id: orderId })
+      .populate({
+        path: 'productdetails',
+        model: 'collectionOfProduct',
+      });
+        console.log(" the order details inside the :",orderDetails);
+      if (!orderDetails) {
+        // If the order with the specified orderId doesn't exist
+        return res.status(404).send('Order not found');
+      }
+  
+      const productsWithImages = [];
+  
+      for (const productId of orderDetails.productdetails) {
+        // Ensure that the productDetails is not null
+        const productDetails = await productCollection.findById(productId);
+  
+        if (productDetails) {
+          productsWithImages.push({
+            name: productDetails.name,
+            description: productDetails.description,
+            quantity: 1, // You can modify this based on your data structure
+            price: `${productDetails.price}`,
+            images: productDetails.Images,
+          });
+        } else {
+          console.warn(`Product not found for productId: ${productId}`);
+          // Handle the case where a product is not found (optional)
+        }
+      }
+  
+      res.render('user/singleOrder', { orderDetails, productsWithImages });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send(error.message);
+    }
+  };
+
+  const cancelOrder = async (req, res) => {
+    try {
+      const orderId = req.params.id;
+  
+      const updatedOrder = await orderCollection.findOneAndUpdate(
+        { _id: orderId },
+        { $set: { orderStatus: 'Cancelled' } },
+        { new: true }
+      );
+  
+      console.log("The updated order in the cancel order is:", updatedOrder);
+  
+      if (updatedOrder) {
+        // Fetch all orders again after the update
+        const allOrders = await orderCollection.find();
+        
+        res.render("user/orderList", { orders: allOrders });
+      } else {
+        console.log("Error in canceling order");
+        res.status(404).json({ error: 'Order not found or error in canceling order' });
+      }
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send(error.message);
+    }
+  };
 
 module.exports = {
     submitAddress, orderStatus,
      addCheckoutAddress,
-    checkoutPost,orderList
+    checkoutPost,orderList,SingleOrderlist,
+    cancelOrder
 };

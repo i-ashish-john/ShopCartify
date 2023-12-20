@@ -10,7 +10,7 @@
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
                 <%= product.quantity %>
               </span>
-              <img src="<%= product.images && product.images.length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>"
+              <img src="<%= product.images && product.images.length > 0 ? product.images[0] : 'default-image-url' %>"
                 style="height: 96px; width: 96px;" class="img-sm rounded border" />
             </div>
             <div class="">

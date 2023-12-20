@@ -6,14 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OTP Verification</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="sweetalert2.min.js"></script>
+<link rel="stylesheet" href="sweetalert2.min.css">
+
   <style>
     body {
-      background-color: #3498db;
-      color: #fff;
+      background: linear-gradient(to top, #FDD835, #78909C);
+      color: #000;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
 
     .container {
-      margin-top: 100px;
+      margin-top: 50px;
     }
 
     .form-container {
@@ -21,6 +30,20 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+      background-color: #FFD600;
+      border-color: #FFD600;
+    }
+
+    #countdown {
+      color: #000;
+    }
+
+    #hiddenButton {
+      display: none;
+      color: #000;
     }
   </style>
 </head>
@@ -30,29 +53,40 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="form-container">
-          <h2 class="text-center mb-4" style="color: black;">OTP Verification</h2>
+          <h2 class="text-center mb-4">OTP Verification</h2>
           <form action="/OTP" method="post">
             <div class="form-group">
               <label for="otp">Enter OTP</label>
               <input type="text" name="otp" class="form-control" id="otp" placeholder="Enter your OTP">
             </div>
             <button type="submit" class="btn btn-primary btn-block" id="sub">Verify OTP</button>
-            <div id="countdown" style="color: black;">00:59</div>
+            <div id="countdown">00:59</div>
+           
+
             <div>
               <% if (error) { %>
-                <p style="color: red;padding: 50px;">
-                  <%= error %> <a href="user/signup"></a>Signup again to continue
+                <p style="color: red;padding: 10px;">
+                  <%= error %> <a href="user/signup" style="color: #FFD600;">Signup again to continue</a>
                 </p>
               <% } %>
             </div>
-            <div id="hiddenButton" style="display: none;">Resend Button</div>
+            <div id="hiddenButton">Resend Button</div>
           </form>
         </div>
       </div>
     </div>
   </div>
 
+  <script src="sweetalert2.all.min.js"></script>
+  <script>
+         Swal.fire({
+  title: 'Error!',
+  text: 'Do you want to continue',
+  icon: 'error',
+  confirmButtonText: 'Cool'
+})
 
+  </script>
 
   <script>
     let seconds = 59;
@@ -90,6 +124,8 @@
 
     countdown();  // Start the countdown
   </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

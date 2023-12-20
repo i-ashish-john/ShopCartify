@@ -8,8 +8,11 @@ const generateOtp = require('generate-otp');
 const cartCollection = require('../model/cartCollection');
 const addressCollection = require('../model/addressCollection');
 const orderCollection = require('../model/orderCollection');
+
 const { log } = require('console');
 const mongoose = require('mongoose');
+const Swal = require('sweetalert2')
+
 
 require('dotenv').config();
 let otp;
@@ -18,9 +21,12 @@ let otp;
 const home = async (req, res) => {
   try {
     console.log("* This is home");
+    const loguser = req.session.user;
     const fetchedUser = await userCollection.find();
-    const products = await productCollection.find();
-    return res.render("user/home", { user: fetchedUser, products: products });
+    const productsOfUser = await productCollection.find();
+    const CartData = await cartCollection.findOne({email:loguser});
+    console.log("cart datas were :",CartData);
+    return res.render("user/home", { user: fetchedUser,  products:productsOfUser , cart: CartData });
 
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -47,16 +53,26 @@ const login = async (req, res) => {
 
 const loginpost = async (req, res) => {
   try {
-    const user = await userCollection.findOne({ email: req.body.email });
+   const user = await userCollection.findOne({ email: req.body.email });
 
+   if (user) {
+    if (user.isblocked) {
+      res.render('user/userlogin', { blockedMessage: 'Your account is blocked. Please contact support.' });
+      return;
+    }
+  }
     if (user && !user.isblocked && user.password === req.body.password) {
       req.session.user = req.body.email;
       const fetchedUser = await userCollection.find();
       const products = await productCollection.find();
       res.render('user/home', { user: fetchedUser, products: products });
-    } else {
+    
+    }else {
       res.render('user/userlogin', { validation: 'Invalid username or password' });
     }
+
+//above is for checking the user is blocked then it is used to use in the blocked middle ware
+ 
   } catch (error) {
     console.log(error.message);
     res.send(error.message);
@@ -149,69 +165,14 @@ const signupPost = async (req, res) => {
   }
 };
 
-
-// const signupPost = async (req, res) => {
-//   try {
-//     const { username, email, password } = req.body;
-
-//     if (!username || !email || !password) {
-//       return res.status(400).json({ error: 'All fields are required' });
-//     }
-
-//     if (password.length < 8) {
-//       const passwordError = 'Password must be at least 8 characters long';
-//       const emailError = '';
-//       return res.render('user/signup', { passwordError, emailError });
-//     }
-
-//     // Check for email uniqueness (you should implement this logic)
-//     const isEmailUnique = await checkEmailUniqueness(email);
-//     if (!isEmailUnique) {
-//       const passwordError = '';
-//       const emailError = 'Email is already registered. Try with another email.';
-//       return res.render('user/signup', { passwordError, emailError });
-//     }
-
-//     // Rest of your code for sending OTP
-//     const otp = generateOtp.generate(6, { digits: true, alphabets: false, specialChars: false });
-//     const otpExpiresAt = new Date();
-//     const expirationMinutes = 5;
-//     otpExpiresAt.setMinutes(otpExpiresAt.getMinutes() + expirationMinutes);
-
-//     const mailOptions = {
-//       from: 'johnashish509@gmail.com', // Replace with your Gmail email
-//       to: email,
-//       subject: 'Your OTP code',
-//       text: `Your OTP code is: ${otp}`,
-//     };
-
-//     transporter.sendMail(mailOptions, (error, info) => {
-//       if (error) {
-//         console.error('Error sending OTP:', error);
-//         return res.status(500).json({ error: 'Error sending OTP' });
-//       } else {
-//         console.log('OTP sent:', info.response);
-//         console.log(mailOptions);
-//         console.log('Successfully sent');
-//         console.log('Successfully sent. Error is here:', otp);
-//         req.session.otp = otp;
-//         const error = '';
-//         return res.render('user/OTP', { error });
-//       }
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
-
-
 const sendOTPByEmail = async (req, res) => {
   try {
     const enteredOtp = req.body.otp;
     console.log("Entered OTP:", enteredOtp);
     console.log("THE OTP IS HERE", req.session.otp);
     if (req.session.otp === enteredOtp) {
+      Swal.fire("SweetAlert2 is working!");
+
       const users = await userCollection.find();
       const products = await productCollection.find();
       const EnteringData = req.session.user;
@@ -239,7 +200,7 @@ const productdetails = async (req, res) => {
     console.log("data is :", data);
     console.log("THE PARAM ID IS :", req.query.id);
     req.session.product = data;
-    console.log("id of the product: " + req.session.product);
+    console.log("id of the product: ", req.session.product);
     const product = await productCollection.findById(data);
     if (!product) {
       return res.status(404).send('Product not found');
@@ -259,12 +220,51 @@ const back = async (req, res) => {
   res.render("user/home", { user: fetchedUser, products: products });
 };
 
-const Totalproductlist = async (req, res) => {
+const MensTotalproductlist = async (req, res) => {
+  try {
+      const page = parseInt(req.query.page) || 1; // Get the requested page number from the query parameter
+      const pageSize = 10; // Set the number of products to display per page
 
-  const user = await userCollection.find();
-  const products = await productCollection.find();
-  res.render('user/Totalproductlisting', { user, products });
+      // Example: Fetch products for the requested page
+      const products = await productCollection.find({ category: "Mens" })
+          .skip((page - 1) * pageSize)
+          .limit(pageSize);
+
+      const totalProducts = await productCollection.countDocuments({ category: "Mens" });//here iam counting the total number of the pagination process
+
+      // Example: Calculate total pages based on the total number of products and page size
+      const totalPages = Math.ceil(totalProducts / pageSize);
+
+      res.render('user/Totalproductlisting', { products, currentPage: page, totalPages });
+    } catch (error) {
+      console.log(error.message);
+      res.send(error.message);
+  }
 };
+
+
+const WomensTotalproductlist = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 10;
+
+    // Example: Fetch products for the requested page
+    const products = await productCollection.find({ category: "Womens" })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    const totalProducts = await productCollection.countDocuments({ category: "Womens" });
+
+    // Example: Calculate total pages based on the total number of products and page size
+    const totalPages = Math.ceil(totalProducts / pageSize);
+
+    res.render('user/Totalproductlisting', { products, currentPage: page, totalPages });
+  } catch (error) {
+    console.log(error.message);
+    res.send(error.message);
+  }
+};
+
 
 
 // Function to calculate overall total price
@@ -323,110 +323,6 @@ const checkout = async (req, res) => {
   }
 };
 
- 
-
-
-
-
-
-
-// const submitAddress = async (req, res) => {
-//   try {
-//     // Assuming the form data is available in req.body
-//     console.log("ENTERED IN SUBMIT");
-//     const formData = req.body;
-//     console.log("REQ.BODY", req.body);
-
-//     // Save the form data to the addressCollection model
-//     const newAddress = new addressCollection({
-//       userId: formData.userId._id,
-//       productId: formData.productId._id,
-//       cartId: formData.cartId._id,
-//       address: formData.address,
-//       street: formData.street,
-//       country: formData.country,
-//       city: formData.city,
-//       state: formData.state,
-//       zip: formData.zip,
-//     });
-
-//     const savedAddress = await newAddress.save();
-
-//     const totalPrice = formData.totalPrice;
-
-//     // Create a new order document using the orderCollection model
-//     const newOrder = new orderCollection({
-//       addressId: savedAddress._id,
-//       totalPrice: totalPrice, // Use the variable you defined
-//       // Add other fields as needed
-//     });
-
-//     const savedOrder = await newOrder.save();
-
-//     // Render the order success page with the order details
-//     res.render('user/ordersuccess', {
-//       order: savedOrder,
-//       // Add other variables as needed
-//     });
-//   } catch (error) {
-//     // Handle any errors that occur during the process
-//     console.error('Error processing form:', error.message);
-//     res.render('error', { error: 'An error occurred while processing the form.' });
-//   }
-// };
-
-
-
-// const orderStatus = async (req, res) => {
-//   try {
-//     console.log("entered in to order status");
-//     const stored = req.session.user;
-//     console.log("STORED SESSION", req.session.user);
-//     if (stored) {
-//       console.log("session of user in the  order status", req.session.user);
-
-//       return res.render('user/displayOrderStatus');
-//     }
-//   } catch (error) {
-//     console.error(error.message);
-//     console.log("error inside the order status get");
-//     res.status(500).send('Internal Server Error'); // Send an error response if there's an issue
-//   }
-// };
-
-// const profile = async (req, res) => {
-//   try {
-//     const Email = req.session.user;
-
-//     const updatedBody = {
-//       street: req.body.street,
-//       city: req.body.city,
-//       state: req.body.state,
-//       zip: req.body.zip
-//     };
-//     if (!updatedBody.street || !updatedBody.city || !updatedBody.state || !updatedBody.zip) {
-//       return res.status(400).send('Missing required fields');
-//     }
-//     const user = await userCollection.findOne({ email: Email });
-//     if (!user) {
-//       return res.status(404).send('User not found');
-//     }
-//     user.address.forEach((address) => {
-//       address.street = updatedBody.street;
-//       address.city = updatedBody.city;
-//       address.state = updatedBody.state;
-//       address.zip = updatedBody.zip;
-//     });
-//     await Promise.all(user.address.map((address) => address.save()));
-//     res.redirect('/');
-//     console.log("AAGAYA");
-//   } catch (error) {
-//     console.error('Error updating user details:', error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// };
-
-
 
 // UserDetails function
 const UserDetails = async (req, res) => {
@@ -482,12 +378,21 @@ const profile = async (req, res) => {
 
 const addAddressUserPage = async (req, res) => {
   // const isUser = req.session.user;
-  res.render('user/addAddressUser');
+  res.render('user/addAddressUser',{noData:''});
 }
 
 
 const NewAddressAddedForUser = async (req, res) => {
   try {
+
+    const { street, country, city, state, zip } = req.body;
+
+    if (!street || !country || !city || !state || !zip) {
+      const noData = 'Please fill in all the fields.';
+      return res.render('user/addAddressUser', { noData });
+    }
+
+
     const newData = {
       street: req.body.street,
       country: req.body.country,
@@ -528,6 +433,15 @@ const NewAddressAddedForUser = async (req, res) => {
 
 const addCheckoutAddressPost = async (req, res) => {
   try {
+
+
+    const { street, country, city, state, zip } = req.body;
+
+    if (!street || !country || !city || !state || !zip) {
+      const noData = 'Please fill in all the fields.';
+      return res.render('user/AddingCheckoutAddress', { noData });
+    }
+
     const newData = {
       street: req.body.street,
       country: req.body.country,
@@ -561,87 +475,16 @@ const addCheckoutAddressPost = async (req, res) => {
   }
 };
 
-// const checkoutPost = async (req, res) => {
-//   try {
-//     console.log("THE DATA 1 IS IN THE CHECKOUT POST");
-//     const { username, email, paymentType, selectedAddressId, totalPrice } = req.body;
-//     console.log("body of checkout page is :", username, email, paymentType, selectedAddressId);
-//     console.log("the body values:", req.body);
-
-//     const userId = req.session.user;
-//     console.log("logged user in the user is:", userId);
-
-//     const emailOfUser = await userCollection.findOne({ email: userId });
-//     const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
-//     console.log("cartData:", cartData);
-
-//     if (!cartData) {
-//       return res.status(404).json({ message: 'Cart values not found' });
-//     }
-//     const selectedAddress = emailOfUser.address.find(address => address._id == selectedAddressId);
-//       console.log("The  emailOfUser is :",emailOfUser);
-
-//       const productDetailsPromises = cartData.products.map(async product => {
-//         const productDetails = await productCollection.findById(product.productId);
-//         console.log("the product details is:",productDetails);
-//         return productDetails;
-//       });
-  
-//       const productDetailsArray = await Promise.all(productDetailsPromises);
-
-
-//     const order = new orderCollection({
-//       username,
-//       email,
-//       paymentType,
-//       totalPrice,
-//       productdetails: productDetailsArray.map(productDetails => productDetails._id),
-//       address: {
-//         street: selectedAddress?.street,
-//         city: selectedAddress?.city,
-//         state: selectedAddress?.state,
-//         zip: selectedAddress?.zip,
-//         country: selectedAddress?.country,
-//       }
-//     });
-//     console.log("the order  is :",order);
-//     console.log("the productdetails is:",productdetails);
-//     console.log("the selectedAddress is :",selectedAddress);
-
-//     await order.save();
-
-//     await cartCollection.deleteOne({ userId: emailOfUser._id });
-
-
-//     if (order.paymentType === 'CashOnDelivery') {
-//       return res.render('user/ordersuccess');
-//     }
-
-//     res.status(201).json({ message: 'Order saved successfully' });
-//   } catch (error) {
-//     console.error(error.message);
-//     res.send(error.message);
-//   }
-// };
-
-// const orderList = async(req,res)=>{
-//     try{
-//       const orders = await orderCollection.find().populate('productdetails');
-//       res.render('user/orderList', { orders });
-//     }catch(error){
-//       console.log(error.message);
-//       res.send(error.message)
-//     }
-
-// };
+// --------forgott
 
 
 module.exports = {
   login, loginpost, signout,
   signupPost, signup, home,
   sendOTPByEmail, back, productdetails,
-  Totalproductlist, checkout,
+  MensTotalproductlist,WomensTotalproductlist, checkout,
    UserDetails, profile,
   addAddressUserPage, NewAddressAddedForUser,
    addCheckoutAddressPost,
+
 };
