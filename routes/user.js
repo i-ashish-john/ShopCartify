@@ -57,6 +57,8 @@ router.get('/forgot-password', forgotpassController.forgotPasswordLoadPage);
 router.post('/forgot-passwordPost', forgotpassController.forgotPasswordLoadpagePost);
 router.post('/verifyOtp', forgotpassController.verifyOtp);
 router.post('/update-password', forgotpassController.updatePassword);
+// router.get('/resendOTP', forgotpassController.resend);
+
 
 
 module.exports = router;

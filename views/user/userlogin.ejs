@@ -120,15 +120,23 @@
       <div class="login-form">
         <h2 style="color: #000000; font-size: 28px;">Welcome back!</h2>
         <form id="loginForm" action="/login" method="post">
-          <input type="email" name="email" placeholder="Email@example.com"  required>
+          <input type="email" name="email" placeholder="Email@example.com"  >
           <br>
+          <p style="color: red;">
+            <%= locals.checkEmail %>
+          </p>
+          
           <div class="password-container">
-            <input type="password" name="password" id="passwordField" placeholder="Password"  required>
+            <input type="password" name="password" id="passwordField" placeholder="Password"  >
             <span toggle="#passwordField" class="eye-toggle" onclick="togglePasswordVisibility();"></span>
           </div>
 
           <p style="color: red;">
-            <%=locals.blockedMessage %>
+            <%= locals.checkPassword %>
+          </p>
+
+          <p style="color: red;">
+            <%= locals.blockedMessage %>
           </p>
           <br>
           <!-- <label class="checkbox">
@@ -139,7 +147,9 @@
           <input type="submit" value="Log in">
           <p style="color: red;">
             <%=locals.validation%>
-          </p>
+          </p><br>
+
+        
           <a href="signup" class="create-account-button">Create new account</a>
           <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
         </form>

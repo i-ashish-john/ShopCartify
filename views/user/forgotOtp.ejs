@@ -57,11 +57,20 @@
 
             <div class="mb-3">
                 <label for="otp" class="form-label" style="color: #000000;">Enter OTP</label>
-                <input type="text" id="otp" class="form-control" name="otp" placeholder="Enter the OTP" required />
+                <input type="text" id="otp" class="form-control" name="otp" placeholder="Enter the OTP"  />
             </div>
 
+            <% if (currentTime > otpExpirationTime) { %>
+                <p style="color: #b03131;">Your OTP has expired. Please request a new OTP.</p>
+            <% } %>
+            
             <p id="timer" style="color: #b03131;"></p>
             <p style="color: #ff0000;"><%= wrongOtp %></p>
+
+   
+            <p id="timer" style="color: #b03131;"></p>
+            <p style="color: #ff0000;"><%= validate %></p>
+
 
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg" style="background-color: #000000; border-radius: 10px;">Verify OTP</button>
@@ -103,8 +112,11 @@
                             console.error('Fetch error:', error);
                         });
                     });
+    
+                    // Hide the timer element when countdown reaches 0
+                    timerElement.style.display = 'none';
                 } else {
-                    timerElement.innerHTML = 'Your OTP will expires in ' + countdown + ' seconds';
+                    timerElement.innerHTML = 'Your OTP will expire in ' + countdown + ' seconds';
                     countdown--;
                 }
             }, 1000);
@@ -113,6 +125,7 @@
         // Start the timer when the page loads
         startTimer();
     </script>
+    
 </body>
 
 </html>

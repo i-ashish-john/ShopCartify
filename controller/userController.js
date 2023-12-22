@@ -61,6 +61,15 @@ const loginpost = async (req, res) => {
         return;
       }
     }
+
+    if (!req.body.email ) {
+      return res.render('user/userlogin', { checkEmail: 'Email cannot be empty' });
+    }
+
+    if(!req.body.password){
+      return res.render('user/userlogin',{checkPassword:'Password field cannot be empty '});
+    }
+
     if (user && !user.isblocked && user.password === req.body.password) {
       req.session.user = req.body.email;
       const fetchedUser = await userCollection.find();
