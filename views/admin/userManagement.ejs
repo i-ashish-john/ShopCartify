@@ -691,6 +691,23 @@
                         font-weight: bold;
                     }
                 }
+                            .pagination {
+                        display: flex;
+                        justify-content: center;
+                        margin-top: 20px;
+                    }
+
+                    .pagination a {
+                        color: var(--dark);
+                        padding: 8px 16px;
+                        text-decoration: none;
+                        transition: background-color 0.3s;
+                    }
+
+                    .pagination a.active {
+                        background-color: var(--primary);
+                        color: var(--light);
+                    }
             </style>
 
 </head>
@@ -833,7 +850,11 @@
     </table>
 </div>
 
-     
+<div class="pagination">
+    <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+</div>
 
  <script >
 document.addEventListener('DOMContentLoaded', function () {

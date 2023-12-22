@@ -108,10 +108,18 @@ const unblockid = async (req, res) => {
 };
 
 
+const ITEMS_PER_PAGE = 10; 
 const usermanage = async (req, res) => {
-  const users = await userCollection.find()
-  res.render("admin/userManagement", { users })
-}
+  const page = parseInt(req.query.page) || 1; //neede page requesting
+  const skip = (page - 1) * ITEMS_PER_PAGE;
+
+  const users = await userCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
+  
+  const totalCount = await userCollection.countDocuments();
+
+  res.render("admin/userManagement", { users, currentPage: page, totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE) });
+};
+
 
 const logout = (req, res) => {
   req.session.destroy((err) => {
@@ -219,7 +227,6 @@ const productmanagePost = async (req, res) => {
 // };
 
 
-
 const productlist = async (req, res) => {
   try {
     let query = {};
@@ -227,12 +234,28 @@ const productlist = async (req, res) => {
     if (searchTerm) {
       query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }] };
     }
-    const store = await productCollection.find(query);
-    res.render("admin/productManagement", { store });
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const totalProducts = await productCollection.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    const skip = (page - 1) * limit;
+    const products = await productCollection.find(query).skip(skip).limit(limit);
+
+    res.render("admin/productManagement", {
+      products,
+      currentPage: page,
+      totalPages,
+      searchTerm
+    });
   } catch (error) {
     console.log("error in productlist", error);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 const productDelete = async (req, res) => {
   const data = req.params.id;
@@ -384,14 +407,36 @@ const categoryedit = async (req, res) => {
 
 const orders = async (req, res) => {
   try {
-    const orders = await orderCollection.find().populate('productdetails');
-    res.render('admin/orders', { orders });
+    let page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    // Calculate the skip value based on the page number
+    const skip = (page - 1) * limit;
+
+    // Fetch orders with pagination and populate productdetails
+    const orders = await orderCollection
+      .find()
+      .populate('productdetails')
+      .skip(skip)
+      .limit(limit);
+
+    // Count total orders for pagination
+    const totalOrders = await orderCollection.countDocuments();
+
+    // Calculate total pages based on the limit
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    res.render('admin/orders', {
+      orders,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.error(error.message);
-    res.send(error.message);
+    res.status(500).send(error.message);
   }
-
 };
+
 
 const ordersPost = async (req, res) => {
   try {

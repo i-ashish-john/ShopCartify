@@ -692,6 +692,23 @@ body{
                 font-weight: bold;
             }
         }
+        .pagination {
+                        display: flex;
+                        justify-content: center;
+                        margin-top: 20px;
+                    }
+
+                    .pagination a {
+                        color: var(--dark);
+                        padding: 8px 16px;
+                        text-decoration: none;
+                        transition: background-color 0.3s;
+                    }
+
+                    .pagination a.active {
+                        background-color: var(--primary);
+                        color: var(--light);
+                    }
     </style>
 
 </head>
@@ -834,8 +851,8 @@ body{
                 </tr>
             </thead>
             <tbody>
-            <% store.forEach(product => { %>
-          <tr>
+                <% products.forEach(product => { %>
+                    <tr>
             <td data-label="#"></td>
             <td data-label="Product ID"><%= product._id %></td>
             <td data-label="Product Name"><%= product.name %></td>
@@ -858,9 +875,23 @@ body{
     </div>
   
    
-    <!-- Main Content -->
+</div>
 
-    </div>
+<div class="pagination">
+    <% if (currentPage > 1) { %>
+      <a href="?page=<%= currentPage - 1 %>&search=<%= searchTerm %>">Previous</a>
+    <% } %>
+    
+    <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %>&search=<%= searchTerm %>" <%= i === currentPage ? 'class="active"' : '' %>><%= i %></a>
+        <% } %>
+    
+    <% if (currentPage < totalPages) { %>
+      <a href="?page=<%= currentPage + 1 %>&search=<%= searchTerm %>">Next</a>
+    <% } %>
+  </div>
+    <!-- Main Content -->
+      
  <script >
 
 document.addEventListener('DOMContentLoaded', function () {

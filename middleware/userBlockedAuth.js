@@ -19,7 +19,8 @@
 const userCollection = require("../model/userCollection");
 
 const blockedAuth = async (req, res, next) => {
-    const email = req.session.user;
+    try {
+        const email = req.session.user;
     console.log("the session of the user is :", email);
     const user = await userCollection.findOne({ email: email });
     console.log("the logged user is :", user);
@@ -29,6 +30,11 @@ const blockedAuth = async (req, res, next) => {
     } else {
         res.render('user/userlogin');
     }
+        
+    } catch (error) {
+        console.log(error);
+    }
+    
 };
 module.exports = blockedAuth;
 

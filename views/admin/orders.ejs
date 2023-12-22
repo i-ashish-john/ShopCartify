@@ -692,6 +692,43 @@ body{
                 font-weight: bold;
             }
         }
+        .pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.pagination-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.pagination-item {
+  margin-right: 8px;
+}
+
+.pagination-link {
+  display: block;
+  padding: 8px 12px;
+  background-color: var(--light);
+  color: var(--dark);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-link:hover {
+  background-color: var(--grey);
+}
+
+.pagination-item.active .pagination-link {
+  background-color: var(--primary);
+  color: var(--light);
+}
+
     </style>
 
 </head>
@@ -848,9 +885,20 @@ body{
             <% }) %>
         </tbody>
     </table>
+   <!-- Pagination -->
+<div class="pagination">
+    <% if (totalPages > 1) { %>
+      <ul class="pagination-list">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="pagination-item <%= currentPage === i ? 'active' : '' %>">
+            <a href="?page=<%= i %>" class="pagination-link"><%= i %></a>
+          </li>
+        <% } %>
+      </ul>
+    <% } %>
+  </div>
 </div>
 <!-- End of Main Content -->
-
 
 
 <script >

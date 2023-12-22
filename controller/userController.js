@@ -24,9 +24,9 @@ const home = async (req, res) => {
     const loguser = req.session.user;
     const fetchedUser = await userCollection.find();
     const productsOfUser = await productCollection.find();
-    const CartData = await cartCollection.findOne({email:loguser});
-    console.log("cart datas were :",CartData);
-    return res.render("user/home", { user: fetchedUser,  products:productsOfUser , cart: CartData });
+    const CartData = await cartCollection.findOne({ email: loguser });
+    console.log("cart datas were :", CartData);
+    return res.render("user/home", { user: fetchedUser, products: productsOfUser, cart: CartData });
 
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -53,26 +53,26 @@ const login = async (req, res) => {
 
 const loginpost = async (req, res) => {
   try {
-   const user = await userCollection.findOne({ email: req.body.email });
+    const user = await userCollection.findOne({ email: req.body.email });
 
-   if (user) {
-    if (user.isblocked) {
-      res.render('user/userlogin', { blockedMessage: 'Your account is blocked. Please contact support.' });
-      return;
+    if (user) {
+      if (user.isblocked) {
+        res.render('user/userlogin', { blockedMessage: 'Your account is blocked. Please contact support.' });
+        return;
+      }
     }
-  }
     if (user && !user.isblocked && user.password === req.body.password) {
       req.session.user = req.body.email;
       const fetchedUser = await userCollection.find();
       const products = await productCollection.find();
       res.render('user/home', { user: fetchedUser, products: products });
-    
-    }else {
+
+    } else {
       res.render('user/userlogin', { validation: 'Invalid username or password' });
     }
 
-//above is for checking the user is blocked then it is used to use in the blocked middle ware
- 
+    //above is for checking the user is blocked then it is used to use in the blocked middle ware
+
   } catch (error) {
     console.log(error.message);
     res.send(error.message);
@@ -96,7 +96,8 @@ const signout = (req, res) => {
 const signup = async (req, res) => {
   const passwordError = '';
   const emailError = '';
-  res.render('user/signup', { emailError, passwordError });
+  const usernameError = '';
+  res.render('user/signup', { emailError, passwordError, usernameError });
 };
 
 const signupPost = async (req, res) => {
@@ -106,6 +107,13 @@ const signupPost = async (req, res) => {
       email: req.body.email,
       password: req.body.password
     }
+    if (/\d/.test(newUser.name)) {
+      const usernameError = 'Username should not contain numbers';
+      const passwordError = '';
+      const emailError = '';
+      res.render('user/signup', { usernameError, passwordError, emailError });
+      return;
+    }
     req.session.user = newUser;
     const email = req.body.email;
     const existingUser = await userCollection.findOne({ email });
@@ -113,12 +121,17 @@ const signupPost = async (req, res) => {
     if (existingUser && newUser.password.length < 8) {
       const passwordError = 'Password must be at least 8 characters long';
       const emailError = '';
+      // const usernameError = '';
+      // res.render('user/signup', { passwordError, emailError,usernameError });
       res.render('user/signup', { passwordError, emailError });
       return;
     } else if (existingUser) {
+      // const usernameError ='';
       const passwordError = '';
       const emailError = "Try with other email"
+      // res.render('user/signup', { passwordError, emailError ,usernameError});
       res.render('user/signup', { passwordError, emailError });
+
       return;
     }
 
@@ -171,7 +184,6 @@ const sendOTPByEmail = async (req, res) => {
     console.log("Entered OTP:", enteredOtp);
     console.log("THE OTP IS HERE", req.session.otp);
     if (req.session.otp === enteredOtp) {
-      Swal.fire("SweetAlert2 is working!");
 
       const users = await userCollection.find();
       const products = await productCollection.find();
@@ -180,15 +192,17 @@ const sendOTPByEmail = async (req, res) => {
       console.log("THE SESSION OF USER IS", req.session.user);
 
       await userCollection.insertMany([EnteringData]);
+      console.log("here @@@@");
       res.render("user/home", { users, products });
     } else {
       res.render("user/OTP", { error: "Incorrect OTP. Please try to signup again !." });
     }
   } catch (error) {
-    console.error("Error in OTP verification:", error);
-    res.status(500).send("Internal Server Error");
+    console.log("Error in OTP verification:", error);
+    res.send("Internal Server Error");
   }
 };
+
 
 
 
@@ -220,6 +234,7 @@ const back = async (req, res) => {
   res.render("user/home", { user: fetchedUser, products: products });
 };
 
+
 const MensTotalproductlist = async (req, res) => {
   try {
       const page = parseInt(req.query.page) || 1; // Get the requested page number from the query parameter
@@ -229,19 +244,23 @@ const MensTotalproductlist = async (req, res) => {
       const products = await productCollection.find({ category: "Mens" })
           .skip((page - 1) * pageSize)
           .limit(pageSize);
-
-      const totalProducts = await productCollection.countDocuments({ category: "Mens" });//here iam counting the total number of the pagination process
-
-      // Example: Calculate total pages based on the total number of products and page size
-      const totalPages = Math.ceil(totalProducts / pageSize);
-
-      res.render('user/Totalproductlisting', { products, currentPage: page, totalPages });
+          if (products.length > 0) {
+            const category = products[0].category; // Extract category from the first product
+            console.log("The men's product is here#:", category);
+      
+            const totalProducts = await productCollection.countDocuments({ category: "Mens" });
+            const totalPages = Math.ceil(totalProducts / pageSize);
+      
+            res.render('user/Totalproductlisting', { products, currentPage: page, totalPages, category });
+          } else {
+            // Handle the case where no products are found
+            res.render('user/Totalproductlisting', { products: [], currentPage: page, totalPages: 0, category: null });
+          }
     } catch (error) {
       console.log(error.message);
       res.send(error.message);
   }
 };
-
 
 const WomensTotalproductlist = async (req, res) => {
   try {
@@ -252,19 +271,23 @@ const WomensTotalproductlist = async (req, res) => {
     const products = await productCollection.find({ category: "Womens" })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-
-    const totalProducts = await productCollection.countDocuments({ category: "Womens" });
-
-    // Example: Calculate total pages based on the total number of products and page size
-    const totalPages = Math.ceil(totalProducts / pageSize);
-
-    res.render('user/Totalproductlisting', { products, currentPage: page, totalPages });
+      if (products.length > 0) {
+        const category = products[0].category; // Extract category from the first product
+        console.log("The women's product is here#:", category);
+  
+        const totalProducts = await productCollection.countDocuments({ category: "Womens" });
+        const totalPages = Math.ceil(totalProducts / pageSize);
+  
+        res.render('user/Totalproductlisting', { products, currentPage: page, totalPages, category });
+      } else {
+        // Handle the case where no products are found
+        res.render('user/Totalproductlisting', { products: [], currentPage: page, totalPages: 0, category: null });
+      }
   } catch (error) {
     console.log(error.message);
     res.send(error.message);
   }
 };
-
 
 
 // Function to calculate overall total price
@@ -378,7 +401,7 @@ const profile = async (req, res) => {
 
 const addAddressUserPage = async (req, res) => {
   // const isUser = req.session.user;
-  res.render('user/addAddressUser',{noData:''});
+  res.render('user/addAddressUser', { noData: '' });
 }
 
 
@@ -482,9 +505,9 @@ module.exports = {
   login, loginpost, signout,
   signupPost, signup, home,
   sendOTPByEmail, back, productdetails,
-  MensTotalproductlist,WomensTotalproductlist, checkout,
-   UserDetails, profile,
+  MensTotalproductlist, WomensTotalproductlist, checkout,
+  UserDetails, profile,
   addAddressUserPage, NewAddressAddedForUser,
-   addCheckoutAddressPost,
+  addCheckoutAddressPost,
 
 };
