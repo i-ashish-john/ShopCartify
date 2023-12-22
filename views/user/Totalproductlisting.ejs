@@ -29,9 +29,14 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/NEW TEMP/online-shop-website-template/css/style.css" rel="stylesheet">
+    
 
 </head>
-
+<style>
+    /* .not-found{
+        display: none;
+    } */
+</style>
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
@@ -54,18 +59,20 @@
                     </div>
 
                 </div>
+
                 <div class="d-inline-flex align-items-center d-block d-lg-none">
                     <a href="" class="btn px-0 ml-2">
                         <i class="fas fa-heart text-dark"></i>
                         <span class="badge text-dark border border-dark rounded-circle"
-                            style="padding-bottom: 2px;">0</span>
+                            style="padding-bottom: 2px;"></span>
                     </a>
                     <a href="" class="btn px-0 ml-2">
                         <i class="fas fa-shopping-cart text-dark"></i>
                         <span class="badge text-dark border border-dark rounded-circle"
-                            style="padding-bottom: 2px;">0</span>
+                            style="padding-bottom: 2px;"></span>
                     </a>
                 </div>
+
             </div>
         </div>
         <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
@@ -75,15 +82,16 @@
                     <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Cartify</span>
                 </a>
             </div>
+
             <div class="col-lg-4 col-6 text-left">
                 <form action="">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products">
-                        <div class="input-group-append">
+                        <input type="search"  id="userSearch-all"  class="form-control" placeholder="Search for products">
+                        <!-- <div class="input-group-append">
                             <span class="input-group-text bg-transparent text-primary">
                                 <i class="fa fa-search"></i>
                             </span>
-                        </div>
+                        </div> -->
                     </div>
                 </form>
             </div>
@@ -214,12 +222,12 @@
                                 </div>
                             </div>
                         </div>
-
+                <!-- <div class="not-found">not found</div> -->
 
                         <% if (products){ %>
                             <% for( let i=0 ; i < products.length ;i++){ %>
                                 <!-- --- -->
-                                <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                                <div class="searchable-item-all  col-lg-4 col-md-6 col-sm-6 pb-1">
                                     <div class="product-item bg-light mb-4">
                                         <div class="product-img position-relative overflow-hidden">
                                             <img class="img-fluid w-100" src="<%= products[i].Images[0]?.slice(6) %>"
@@ -525,7 +533,37 @@
             });
         </script>
 
+<script>
+    const searchInput = document.getElementById('userSearch-all');
+    const searchableItems = document.querySelectorAll('.searchable-item-all');
+    // const notfound= document.querySelector(".not-found")
+  
+  
+    // Reference to the message element
+  
+    searchInput.addEventListener('input', () => {
+      const searchText = searchInput.value.toLowerCase();
+      let found = false; // Flag to check if any matching items are found
+  
+      searchableItems.forEach(item => {
+        const itemText = item.textContent.toLowerCase();
+  
+        if (itemText.includes(searchText)) {
+            // notfound.style.display='none'
+          item.style.display = 'block';
+          found = true; // Set the flag to true if a matching item is found
+        } else {
+          item.style.display = 'none';
+        //   notfound.style.display='block'
 
+        }
+      });
+  
+    
+   
+  
+    });
+  </script>
 
 
         <!-- JavaScript Libraries -->
