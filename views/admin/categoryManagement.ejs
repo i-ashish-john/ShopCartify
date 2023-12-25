@@ -691,6 +691,7 @@ body{
                 font-weight: bold;
             }
         }
+        /* .text-shadow:{ #fc0 1px 0 10px;} */
     </style>
 
 </head>
@@ -727,7 +728,7 @@ body{
                 <div class="d-inline-flex align-items-center h-100">
                     <a class="text-body mr-3" href="">shop cartify</a>
                     <a class="text-body mr-3" href=""></a>
-    
+                    
                 </div>
             </div>
             <div class="col-lg-6 text-center text-lg-right">
@@ -750,8 +751,7 @@ body{
                     <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Cartify</span>
                 </a>
             </div>
-          
-          
+            
         </div>
     </div>
     <!-- Topbar End -->
@@ -766,13 +766,15 @@ body{
                     <i class="fa fa-angle-down text-dark"></i> -->
                 </a>
           
+                
             </div>
 
-        
-
-
-
+            
         </div>
+        
+    </div>
+    <div class="heading ">
+        <h1 class="text-shadow ">Category Manage</h1>
     </div>
     <!-- Navbar End -->
 
@@ -809,7 +811,7 @@ body{
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col"></th>
             <th scope="col">Category Id</th>
             <th scope="col">Category Name</th>
             <th scope="col">details</th>
@@ -820,7 +822,7 @@ body{
         <tbody>
             <% categories.forEach((category, index) => { %>
               <tr>
-                <th scope="row" data-label="#"> <%= index + 1 %> </th>
+                <th scope="row" data-label="#"></th>
                 <td data-label="Category ID"><%= category._id %></td>
                 <td data-label="Category Name"><%= category.categoryName %></td>
                 <td data-label="Description"><%= category.categoryDescription %></td>

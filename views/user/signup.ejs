@@ -58,12 +58,16 @@
                                     <form class="mx-1 mx-md-4" action="/signup" method="post">
                                         <div class="mb-3">
                                             <label for="username" class="form-label" style="color: #000000;">Username</label>
-                                            <input type="text" id="username" class="form-control" name="username" placeholder="Enter your Username" required />
+                                            <input type="text" id="username" class="form-control" name="username" placeholder="Enter your Username"  />
                                         </div>
 
+                                        <% if (usernameError) { %>
+                                            <p style="color: red;"><%= usernameError%></p>
+                                        <% } %>
+                                        
                                         <div class="mb-3">
                                             <label for="email" class="form-label" style="color: #000000;">Email</label>
-                                            <input type="email" id="email" class="form-control" name="email" placeholder="Enter your Email" required />
+                                            <input type="email" id="email" class="form-control" name="email" placeholder="Enter your Email"  />
                                             <% if (emailError) { %>
                                                 <p style="color: red;"><%= emailError%></p>
                                             <% } %>
@@ -71,14 +75,12 @@
 
                                         <div class="mb-3">
                                             <label for="password" class="form-label" style="color: #000000;">Password</label>
-                                            <input type="password" id="password" class="form-control" name="password" placeholder="Enter your Password" required />
+                                            <input type="password" id="password" class="form-control" name="password" placeholder="Enter your Password"  />
                                             <% if (passwordError) { %>
                                                 <p style="color: red;"><%= passwordError %></p>
                                             <% } %>
                                             
-                                            <% if (usernameError) { %>
-                                                <p style="color: red;"><%= usernameError%></p>
-                                            <% } %>
+                                          
                                         </div>
 
                                         <div class="d-grid gap-2">

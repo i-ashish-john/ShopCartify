@@ -116,6 +116,7 @@ const signupPost = async (req, res) => {
       email: req.body.email,
       password: req.body.password
     }
+
     if (/\d/.test(newUser.name)) {
       const usernameError = 'Username should not contain numbers';
       const passwordError = '';
@@ -123,23 +124,49 @@ const signupPost = async (req, res) => {
       res.render('user/signup', { usernameError, passwordError, emailError });
       return;
     }
+
+    if(!newUser.name){
+      const usernameError = 'User name is required';
+      const passwordError = '';
+      const emailError = '';
+      res.render('user/signup',{usernameError,passwordError,emailError});
+      return;
+    }
+    if(!newUser.email){
+      const usernameError = '';
+      const passwordError = '';
+      const emailError = 'Email is required';
+      res.render('user/signup',{usernameError,passwordError,emailError});
+      return;
+    }
+
+    if(!newUser.password){
+      const usernameError = '';
+      const passwordError = 'Password is required';
+      const emailError = '';
+      res.render('user/signup',{usernameError,passwordError,emailError});
+      return;
+    }
+
     req.session.user = newUser;
     const email = req.body.email;
     const existingUser = await userCollection.findOne({ email });
 
-    if (existingUser && newUser.password.length < 8) {
+    if (newUser.password.length < 8) {
       const passwordError = 'Password must be at least 8 characters long';
       const emailError = '';
-      // const usernameError = '';
+      const usernameError = '';
       // res.render('user/signup', { passwordError, emailError,usernameError });
-      res.render('user/signup', { passwordError, emailError });
+      res.render('user/signup', { passwordError, emailError ,usernameError});
       return;
     } else if (existingUser) {
       // const usernameError ='';
       const passwordError = '';
       const emailError = "Try with other email"
+      const usernameError = '';
+
       // res.render('user/signup', { passwordError, emailError ,usernameError});
-      res.render('user/signup', { passwordError, emailError });
+      res.render('user/signup', { passwordError, emailError,usernameError });
 
       return;
     }
@@ -147,8 +174,10 @@ const signupPost = async (req, res) => {
     // Rest of your code for sending OTP
     const password = req.body.password;
     const otp = generateOtp.generate(6, { digits: true, alphabets: false, specialChars: false });
+    req.session.otp = otp;
+    req.session.user = newUser;
     const otpExpiresAt = new Date();
-    const expirationMinutes = 5;
+    const expirationMinutes = 1;
     otpExpiresAt.setMinutes(otpExpiresAt.getMinutes() + expirationMinutes);
 
     transporter = nodemailer.createTransport({
@@ -177,7 +206,7 @@ const signupPost = async (req, res) => {
         console.log("SUCESSFULLY SEND ERROR IS HERE", otp);
         req.session.otp = otp;
         const error = ''
-        res.render('user/OTP', { error });
+        res.render('user/OTP', { error:'', otp: req.session.otp });
       }
     })
 
@@ -192,25 +221,40 @@ const sendOTPByEmail = async (req, res) => {
     const enteredOtp = req.body.otp;
     console.log("Entered OTP:", enteredOtp);
     console.log("THE OTP IS HERE", req.session.otp);
+ 
     if (req.session.otp === enteredOtp) {
-
       const users = await userCollection.find();
       const products = await productCollection.find();
       const EnteringData = req.session.user;
-
+ 
       console.log("THE SESSION OF USER IS", req.session.user);
-
+ 
       await userCollection.insertMany([EnteringData]);
       console.log("here @@@@");
-      res.render("user/home", { users, products });
+ 
+      // Clear the OTP from the session after successful verification
+      delete req.session.otp;
+ 
+      // Redirect to home page instead of rendering a page
+      res.redirect("/home");
     } else {
-      res.render("user/OTP", { error: "Incorrect OTP. Please try to signup again !." });
+      // Check if OTP has expired
+      const otpExpiresAt = new Date(req.session.otpExpiresAt);
+      const currentDateTime = new Date();
+ 
+      if (currentDateTime > otpExpiresAt) {
+        res.render("user/OTP", { error: "Incorrect OTP. Please try to signup again.", otp: req.session.otp });
+      } else {
+        res.render("user/OTP", { error: "Incorrect OTP. Please try to signup again.", otp: req.session.otp });
+      }
     }
   } catch (error) {
     console.log("Error in OTP verification:", error);
     res.send("Internal Server Error");
   }
-};
+ };
+ 
+
 
 
 

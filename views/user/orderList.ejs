@@ -34,7 +34,7 @@
             margin-top: 30px;
             font-size: 24px;
             font-weight: bold;
-            color: #333; /* Set a dark color for the heading */
+            color: #c32828; /* Set a dark color for the heading */
         }
 
         .table-responsive {
@@ -52,15 +52,16 @@
         .table td {
             text-align: left;
             vertical-align: middle;
-            background-color: #c8c8c0; /* Set a yellow background for header cells */
+            background-color: #000000;
+            color:#ffffff; /* Set a yellow background for header cells */
             padding: 15px;
             border: 1px solid #ddd; /* Add a light grey border for cells */
         }
 
         .table thead th {
             background-color: #af2b2b; /* Set a dark grey background for header */
-            color: #764c4c; /* Set a white color for header text */
-            border-color: #555; /* Set a slightly darker border color for header cells */
+            color: #1d1a1a; /* Set a white color for header text */
+            border-color: #141313; /* Set a slightly darker border color for header cells */
         }
 
         @media screen and (max-width: 576px) {
@@ -249,8 +250,8 @@
                                 <td data-label="Total Price"> <%= order.totalPrice %>/- </td>
                                 <td>
                                     <form action="/SingleOrderlist/<%= order._id%>" method="post">
-                                        <button type="submit" class="btn btn-secondary;" style="background-color: #8e8989;">
-                                            <span data-label="Order Status" style="color: #ffffff;">info</span>
+                                        <button type="submit" class="btn btn-secondary;" style="background-color: #ffffff;border-radius: 5px;">
+                                            <span data-label="Order Status" style="color: #000000;">info</span>
                                         </button>
                                     </form>
                                 </td>

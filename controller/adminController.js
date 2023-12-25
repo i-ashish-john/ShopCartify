@@ -292,6 +292,8 @@ const updateproduct = async (req, res) => {
   }
 };
 
+
+
 const editproduct = async (req, res) => {
   try {
     const id = req.params.id;

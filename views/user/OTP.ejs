@@ -71,23 +71,15 @@
               <% } %>
             </div>
             <div id="hiddenButton">Resend Button</div>
+            <input type="hidden" id="mainOTP" value="<%= otp %>">
+
           </form>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="sweetalert2.all.min.js"></script>
-  <script>
-         Swal.fire({
-  title: 'Error!',
-  text: 'Do you want to continue',
-  icon: 'error',
-  confirmButtonText: 'Cool'
-})
-
-  </script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     let seconds = 59;
     let submitBtn = document.getElementById('sub');
@@ -124,6 +116,8 @@
 
     countdown();  // Start the countdown
   </script>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
