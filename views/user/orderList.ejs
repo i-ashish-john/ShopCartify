@@ -52,7 +52,7 @@
         .table td {
             text-align: left;
             vertical-align: middle;
-            background-color: #000000;
+            background-color: #2f2c2c;
             color:#ffffff; /* Set a yellow background for header cells */
             padding: 15px;
             border: 1px solid #ddd; /* Add a light grey border for cells */
@@ -223,46 +223,46 @@
   </div>
   <!-- Navbar End -->
 
-    <div class="container">
-        <div class="order-heading">Order Details</div>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">Order ID</th>
-                        <th scope="col">Product Name</th>
-                        <th scope="col">Total Price</th>
-                        <th scope="col">Order details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% if (orders) { %>
-                        <% orders.forEach((order, index) => { %>
-                            <tr>
-                                <td data-label="#"> <%= index + 1 %> </td>
-                                <td data-label="Order ID"><%= order.orderId %> </td>
-                                <td data-label="Product Name">
-                                    <% order.productdetails.forEach(product => { %>
-                                        <%= product.name %><br>
-                                    <% }); %>
-                                </td>
-                                <td data-label="Total Price"> <%= order.totalPrice %>/- </td>
-                                <td>
-                                    <form action="/SingleOrderlist/<%= order._id%>" method="post">
-                                        <button type="submit" class="btn btn-secondary;" style="background-color: #ffffff;border-radius: 5px;">
-                                            <span data-label="Order Status" style="color: #000000;">info</span>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <% }); %>
-                    <% } %>
-                </tbody>
-                
-            </table>
-        </div>
+  <div class="container">
+    <div class="order-heading">Order Details</div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Order details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (orders) { %>
+                    <% orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate)).forEach((order, index) => { %>
+                        <tr>
+                            <td data-label="#"> <%= index + 1 %> </td>
+                            <td data-label="Order ID"><%= order.orderId %> </td>
+                            <td data-label="Product Name">
+                                <% order.productdetails.forEach(product => { %>
+                                    <%= product.name %><br>
+                                <% }); %>
+                            </td>
+                            <td data-label="Total Price"> <%= order.totalPrice %>/- </td>
+                            <td>
+                                <form action="/SingleOrderlist/<%= order._id%>" method="post">
+                                    <button type="submit" class="btn btn-secondary;" style="background-color: #f4dc51;border-radius: 5px;">
+                                        <span data-label="Order Status" style="color: #000000;">info</span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+            </tbody>
+        </table>
     </div>
+</div>
+
     
  <!-- Footer Start -->
  <div class="container-fluid bg-dark text-secondary mt-5 pt-5">

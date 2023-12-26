@@ -13,6 +13,8 @@ const { log } = require('console');
 const multer = require('multer');
 
 const uploads = multer({ dest: "public/uploads" });
+// ----for updating the product details----
+
 
 const dashboardForAdmin = async (req, res) => {
   res.render('admin/dashboard');
@@ -202,7 +204,6 @@ const productmanagePost = async (req, res) => {
     const productDetails = {
       name: req.body.name,
       price: req.body.price,
-      currency: req.body.currency,
       category: req.body.category,
       stock: req.body.stock,
       description: req.body.description,
@@ -272,7 +273,7 @@ const productDelete = async (req, res) => {
 const updateproduct = async (req, res) => {
   try {
     const productId = req.params.id;
-    const { name, description, category, price } = req.body;
+    const { name, description, category, price,stock } = req.body;
     const productToUpdate = await productCollection.findById(productId);
     const updatedProduct = await productCollection.findByIdAndUpdate(
       productId,
@@ -281,6 +282,7 @@ const updateproduct = async (req, res) => {
         category,
         description,
         price,
+        stock,
       },
       { new: true } // Return the updated product
     );

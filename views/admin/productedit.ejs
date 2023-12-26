@@ -12,14 +12,12 @@
   <style>
     /* Custom styles */
     body {
-      background-color: #e8e8e8;
+      background-color: #f2f2f2; /* Light Grey */
     }
 
     header {
-      background-color: #007bff;
-      /* Blue header */
-      /* color: #ffffff; */
-      /* White text */
+      background-color: #ffd700; /* Yellow */
+      color: #333; /* Dark Grey */
       padding: 20px;
       text-align: center;
     }
@@ -38,7 +36,7 @@
     }
 
     form {
-      background-color: #ffebeb;
+      background-color: #fff; /* White */
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -84,9 +82,17 @@
       margin-top: 10px;
     }
 
+    .img-wrap {
+      max-width: 80%;
+      margin: 20px auto;
+      border: 2px solid #ffd700; /* Yellow */
+      padding: 10px;
+      border-radius: 5px;
+    }
+
     button {
-      background-color: #007bff;
-      color: #ffffff;
+      background-color: #ffd700; /* Yellow */
+      color: #333; /* Dark Grey */
       padding: 10px 20px;
       border: none;
       border-radius: 5px;
@@ -94,10 +100,31 @@
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #cca300; /* Darker Yellow */
     }
-    .img-wrap{
-     max-width: 80%;
+    .image-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .image-preview img {
+      max-width: 100px;
+      border-radius: 5px;
+    }
+
+    .update-image-btn {
+      background-color: #ffd700;
+      color: #333;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .update-image-btn:hover {
+      background-color: #cca300;
     }
   </style>
 </head>
@@ -125,31 +152,24 @@
       <label for="productDescription">Product description:</label>
       <input type="text" id="productDescription" name="description" value="<%= product.description %>" required>
 
-      <label for="currency">Currency:</label>
-      <select id="currency" name="currency" required>
-        <option value="usd" <%=product.currency==='usd' ? 'selected' : '' %>>USD</option>
-        <option value="eur" <%=product.currency==='eur' ? 'selected' : '' %>>EUR</option>
-        <option value="inr" <%=product.currency==='inr' ? 'selected' : '' %>>INR</option>
-      </select>
+      <label for="stocks">Stocks:</label>
+      <input type="number" id="productStock" name="stock" value="<%= product.stock %>" required>
 
-      <!-- Currency image card -->
-      <!-- <div class="currency-image">
-        <span>Selected Currency:</span>
-        <img src="placeholder-image.jpg" alt="Currency Image">
-      </div> -->
-
-      <!-- Image card inside the form -->
-      <!-- <div class="product-image">
-        <-- Display the first image of the product if available -->
-         <!-- <% if (product && product.Images && product.Images.length > 0) { %>
-          <img src="public/uploads product.Images[0] %>" alt="Product Image">
+      <!-- Image editing option -->
+      <div class="product-image">
+        <% if (product && product.Images && product.Images.length > 0) { %>
+            <% for(let i=0 ;i<= product.Images.length ;i++){ %>
+          <img src="<%= product.Images[i]?.slice(6) %>" alt="Product Image">
         <% } %>
-       </div>  --> 
+          <% } %>
+       </div>
        
-          <!-- Include other input fields for description, stock, category, etc. -->
 
-          <button type="submit">Update Product</button>
+      <!-- Include other input fields for description, stock, category, etc. -->
+
+      <button type="submit">Update Product</button>
     </form>
+
   </div>
 </body>
 
