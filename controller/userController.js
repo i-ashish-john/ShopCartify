@@ -37,7 +37,7 @@ const home = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    if (req.session.user) {
+    if (req.url === "/") {
       const fetchedUser = await userCollection.find();
       const products = await productCollection.find();
       res.render('user/home', { user: fetchedUser, products: products });
