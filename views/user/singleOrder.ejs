@@ -155,7 +155,7 @@ background: #b7b1bb;
 background: -webkit-linear-gradient(to top left, rgb(250, 234, 88), rgba(246, 243, 255, 1));
 
 /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to top left, rgb(238, 243, 105), rgba(246, 243, 255, 1))
+background: linear-gradient(to top left, rgb(87, 87, 82), rgba(246, 243, 255, 1))
 }
         
 .quantity-container {
@@ -177,7 +177,7 @@ background: linear-gradient(to top left, rgb(238, 243, 105), rgba(246, 243, 255,
                 }
                 .order-container {
             margin: 20px;
-            background-color: #e2e787;
+            background-color: #ffd333;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -367,8 +367,9 @@ background: linear-gradient(to top left, rgb(238, 243, 105), rgba(246, 243, 255,
                         <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                             <p class="text-muted mb-0 small">₹<%=  product.price %></p>
                         </div>
-                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                            <p class="text-muted mb-0 small"><%= orderDetails.stock %></p>
+
+                        <div class="col-md-6 text-center d-flex justify-content-center align-items-center ">
+                            <p class="text-muted mb-0 small"><%= orderDetails.address.city %><br><%= orderDetails.address.street %><br><%= orderDetails.address.state %><br><%= orderDetails.address.zip %></p>
                           </div>
                     </div>
                     <hr class="mb-4" style="background-color: #3a3737; opacity: 1;">

@@ -111,12 +111,21 @@
   background: url('https://img.icons8.com/material-outlined/24/000000/invisible.png') no-repeat center center;
   background-size: cover;
 }
+.brand-name {
+  position: absolute;
+  top: 20px; 
+  left: 20px; 
+  z-index: 2; 
+}
 
   </style>
 </head>
 
-<<body>
+<body>
     <div class="overlay" id="loginOverlay">
+      <div class="brand-name">
+        <h1 style="color: #FFFFFF; font-size: 36px;">ShopCartify</h1>
+      </div>
       <div class="login-form">
         <h2 style="color: #000000; font-size: 28px;">Welcome back!</h2>
         <form id="loginForm" action="/login" method="post">

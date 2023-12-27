@@ -728,6 +728,20 @@ body{
   background-color: var(--primary);
   color: var(--light);
 }
+.content main .table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
 
     </style>
 
@@ -841,6 +855,7 @@ body{
 </div>
 <!-- End of Sidebar -->
 <!-- Main Content -->
+<div class="content main">
 <div class="table-responsive">
     <table class="table table-bordered table-hover">
         <thead class="table-light">
@@ -850,11 +865,12 @@ body{
                 <th scope="col">Product Name</th>
                 <th scope="col">Total Price</th>
                 <th scope="col">Order Status</th>
+                <th scope="col">Address</th>
             </tr>
         </thead>
         <tbody>
             <!-- Loop through your orders and populate table rows -->
-            <% orders.forEach(order => { %>
+            <% orders.reverse().forEach(order => { %>
             <tr>
                 <td data-label="#"></td>
                 <td data-label="Order ID"><%= order.orderId %></td>
@@ -881,7 +897,12 @@ body{
                     <a href="#"><h5>This item is cancelled by the user</h5></a>
                 </td>
                 <% } %>
-            </tr>
+
+                <td data-label="Address">
+                    <%= order.address.street %>, <%= order.address.city %>, <%= order.address.state %> - <%= order.address.zip %>, <%= order.address.country %>
+                </td>
+             </tr>
+
             <% }) %>
         </tbody>
     </table>
@@ -897,6 +918,7 @@ body{
       </ul>
     <% } %>
   </div>
+</div>
 </div>
 <!-- End of Main Content -->
 

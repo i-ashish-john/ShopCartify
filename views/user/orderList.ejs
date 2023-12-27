@@ -236,9 +236,11 @@
                     <th scope="col">Order details</th>
                 </tr>
             </thead>
+
             <tbody>
+
                 <% if (orders) { %>
-                    <% orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate)).forEach((order, index) => { %>
+                    <% orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate)).reverse().forEach((order, index) => { %>
                         <tr>
                             <td data-label="#"> <%= index + 1 %> </td>
                             <td data-label="Order ID"><%= order.orderId %> </td>
@@ -258,7 +260,9 @@
                         </tr>
                     <% }); %>
                 <% } %>
+
             </tbody>
+            
         </table>
     </div>
 </div>
