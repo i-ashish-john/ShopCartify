@@ -14,7 +14,6 @@ const { log } = require('console');
 const multer = require('multer');
 
 const uploads = multer({ dest: "public/uploads" });
-// ----for updating the product details----
 
 
 const dashboardForAdmin = async (req, res) => {
