@@ -21,7 +21,7 @@ router.get('/dashboardForAdmin', adminController.dashboardForAdmin);
 router.get('/dashboard', adminController.dashboard);
 router.get('/login', adminController.adminlogin);
 router.post('/login', adminController.postlogin);
-// router.get('/create',adminController.create);
+
 router.post('/create',AdminSession, adminController.createPost);
 router.post('/block/:id',AdminSession, adminController.blockid);
 router.post('/unblock/:id',AdminSession, adminController.unblockid);
