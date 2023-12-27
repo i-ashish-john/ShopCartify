@@ -4,8 +4,8 @@ const userController = require('../controller/userController');
 const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
 const forgotpassController = require('../controller/forgotpassController');
-const session = require('../middleware/userAuth');
-const blockedAuth = require('../middleware/userBlockedAuth');
+const session = require('../middleware/user/userAuth');
+const blockedAuth = require('../middleware/user/userBlockedAuth');
 
 router.get('/home', userController.home);
 router.get('/', userController.login)

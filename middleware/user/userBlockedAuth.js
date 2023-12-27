@@ -16,7 +16,7 @@
 // };
 
 // module.exports = blockedAuth;
-const userCollection = require("../model/userCollection");
+const userCollection = require("../../model/userCollection");
 
 const blockedAuth = async (req, res, next) => {
     try {

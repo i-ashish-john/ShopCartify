@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 router.use(express.urlencoded({ extended: true }))
 const multer = require('multer')
+const AdminSession = require('../middleware/admin/AdminSession');
 const adminController = require('../controller/adminController');
 
 const storage = multer.diskStorage({
@@ -21,26 +22,26 @@ router.get('/dashboard', adminController.dashboard);
 router.get('/login', adminController.adminlogin);
 router.post('/login', adminController.postlogin);
 // router.get('/create',adminController.create);
-router.post('/create', adminController.createPost);
-router.post('/block/:id', adminController.blockid);
-router.post('/unblock/:id', adminController.unblockid);
-router.get('/logout', adminController.logout);
-router.get('/usermanage', adminController.usermanage);
-router.get('/productmanage', adminController.productmanage);
-router.post('/productmanagePost', upload.array('Images', 5), adminController.productmanagePost);
-router.get('/productlist', adminController.productlist);
-router.post('/deleteproduct/:id', adminController.productDelete);
-router.post('/updateproduct/:id', upload.array('Images', 5), adminController.updateproduct);
-router.get('/editproduct/:id', adminController.editproduct);
+router.post('/create',AdminSession, adminController.createPost);
+router.post('/block/:id',AdminSession, adminController.blockid);
+router.post('/unblock/:id',AdminSession, adminController.unblockid);
+router.get('/logout',AdminSession, adminController.logout);
+router.get('/usermanage', AdminSession,adminController.usermanage);
+router.get('/productmanage', AdminSession,adminController.productmanage);
+router.post('/productmanagePost',AdminSession, upload.array('Images', 5), adminController.productmanagePost);
+router.get('/productlist', AdminSession,adminController.productlist);
+router.post('/deleteproduct/:id', AdminSession,adminController.productDelete);
+router.post('/updateproduct/:id',AdminSession, upload.array('Images', 5), adminController.updateproduct);
+router.get('/editproduct/:id',AdminSession, adminController.editproduct);
 
-router.get('/categoryadd', adminController.categoryadd);
-router.post('/categoryadd', adminController.categoryaddPost)
-router.get('/categorymanage', adminController.categorymanage);
-router.post('/categoryManagementdelete/:id', adminController.categorydelete);
-router.post('/categoryeditpage/:id', adminController.categoryeditpage);
-router.post('/categoryManagementedit/:id', adminController.categoryedit);
-router.get('/orders',adminController.orders);
-router.post('/ordersPost/:id',adminController.ordersPost);
+router.get('/categoryadd', AdminSession,adminController.categoryadd);
+router.post('/categoryadd',AdminSession, adminController.categoryaddPost)
+router.get('/categorymanage',AdminSession, adminController.categorymanage);
+router.post('/categoryManagementdelete/:id',AdminSession, adminController.categorydelete);
+router.post('/categoryeditpage/:id',AdminSession, adminController.categoryeditpage);
+router.post('/categoryManagementedit/:id',AdminSession, adminController.categoryedit);
+router.get('/orders',AdminSession,adminController.orders);
+router.post('/ordersPost/:id',AdminSession,adminController.ordersPost);
 
 
 
