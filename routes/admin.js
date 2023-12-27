@@ -30,7 +30,7 @@ router.get('/productmanage', adminController.productmanage);
 router.post('/productmanagePost', upload.array('Images', 5), adminController.productmanagePost);
 router.get('/productlist', adminController.productlist);
 router.post('/deleteproduct/:id', adminController.productDelete);
-router.post('/updateproduct/:id', adminController.updateproduct);
+router.post('/updateproduct/:id', upload.array('Images', 5), adminController.updateproduct);
 router.get('/editproduct/:id', adminController.editproduct);
 
 router.get('/categoryadd', adminController.categoryadd);

@@ -32,7 +32,12 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
-  Images:[String]
+  Images: [String],
+
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
 
 });
 

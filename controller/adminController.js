@@ -1,4 +1,5 @@
 const session = require('express-session');
+const mongoose = require('mongoose');
 const adminCollection = require('../model/adminCollection')
 const userCollection = require('../model/userCollection');
 const productCollection = require('../model/productCollection');
@@ -193,7 +194,6 @@ const productmanage = async (req, res) => {
 //   }
 // };
 
-
 const productmanagePost = async (req, res) => {
   try {
     console.log("req.files", req.files);
@@ -210,6 +210,7 @@ const productmanagePost = async (req, res) => {
       Images: images,
     };
 
+    // Assuming `productCollection` is defined somewhere in your code
     const Product = await productCollection.insertMany([productDetails]);
 
     if (productDetails && Product) {
@@ -220,6 +221,7 @@ const productmanagePost = async (req, res) => {
   } catch (error) {
     console.log('error in add post*');
     console.log(error);
+    res.status(500).send('Internal Server Error');
   }
 };
 
@@ -227,70 +229,97 @@ const productmanagePost = async (req, res) => {
 //   productmanagePost,
 // };
 
-
 const productlist = async (req, res) => {
   try {
     let query = {};
     const searchTerm = req.query.search;
+ 
     if (searchTerm) {
-      query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }] };
+      query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }], deleted: false };
+    } else {
+      query = { deleted: false };
     }
-
+ 
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
-
+ 
     const totalProducts = await productCollection.countDocuments(query);
     const totalPages = Math.ceil(totalProducts / limit);
-
+ 
     const skip = (page - 1) * limit;
     const products = await productCollection.find(query).skip(skip).limit(limit);
-
+ 
     res.render("admin/productManagement", {
       products,
       currentPage: page,
       totalPages,
-      searchTerm
+      searchTerm,
     });
   } catch (error) {
-    console.log("error in productlist", error);
+    console.error("Error in productlist:", error);
     res.status(500).send("Internal Server Error");
   }
-};
+ };
+ 
 
 
 const productDelete = async (req, res) => {
-  const data = req.params.id;
-  const result = await productCollection.findByIdAndDelete(data);
-  if (result) {
-    res.redirect('/admin/productlist');
-  } else {
-    // res.send(error);
-    console.log("product deleted");
+  try {
+    const productId = req.params.id;
+
+    // Validate ObjectId to prevent invalid queries
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      console.log("Invalid product ID");
+      return res.status(400).send("Invalid product ID");
+    }
+
+    // Soft delete by updating the 'deleted' field
+    const newResult = await productCollection.findByIdAndUpdate(
+      productId,
+      { $set: { deleted: true } },
+      { new: true }
+    );
+
+    if (newResult) {
+      res.redirect('/admin/productlist');
+    } else {
+      console.log("Product not found");
+      res.status(404).send("Product not found");
+    }
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.send(error.message)
   }
 };
-
-
 const updateproduct = async (req, res) => {
   try {
     const productId = req.params.id;
-    const { name, description, category, price,stock } = req.body;
-    const productToUpdate = await productCollection.findById(productId);
+    const product = await productCollection.findById(productId);
+    const { name, description, price, stock } = req.body;
+
+    // Handling Images separately
+    let updatedImages = product.Images;
+
+    if (req.files && req.files.length > 0) {
+      updatedImages = req.files.map(file => `public/uploads/${file.filename}`);
+    }
+
     const updatedProduct = await productCollection.findByIdAndUpdate(
       productId,
       {
         name,
-        category,
         description,
         price,
         stock,
+        Images: updatedImages, // Update the Images field with the new or existing images
       },
-      { new: true } // Return the updated product
+      { new: true }
     );
 
-    res.redirect("/admin/productlist")
-
+    res.redirect("/admin/productlist");
   } catch (error) {
-    res.send(error);
+    console.error("Error updating product:", error);
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -298,6 +327,8 @@ const updateproduct = async (req, res) => {
 
 const editproduct = async (req, res) => {
   try {
+
+
     const id = req.params.id;
     console.log("THE ID IS:", id);
     const product = await productCollection.findById(id);

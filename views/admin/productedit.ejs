@@ -135,13 +135,10 @@
   </header>
 
   <div class="container">
-    <div class="product-image">
-      <!-- Display the first image of the product if available -->
-      <!-- <% if (product && product.Images && product.Images.length > 0) { %>
-        <img src="<%= product.Images[0] %>" alt="Product Image">
-      <% } %> -->
-    </div>
+ 
+
     <form action="/admin/updateproduct/<%= product.id %>" method="post">
+
       <!-- Include input fields for editing product details -->
       <label for="productName">Product Name:</label>
       <input type="text" id="productName" name="name" value="<%= product.name %>" required>
@@ -152,25 +149,23 @@
       <label for="productDescription">Product description:</label>
       <input type="text" id="productDescription" name="description" value="<%= product.description %>" required>
 
-      <label for="stocks">Stocks:</label>
-      <input type="number" id="productStock" name="stock" value="<%= product.stock %>" required>
+      <label for="productImages">Product Images:</label>
+      <input type="file" id="productImages" name="Images" accept="image/*" multiple>
+      
+      <div class="image-preview">
+        <!-- Display existing images for editing -->
 
-      <!-- Image editing option -->
-      <div class="product-image">
         <% if (product && product.Images && product.Images.length > 0) { %>
-            <% for(let i=0 ;i<= product.Images.length ;i++){ %>
-          <img src="<%= product.Images[i]?.slice(6) %>" alt="Product Image">
-        <% } %>
+          <% for (let i = 0; i < product.Images.length; i++) { %>
+            <img src="<%= product.Images[i].slice(6) %>" alt="Product Image">
           <% } %>
-       </div>
-       
-
-      <!-- Include other input fields for description, stock, category, etc. -->
-
+        <% } %>
+      </div>
       <button type="submit">Update Product</button>
     </form>
 
   </div>
+
 </body>
 
 </html>

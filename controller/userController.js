@@ -294,7 +294,7 @@ const MensTotalproductlist = async (req, res) => {
       const pageSize = 10; // Set the number of products to display per page
 
       // Example: Fetch products for the requested page
-      const products = await productCollection.find({ category: "Mens" })
+      const products = await productCollection.find({ category: "Mens" , deleted: false })
           .skip((page - 1) * pageSize)
           .limit(pageSize);
           if (products.length > 0) {
@@ -321,7 +321,7 @@ const WomensTotalproductlist = async (req, res) => {
     const pageSize = 10;
 
     // Example: Fetch products for the requested page
-    const products = await productCollection.find({ category: "Womens" })
+    const products = await productCollection.find({ category: "Womens" , deleted: false })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
       if (products.length > 0) {
