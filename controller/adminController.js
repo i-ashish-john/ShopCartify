@@ -521,6 +521,5 @@ module.exports = {
   categoryaddPost,
   logout,
   orders,
-  ordersPost
-
+  ordersPost,
 }

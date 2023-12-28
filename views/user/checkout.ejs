@@ -193,7 +193,7 @@
           <div class="card mb-4 border shadow-0">
             <!-- Checkout Form -->
 
-            <form action="/checkoutpost" method="post">
+            <form id="checkOutForm" action="/checkoutpost" method="post">
               <!-- User Information -->
               <div class="card shadow-0 border">
                 <div class="p-4">
@@ -243,6 +243,7 @@
                       <!-- Add more payment options if needed -->
                     </div>
                   </div>
+
                   <!-- Address Selection -->
                   <div>
                     <% if (addresses && addresses.length > 0) { %>
@@ -279,8 +280,9 @@
                   </div>
                 </div>
               </div>
-          
-
+              <input type="hidden" name="totalPrice" value="<%= cartFound.total+14 %>" />
+          </form>
+<!-- <-----form ending---> 
           </div>
         </div>
         <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
@@ -299,9 +301,10 @@
             <p class="mb-2">+ ₹14.00</p>
           </div>
           <hr />
+
           <div class="d-flex justify-content-between">
             <p class="mb-2">Total price:</p>
-            <input type="hidden" name="totalPrice" value="<%= cartFound.total+14 %>" /> ₹<%= cartFound.total+14 %>/-
+             ₹<%= cartFound.total+14 %>/-
           </div>
           
         </form>
@@ -311,15 +314,18 @@
           </div> -->
 
           <hr />
+        
           <h6 class="text-dark my-4">Items in cart</h6>
           <% cartFound.products.forEach((product) => { %>
           <div class="d-flex align-items-center mb-4">
+
             <div class="me-3 position-relative">
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
                 <%= product.quantity %>
               </span>
               <img src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>" style="height: 96px; width: 96x;" class="img-sm rounded border" />
             </div>
+
             <div class="">
               <a href="#" class="nav-link">
               <%= product.productId.name %><br />
@@ -412,7 +418,76 @@
       </div>
   </div>
   <!-- Footer End -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+
+  <!-- ---razorpay working script--- -->
+
+  <script>
+    document.querySelector('#checkOutForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+      console.log("payment ",paymentType);
+      
+      // Get the selected payment method
+      if (paymentType == 'NetBanking') {
+        console.log("inside net");
+        var razorpayKey = 'rzp_test_Jbmx59qoOc1tKj';
+        
+        // Fetch other necessary details for the payment
+        var totalPrice = document.querySelector('input[name="totalPrice"]').value;
+        
+        // Create a Razorpay order
+        fetch('/payPost', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ totalPrice: totalPrice }),
+        })
+          .then(response => response.json())
+          
+          .then(order => {
+            console.log(order);
+            // Initialize Razorpay
+            const  options = {
+            key: 'rzp_test_Jbmx59qoOc1tKj',
+            amount: order.amount,
+            currency: order.currency,
+            order_id: order.id,
+            name: 'ShopCartify',
+            description: 'Payment for your orders',
+            handler: function (response) {
+                // here handling the success response
+                console.log('Payment success:', response);
+  
+                // Now you can submit the form to complete the checkout process
+                document.querySelector('#checkOutForm').submit();
+              },
+              prefill: {
+                name: 'User Name',
+                email: 'user@example.com',
+              },
+            };
+  
+            var rzp = new Razorpay(options);
+            rzp.open();
+          })
+          .catch(error => {
+            console.error('Error creating Razorpay order:', error);
+            // Handle the error if needed
+          });
+      } else if (selectedPaymentMethod === 'CashOnDelivery') {
+        // If the payment method is Cash on Delivery, submit the form directly
+        document.querySelector('#checkOutForm').submit();
+      } else {
+        // If the payment method is not Razorpay or Cash on Delivery, you can handle it accordingly
+        alert('Invalid payment method selected.');
+      }
+    });
+  </script>
+<!-- ----ending of the razoray script---- -->
+    
 
   <!-- Back to Top -->
   <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>

@@ -4,7 +4,13 @@ const orderCollection = require('../model/orderCollection');
 const productCollection = require('../model/productCollection');
 const addressCollection = require('../model/addressCollection');
 const categoryCollection = require('../model/categoryCollection');
+const Razorpay = require('razorpay');
 const mongoose = require('mongoose');
+
+let instance = new Razorpay({
+  key_id:process.env.key_id ,
+  key_secret:process.env.key_secret,
+});
 
 const submitAddress = async (req, res) => {
     try {
@@ -118,23 +124,40 @@ const submitAddress = async (req, res) => {
       // console.log("the productdetails is:",productdetails);
       console.log("the selectedAddress is :",selectedAddress);
   
-      await order.save();
-  
+     let result= await order.save();
+      console.log(result);
       await cartCollection.deleteOne({ userId: emailOfUser._id });
   
   
       if (order.paymentType === 'CashOnDelivery') {
         return res.render('user/ordersuccess');
-      }else if(order.paymentType === 'NetBanking'){
-          return res.send('RAZORPAY NEXT WEEK TASK');
+      } 
+      
+      if (order.paymentType === 'NetBanking') {
+        // Use Razorpay for NetBanking payment
+        const options = {
+          amount: order.totalPrice * 100, 
+          currency: 'INR',
+          receipt: `order_${order.orderId}`,
+          notes: {
+            key1: "value3",
+            key2: "value2"
+        }
+
+        };
+  
+        const razorpayOrder = await instance.orders.create(options);
+  
+        return res.render('user/ordersuccess');
       }
   
       res.status(201).json({ message: 'Order saved successfully' });
     } catch (error) {
-      console.error(error.message);
-      res.send(error.message);
+      console.error(error);
+      res.send(error);
     }
   };
+  
   const orderList = async(req,res)=>{
       try{
         const email = req.session.user;
@@ -245,9 +268,29 @@ const submitAddress = async (req, res) => {
     }
   };
 
+  const payPost = async(req,res)=>{
+    
+    try {
+      console.log('paypost');
+      const razorpayOrder = await instance.orders.create({
+        amount: req.body.totalPrice,
+        currency: 'INR',
+        receipt: `order_${Date.now()}`,
+      });
+      console.log('razorpay log:',razorpayOrder);
+      return res.json(razorpayOrder).send()
+    } catch (error) {
+      console.error('Error creating Razorpay order:', error);
+      throw error;
+    }
+
+  };
+
 module.exports = {
     submitAddress, orderStatus,
      addCheckoutAddress,
     checkoutPost,orderList,SingleOrderlist,
-    cancelOrder
+    cancelOrder,
+    payPost
+
 };

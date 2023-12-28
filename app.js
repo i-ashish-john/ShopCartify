@@ -18,6 +18,8 @@ const orderCollection = require('./model/orderCollection');
 const usersRouter = require('./routes/user');
 const indexRouter = require('./routes/admin');
 
+const Razorpay = require('razorpay')
+
 const app = express();
 const port = 3001;
 

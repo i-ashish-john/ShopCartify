@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
+const moment =  require('moment')
 
 const orderSchema = new mongoose.Schema({
 
@@ -52,12 +53,20 @@ const orderSchema = new mongoose.Schema({
     },
   },
   totalPrice: {
-    type: String,
+    type: Number,
     required :true,
   },
+
   orderStatus: {
     type: String,
     default: 'Pending',
+  },
+  orderDate: {
+    type: Date,
+    default: Date.now,
+    set: function(value) {
+      return moment(value).format('YYYY-MM-DD');
+    },
   }
 
 });

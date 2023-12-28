@@ -59,6 +59,7 @@ router.post('/verifyOtp', forgotpassController.verifyOtp);
 router.post('/update-password', forgotpassController.updatePassword);
 // router.get('/resendOTP', forgotpassController.resend);
 
+router.post('/payPost',session, blockedAuth, orderController.payPost)
 
 
 module.exports = router;
