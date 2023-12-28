@@ -199,6 +199,7 @@ const submitAddress = async (req, res) => {
 
   const SingleOrderlist = async (req, res) => {
     try {
+      
       const orderId = req.params.id;
        console.log(" the order in the single order list function is here :",orderId);
       // Fetch order details with product details populated
