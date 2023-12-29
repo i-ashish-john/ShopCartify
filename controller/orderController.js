@@ -81,14 +81,14 @@ const submitAddress = async (req, res) => {
     try {
       console.log("THE DATA 1 IS IN THE CHECKOUT POST");
       const { username, email, paymentType, selectedAddressId, totalPrice } = req.body;
-      console.log("body of checkout page is :", username, email, paymentType, selectedAddressId);
+      // console.log("body of checkout page is :", username, email, paymentType, selectedAddressId);
       console.log("the body values:", req.body);
   
       const userId = req.session.user;
       console.log("logged user in the user is:", userId);
   
       const emailOfUser = await userCollection.findOne({ email: userId });
-      const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
+          const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
       console.log("cartData:", cartData);
   
       if (!cartData) {
@@ -100,6 +100,17 @@ const submitAddress = async (req, res) => {
         const productDetailsPromises = cartData.products.map(async product => {
           const productDetails = await productCollection.findById(product.productId);
           console.log("the product details is:",productDetails);
+           if(productDetails){
+            if (productDetails) {
+              const newStock = productDetails.stock - product.quantity;
+              if (newStock < 0) {
+                throw new Error(`Not enough stock for product: ${productDetails.name}`);
+              }
+      
+              // Update the stock in the product collection
+              await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
+            }
+           }
           return productDetails;
         });
     
@@ -199,7 +210,7 @@ const submitAddress = async (req, res) => {
 
   const SingleOrderlist = async (req, res) => {
     try {
-      
+
       const orderId = req.params.id;
        console.log(" the order in the single order list function is here :",orderId);
       // Fetch order details with product details populated

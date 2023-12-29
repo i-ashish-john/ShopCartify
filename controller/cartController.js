@@ -4,35 +4,36 @@ const orderCollection = require('../model/orderCollection');
 const productCollection = require('../model/productCollection');
 const addressCollection = require('../model/addressCollection');
 const categoryCollection = require('../model/categoryCollection');
-
-
-
+const mongoose = require('mongoose');
 
 
 
 const cartItemRemove = async (req, res) => {
-    try {
-      const productId = req.params.id; // get productId from the route
-      const cartId = req.body.cartId; // get cartId from the form
-      // console.log("THE CART ID IS:", cartId);
-      // console.log('Product Id:', productId);
+  try {
+    const productId = req.params.id; // get productId from the route
+    const cartId = req.body.cartId; // get cartId from the form
   
-      // Delete the product from the specific cart
-      const updatedCart = await cartCollection.findOneAndUpdate({ _id: cartId }, { $pull: { products: { productId: productId } } }, { new: true });
-  
-      if (updatedCart) {
-        // console.log("Updated Cart:", updatedCart);
-        res.redirect('/cartload');
-      } else {
-        // Handle error case
-        console.log('Product not found in the cart');
-      }
-  
-    } catch (error) {
-      console.log(error.message);
+
+    console.log('Removing product:', productId, 'from cart:', cartId);
+
+    // Update the cart to remove the specific product
+    const updatedCart = await cartCollection.findOneAndUpdate(
+      { _id: cartId },
+      { $pull: { products: { productId: new mongoose.Types.ObjectId(productId) } } },
+      { new: true }
+    );
+
+    if (updatedCart) {
+      res.redirect('/cartload');
+    } else {
+      // Handle error case
+      console.log('Product not found in the cart');
     }
-  };
-  
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
   
   
   const updateCartItem = async (req, res) => {
@@ -48,7 +49,11 @@ const cartItemRemove = async (req, res) => {
         userId: userId,
         productId: productId
       });
-  
+
+    //  if (productId.stock < 0){
+    //   res.render('')
+    //  }
+
       console.log("cartItem: ", cartItem);
   
       if (!cartItem) {

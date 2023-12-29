@@ -22,6 +22,14 @@
             .quantity {
               margin: 0 10px; 
             }
+            .out-of-stock {
+                opacity: 0.5; /* Adjust opacity as needed */
+           }
+
+              .product-image {
+                max-width: 100px;
+                max-height: 100px;
+           }
 
      </style>
 
@@ -229,12 +237,11 @@
                         <!-- Quantity -->
                         <td>
                           <div class="product-info">
-                            <!-- Assuming 'product.images' contains the image source -->
                             <div class="product-image-container">
                               <img
                                 src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>"
-                                alt="Product Image" class="product-image" style="max-width: 100px; max-height: 100px;">
-                              </div>
+                                alt="Product Image" class="product-image <%= product.productId.stock <= 0 ? 'out-of-stock' : '' %>">
+                            </div>
                           </div>
                         </td>
 
@@ -289,6 +296,15 @@
                               <input type="hidden" name="productId" value="<%= product.productId._id %>">
                               <button type="submit" class="btn btn-danger">Remove</button>
                             </form>
+                            <!-- --- ---- -- -->
+
+                            <% if (product.productId.stock <= 0 ) { %>
+                              <p id="out-of-stock-message-<%= product.productId._id %>" style="display: none; color: red;">This product is out of stock</p>
+                              <% } else { %>
+                              <!-- Display the add to cart button or other relevant actions -->
+                              <p></p>
+                            <% } %>
+                            <!-- ---- -->
                             
                           </div>
                         </td>
@@ -297,7 +313,11 @@
                       <% }); %>
                         <% } %>
                           <% }); %>
+                          
               </tbody>
+
+
+
 
             </table>
             <% } else { %>
@@ -326,20 +346,29 @@
       </span>/-</h5>
 
       <div class="checkout" class="margin-right">
+
         <% if (cartDocument && cartDocument.length > 0) { %>
           <% if (typeof message !== 'undefined') { %>
             <div class="alert alert-danger">
               <%= message %>
             </div>
           <% } %>
-
+        
           <!-- Pass the totalPrice to the click event as a data attribute -->
-
-          <!-- <a href="/checkout"  class="btn btn-primary proceed-btn" >Proceed to checkout</a> -->
           <a href="/checkout?totalPrice=<%= totalPrice.toFixed(2) %>" class="btn btn-primary proceed-btn">Proceed to checkout</a>
+        
+        <% } else if(cartDocument <=0) { %>
+        
+          <!-- <a href="/checkout" class="btn btn-primary proceed-btn">Proceed to checkout</a> -->
+          <a href="/Totallistpro" class="btn btn-primary proceed-btn">Go to Shop</a>
+        
         <% } else { %>
+        
           <p>No items in cart</p>
+          <a href="/Totallistpro" class="btn btn-primary proceed-btn">Go to Shop</a>
+        
         <% } %>
+        
       </div>
       
     </div>
@@ -438,7 +467,7 @@
 
   <!-- Template Javascript -->
   <script src="/NEW TEMP/online-shop-website-template/js/main.js"></script>
-</body>
+<!-- </body> -->
 
 </html>
 

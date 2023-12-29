@@ -435,18 +435,19 @@
         var razorpayKey = 'rzp_test_Jbmx59qoOc1tKj';
         
         // Fetch other necessary details for the payment
-        var totalPrice = document.querySelector('input[name="totalPrice"]').value;
-        
-        // Create a Razorpay order
-        fetch('/payPost', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ totalPrice: totalPrice }),
-        })
+        var totalPriceInRupees = document.querySelector('input[name="totalPrice"]').value;
+            var totalPriceInPaisa = Math.round(parseFloat(totalPriceInRupees) * 100);
+
+            fetch('/payPost', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ totalPrice: totalPriceInPaisa }),
+            })
+
           .then(response => response.json())
-          
+
           .then(order => {
             console.log(order);
             // Initialize Razorpay
@@ -457,6 +458,9 @@
             order_id: order.id,
             name: 'ShopCartify',
             description: 'Payment for your orders',
+            theme:{
+                color:"#FFD333"
+            },
             handler: function (response) {
                 // here handling the success response
                 console.log('Payment success:', response);

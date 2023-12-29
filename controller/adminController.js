@@ -200,6 +200,7 @@ const productmanagePost = async (req, res) => {
     const images = req.files.map(file => `public/uploads/${file.filename}`);
 
     console.log('body', req.body);
+
     const productDetails = {
       name: req.body.name,
       price: req.body.price,
@@ -295,7 +296,7 @@ const updateproduct = async (req, res) => {
     const productId = req.params.id;
     const product = await productCollection.findById(productId);
     const { name, description, price, stock } = req.body;
-
+    console.log("the stock  of the product is:",stock);
     // Handling Images separately
     let updatedImages = product.Images;
 
