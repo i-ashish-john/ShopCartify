@@ -355,7 +355,7 @@
           <% } %>
         
           <!-- Pass the totalPrice to the click event as a data attribute -->
-          <a href="/checkout?totalPrice=<%= totalPrice.toFixed(2) %>" class="btn btn-primary proceed-btn">Proceed to checkout</a>
+          <a href="/checkout?totalPrice=<%= totalPrice.toFixed(2) %>"  id="proceedToCheckoutBtn"  class="btn btn-primary proceed-btn">Proceed to checkout</a>
         
         <% } else if(cartDocument <=0) { %>
         
@@ -470,6 +470,17 @@
 <!-- </body> -->
 
 </html>
+
+       <!--this script is for the hiding the proceed to checkout button-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        var proceedBtn = document.getElementById('proceedToCheckoutBtn');
+        var totalPriceElement = document.getElementById('total-price');
+        if (parseFloat(totalPriceElement.innerHTML.replace('₹', '')) === 0) {
+          proceedBtn.style.display = 'none';
+        }
+      });
+    </script>
 
 
   <script>
