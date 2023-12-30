@@ -250,11 +250,11 @@
                                           <!-- Quantity -->
                         <!-- Quantity -->
                         <div class="quantity-container">
-                          <a href="javascript:void(0);" onclick="decreaseQuantity('<%=product.productId._id %>')">
+                          <a href="javascript:void(0);" onclick="decreaseQuantity('<%=product.productId._id%>')">
                             <i class="fas fa-minus"></i>
                           </a>
 
-                          <div class="quantity" data-product-id="<%= product._id %>">
+                          <div class="quantity" id="qty" data-product-id="<%= product._id %>">
                             <%= product.quantity %>
                           </div>
 
@@ -298,7 +298,7 @@
                             </form>
                             <!-- --- ---- -- -->
 
-                            <% if (product.productId.stock <= 0 ) { %>
+                            <% if (product.productId.stock < 0 ) { %>
                               <p id="out-of-stock-message-<%= product.productId._id %>" style="display: none; color: red;">This product is out of stock</p>
                               <% } else { %>
                               <!-- Display the add to cart button or other relevant actions -->
@@ -344,6 +344,21 @@
         <% }); %>
         <%= totalPrice.toFixed(2) %>
       </span>/-</h5>
+      <div class="modal fade" id="outOfStockModal" tabindex="-1" role="dialog" aria-labelledby="outOfStockModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="outOfStockModalLabel">Out of Stock</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              This product is out of stock.
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="checkout" class="margin-right">
 
@@ -575,22 +590,36 @@
           // }
           window.location.reload()
         } else {
-          alert("done")
+          alert("item out of stock")
         }
       } catch (error) {
         alert("please wait");
-        console.log("page is reloading in cart quantity");
+        console.log("page is reloading in cart quantity",error);
       }
     };
 
 
-    function increaseQuantity(pid) {
-      console.log("haai");
+   function increaseQuantity(pid) {
+      console.log("in the increaseQuantity function");
+      console.log("the product's id in the increase : ",pid);
+    //   if (productDetails.stock > 0) {
+    //   updateQuantity(pid, true);
+    // } else {
+    //   $('#outOfStockModal').modal('show');
+    // }
       updateQuantity(pid, true);
     }
 
     function decreaseQuantity(pid) {
-      updateQuantity(pid, false);
+      const qty=document.getElementById('qty').innerText
+      console.log("in the decreaseQuantity function");
+      console.log("the product's id in the decrease : ",pid);
+      if (qty>1) {
+        updateQuantity(pid, false);
+        
+      }else{
+        alert("quntity cant be zero")
+      }
     }
   </script>
 

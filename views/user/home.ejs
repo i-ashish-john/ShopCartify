@@ -453,19 +453,25 @@
                             <!-- Your product item content here -->
                             <div class="product-img position-relative overflow-hidden">
                                 <img class="img-fluid w-70" src="<%= products[i].Images[0]?.slice(6)%>" alt="">
-
                                 <!-- Your product image and actions here -->
-                            </div>
-                            <div class="text-center py-4">
-                                <!-- Your product details here -->
-                                <a class="h6 text-decoration-none text-truncate" href="">
-                                    <%= products[i].name.length > 20 ? products[i].name.slice(0, 20) + '...' : products[i].name %>
-                                </a>
-                                
-
-                                <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5><%= products[i].price %></h5><h6 class="text-muted ml-2"><del></del></h6>
                                 </div>
+                                
+                                <div class="text-center py-4">
+                                    <!-- Your product details here -->
+                                    <a class="h6 text-decoration-none text-truncate" href="">
+                                        <%= products[i].name.length > 20 ? products[i].name.slice(0, 20) + '...' : products[i].name %>
+                                        </a>
+                                        
+                                        
+                                        <div class="d-flex align-items-center justify-content-center mt-2">
+                                            <h5><%= products[i].price %></h5><h6 class="text-muted ml-2"><del></del></h6>
+                                            </div>
+
+                                            <% if(products && products.lenght< 0){ %>
+                                                <h4 style="color: red;">Out of stock</h4>
+                                              <% } %>
+                         
+
                                 <div class="d-flex align-items-center justify-content-center mb-1">
                                     <small class="fa fa-star text-primary mr-1"></small>
                                     <small class="fa fa-star text-primary mr-1"></small>

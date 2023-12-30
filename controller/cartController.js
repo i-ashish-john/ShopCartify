@@ -82,15 +82,18 @@ const cartItemRemove = async (req, res) => {
     try {
       const pid = req.params.id;
       const cart = await cartCollection.findOne({ "products.productId": pid });
-  
+      const products=await productCollection.findById(pid)
       if (!cart) {
         return res.status(404).send('Cart not found');
       }
   
       const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
   
-      // Increment the quantity of the specific product
+      // Decrement the quantity of the specific product
       cart.products[productIndex].quantity++;
+      if(products.stock<cart.products[productIndex].quantity){
+        return res.status(401).send({message:"Out of stock"})
+      }
   
       // Recalculate total or perform any other necessary updates
       cart.total += cart.products[productIndex].price;
@@ -105,11 +108,12 @@ const cartItemRemove = async (req, res) => {
         totalPrice: cart.total,
         pid: pid
       });
-    } catch (error) {
-      console.error(error);
-      res.send(error.message);
-    }
-  };
+    } 
+     catch (error) {
+    console.error(error);
+    res.send(error.message);
+  }
+};
   
   const decCart = async (req, res) => {
     try {
@@ -160,7 +164,7 @@ const cartItemRemove = async (req, res) => {
       }
   
       // Find the user's cart
-      let cart = await cartCollection.findOne({ userId: user._id });
+      const cart = await cartCollection.findOne({ userId: user._id });
   
       if (cart) {
         // Check if the product is already in the cart
@@ -195,7 +199,7 @@ const cartItemRemove = async (req, res) => {
             quantity: 1,
           }],
         };
-        cart = await cartCollection.create(cartData);
+       const cart = await cartCollection.create(cartData);
       }
   
       // Recalculate and update the total in the cart
