@@ -290,10 +290,11 @@
                         <!-- Remove button -->
 
                         <td>
+
                           <div class="remove-button">
                             <form action="/removeitems/<%= product.productId._id %>" method="post">
                               <input type="hidden" name="cartId" value="<%= cart._id %>">
-                              <input type="hidden" name="productId" value="<%= product.productId._id %>">
+                              <!-- <input type="hidden" name="productId" value="<%= product.productId._id %>"> -->
                               <button type="submit" class="btn btn-danger">Remove</button>
                             </form>
                             <!-- --- ---- -- -->
@@ -307,6 +308,7 @@
                             <!-- ---- -->
                             
                           </div>
+
                         </td>
 
                       </tr>
@@ -333,6 +335,7 @@
   <div class="row">
     <div class="col-lg-4 offset-lg-4">
       <!-- Existing code for displaying total price -->
+
       <h5>Total Amount: ₹ <span id="total-price">
         <% let totalPrice = 0; %>
         <% cartDocument.forEach((cart) => { %>
@@ -344,6 +347,7 @@
         <% }); %>
         <%= totalPrice.toFixed(2) %>
       </span>/-</h5>
+
       <div class="modal fade" id="outOfStockModal" tabindex="-1" role="dialog" aria-labelledby="outOfStockModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -388,6 +392,7 @@
       
     </div>
   </div>
+
 </div>
 
 
@@ -495,23 +500,11 @@
           proceedBtn.style.display = 'none';
         }
       });
+
     </script>
 
 
   <script>
-    // function updateTotalPrice(productId, newPrice, increaseAmount, decreaseAmount) {
-    //   const totalElement = document.querySelector('.total[data-product-id="' + productId + '"]');
-    //   totalElement.textContent = '₹' + newPrice;
-
-    //   let totalprice = document.getElementById('total-price');
-    //   let currentTotalPrice = parseFloat(totalprice.innerHTML.replace('₹', ''));
-
-    //   if (!isNaN(currentTotalPrice)) {
-    //     let newOverallTotalPrice = (currentTotalPrice + increaseAmount - decreaseAmount).toFixed(2);
-    //     totalprice.innerHTML = '₹' + newOverallTotalPrice;
-    //   }
-    // }
-        // fetching for subbmitting the total price to the databse
 
     document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('checkoutBtn').addEventListener('click', function () {
@@ -524,7 +517,6 @@
           },
           body: JSON.stringify({ totalPrice: totalPrice }), // Include totalPrice in the request body
         })
-
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -540,6 +532,11 @@
       });
     });
 
+
+    
+  function showOutOfStockModal() {
+    $('#outOfStockModal').modal('show');
+  }
 
     async function updateQuantity(pid, isIncrease) {
       const url = isIncrease ? `/increaseq/${pid}` : `/decreaseq/${pid}`;
@@ -560,13 +557,16 @@
           console.log(totalPrice)
           const productId = data.pid;
           console.log(productId)
+             
 
+          console.log("quantity:",newQuantity);
 
           const totalElement = document.querySelector('.total[data-product-id="' + productId + '"]');
           console.log('Selected Element:', totalElement);
 
           if (totalElement) {
             totalElement.textContent = `₹${totalPrice.toFixed(2)}`;
+            console.log("the values of the total price:",totalElement);
           } else {
             console.error('Element not found');
           }
@@ -591,6 +591,7 @@
           window.location.reload()
         } else {
           alert("item out of stock")
+          // showOutOfStockModal();
         }
       } catch (error) {
         alert("please wait");
@@ -618,10 +619,12 @@
         updateQuantity(pid, false);
         
       }else{
-        alert("quntity cant be zero")
+        alert('Quantity not be zero');
       }
     }
   </script>
+<!-- //for checking  the value of the quantity -->
+
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>

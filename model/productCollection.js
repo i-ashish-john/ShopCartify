@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema({
     trim: true,
   },
   // currency: {
-  //   type: String,
+//   type: String,
   //   required: true,
   //   trim: true,
   // },

@@ -4,6 +4,8 @@ const orderCollection = require('../model/orderCollection');
 const productCollection = require('../model/productCollection');
 const addressCollection = require('../model/addressCollection');
 const categoryCollection = require('../model/categoryCollection');
+const flash = require('express-flash');
+
 const mongoose = require('mongoose');
 
 
@@ -110,8 +112,8 @@ const cartItemRemove = async (req, res) => {
       });
     } 
      catch (error) {
-    console.error(error);
-    res.send(error.message);
+    console.error(error.stack);
+    res.send(error.stack);
   }
 };
   
@@ -140,6 +142,7 @@ const cartItemRemove = async (req, res) => {
         newPrice: cart.products[productIndex].price,
         oldPrice: cart.products[productIndex].price,
         totalPrice: cart.total,
+        stock:cart.products[productIndex].stock,
         pid: pid
       });
     } catch (error) {
@@ -148,63 +151,70 @@ const cartItemRemove = async (req, res) => {
     }
   };
   
-
   const addToCart = async (req, res) => {
     try {
       const productId = req.query.id;
       const users = req.session.user;
-  
+     console.log("product's id is:",productId);
+     console.log("user's id is:",users);
+
       if (!users) {
         return res.status(401).send('Unauthorized. Log in to continue.');
       }
-      const productDocument = await productCollection.findById(productId);
+      const products = await productCollection.findById(productId);
+      console.log("product document is :",products);
       const user = await userCollection.findOne({ email: users });
-      if (!productDocument || !user) {
+      console.log("user is :",user);
+      if (!products || !user) {
         return res.status(404).send('Product or user not found.');
       }
-  
-      // Find the user's cart
+ 
       const cart = await cartCollection.findOne({ userId: user._id });
   
       if (cart) {
-        // Check if the product is already in the cart
-        const existingProduct = cart.products.find((p) => p.productId.equals(productDocument._id));
+        const existingProduct = cart.products.find((p) => p.productId.equals(products._id));
   
         if (existingProduct) {
-          // If the product is already in the cart, update the quantity
+          const newQuantity = existingProduct.quantity + 1;
+          
+          
+          if (newQuantity > products.stock) {
+              req.flash('error', 'Stock limit exceeded.'); 
+            return res.status(404).send("limit exeeds");
+          }
+                  
           await cartCollection.findOneAndUpdate(
-            { userId: user._id, 'products.productId': productDocument._id },
-            { $inc: { 'products.$.quantity': 1 } }
+            { userId: user._id, 'products.productId': products._id },
+            { $set: { 'products.$.quantity': newQuantity } }
           );
         } else {
-          // If the product is not in the cart, add it
-          const price = productDocument.price;
+          const price = products.price;
+  
           cart.products.push({
-            productId: productDocument._id,
+            productId: products._id,
             price: price,
-            images: [productDocument.Images[0]],
+            images: [products.Images[0]],
             quantity: 1,
           });
         }
       } else {
-        // If the user doesn't have a cart yet, create a new one
-        const price = productDocument.price;
-  
+        const price = products.price;
+        const tempStock = products.stock - 1;
+ 
         const cartData = {
           userId: user._id,
           products: [{
-            productId: productDocument._id,
+            productId: products._id,
             price: price,
-            images: [productDocument.Images[0]],
+            images: [products.Images[0]],
             quantity: 1,
+            tempStock: tempStock,
           }],
         };
-       const cart = await cartCollection.create(cartData);
+        const cart = await cartCollection.create(cartData);
       }
   
-      // Recalculate and update the total in the cart
       cart.calculateTotal();
-  
       await cart.save();
   
       res.redirect('/Totallistpro');
@@ -212,8 +222,8 @@ const cartItemRemove = async (req, res) => {
       console.error(error.message);
       res.send(error.message);
     }
-  };
-
+ };
+ 
   const cartload = async (req, res) => {
     try {
       if (req.session.user) {

@@ -7,6 +7,28 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
+    <style>
+    
+            .out-of-stock {
+        position: relative;
+        }
+
+        .out-of-stock .overlay::after {
+        content: "Out of Stock";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        }
+
+    
+    </style>
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
@@ -445,54 +467,47 @@
     <div class="container-fluid pt-5 pb-3">
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured Products</span></h2>
         <div class="row px-xl-5">
-            <% if(products){  
-              for(let i = 2, count = 0; i < products.length && count < 6; i++, count++){ %>
+            <% if(products){ 
+                for(let i = 2, count = 0; i < products.length && count < 6; i++, count++){ %>
                     <div class="col-lg-2 col-md-4 col-sm-6 pb-1">
-                        <!-- Your product item HTML code here -->
-                        <div class="product-item bg-light mb-4">
-                            <!-- Your product item content here -->
+                        <div class="product-item bg-light mb-4 <% if(products[i].stock <= 0){ %>out-of-stock<% } %>">
                             <div class="product-img position-relative overflow-hidden">
-                                <img class="img-fluid w-70" src="<%= products[i].Images[0]?.slice(6)%>" alt="">
-                                <!-- Your product image and actions here -->
-                                </div>
-                                
-                                <div class="text-center py-4">
-                                    <!-- Your product details here -->
-                                    <a class="h6 text-decoration-none text-truncate" href="">
-                                        <%= products[i].name.length > 20 ? products[i].name.slice(0, 20) + '...' : products[i].name %>
-                                        </a>
-                                        
-                                        
-                                        <div class="d-flex align-items-center justify-content-center mt-2">
-                                            <h5><%= products[i].price %></h5><h6 class="text-muted ml-2"><del></del></h6>
-                                            </div>
-
-                                            <% if(products && products.lenght< 0){ %>
-                                                <h4 style="color: red;">Out of stock</h4>
-                                              <% } %>
-                         
-
-                                <div class="d-flex align-items-center justify-content-center mb-1">
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small>(99)</small>
-                                </div>
+                               <img class="img-fluid w-70" src="<%= products[i].Images[0]?.slice(6)%>" alt="">
+                            </div>
+             
+                            <div class="text-center py-4">
+                               <a class="h6 text-decoration-none text-truncate" href="">
+                                   <%= products[i].name.length > 20 ? products[i].name.slice(0, 20) + '...' : products[i].name %>
+                               </a>
+             
+                               <div class="d-flex align-items-center justify-content-center mt-2">
+                                   <h5><%= products[i].price %></h5><h6 class="text-muted ml-2"><del></del></h6>
+                               </div>
+             
+                               <% if(products[i].stock <= 0){ %>
+                                   <div class="overlay"></div>
+                               <% } %>
+             
+                               <div class="d-flex align-items-center justify-content-center mb-1">
+                                   <small class="fa fa-star text-primary mr-1"></small>
+                                   <small class="fa fa-star text-primary mr-1"></small>
+                                   <small class="fa fa-star text-primary mr-1"></small>
+                                   <small class="fa fa-star text-primary mr-1"></small>
+                                   <small class="fa fa-star text-primary mr-1"></small>
+                                   <small>(99)</small>
+                               </div>
                             </div>
                         </div>
                     </div>
-                    <% } %>
-                    <% } %>
+             <% } %>
+             <% } %>
+             
         </div>
     </div>
-    
-
-    <!-- Products End -->
+    // <!-- Products End -->
 
 
-    <!-- Offer Start -->
+    // <!-- Offer Start -->
     <div class="container-fluid pt-5 pb-3">
         <div class="row px-xl-5">
             <div class="col-md-6">

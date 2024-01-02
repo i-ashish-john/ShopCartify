@@ -7,6 +7,7 @@ const nocache = require('nocache');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const slowDown = require("express-slow-down");
+const flash = require('express-flash');
 
 const userCollection = require('./model/userCollection');
 const adminCollection = require('./model/adminCollection');
@@ -37,6 +38,9 @@ app.use(session({
  resave: false,
  saveUninitialized: true
 }));
+
+app.use(flash());
+
 
 app.use(express.json());
 app.use(bodyParser.json({limit: '5mb'}));
