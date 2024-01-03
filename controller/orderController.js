@@ -165,7 +165,7 @@ const submitAddress = async (req, res) => {
     }
   };
   
-  const orderList = async(req,res)=>{
+  const  orderList = async(req,res)=>{
       try{
         const email = req.session.user;
         const orders = await orderCollection.find({email:email}).populate('productdetails');

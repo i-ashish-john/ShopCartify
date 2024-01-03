@@ -25,6 +25,14 @@
             align-items: center;
             justify-content: center;
             color: white;
+        }.value{
+            text-align: left;
+            vertical-align: middle;
+            /* background-color: #ffffff; */
+            color: #ffffff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
     </style>
  
@@ -244,87 +252,61 @@
                         </div>
                 <!-- <div class="not-found">not found</div> -->
 
-                <% if (products){ %>
-                    <% for( let i=0 ; i < products.length ;i++){ %>
-                        <div class="searchable-item-all col-lg-4 col-md-6 col-sm-6 pb-1">
-                            <div class="product-item bg-light mb-4 <%= products[i].stock === 0 ? 'out-of-stock' : '' %>">
-
-                               <div class="product-img position-relative overflow-hidden">
-                                   <img class="img-fluid w-100" src="<%= products[i].Images[0]?.slice(6) %>" alt="">
-                                   <div class="product-action">
-                                       <% if(products[i].stock > 0) { %>
-                                          <!-- <a class="btn btn-outline-dark btn-square" id="addToCartButton" href="/addToCart?id=<%= products[i].id %>"><i class="fa fa-shopping-cart"></i></a> -->
-                                           <a class="btn btn-outline-dark btn-square" id="addToCartButton" onclick="addToCart('<%= products[i].id %>')" data-product-id="<%= products[i].id %>"><i class="fa fa-shopping-cart"></i></a>
-
-                                           <a class="btn btn-outline-dark btn-square" href="/wishlist"><i class="far fa-heart"></i></a>
-                                           <a class="btn btn-outline-dark btn-square" href="/search"><i class="fa fa-sync-alt"></i></a>
-                                           <a class="btn btn-outline-dark btn-square" href="/productdetails?id=<%= products[i].id %>"><i class="fa fa-search"></i></a>
-                                       <% } %>
-                                   </div>
-                               </div>
-
-                               <!-- ------here is the modale---- -->
-
-                               <!-- Modal -->
- 
-                            <!-- ----- -->
-                            <!-- Button trigger modal -->
-<!-- Remove this part -->
-<!-- Button trigger modal -->
-
- 
- <!-- Modal -->
-<!-- Modal -->
-<div class="modal fade" id="limitExceededModal" style="color: rgb(65, 65, 59);" tabindex="-1" role="dialog" aria-labelledby="limitExceededModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <div class="modal-header" style="background-color: #ffd700; color: #333;">
-          <h5 class="modal-title" id="limitExceededModalLabel">Limit Exceeded</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" class="container-fluid">
-          The product limit has been exceeded.
-        </div>
-        <div class="modal-footer" style="background-color: #ffd700;">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="color: #333;">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  
-<!-- -----modale ending-----    -->
-
-
-                               <div class="text-center py-4">
-                                   <a class="h6 text-decoration-none text-truncate" href="">
-                                       <%= products[i].name %>
-                                   </a>
-                                   <div class="d-flex align-items-center justify-content-center mt-2">
-                                       <h5> ₹<%= products[i].price %>
-                                       </h5>
-                                       <h6 class="text-muted ml-2">
-                                           <del><!-- product discount display here--></del>
-                                       </h6>
-                                   </div>
-                                   <div class="d-flex align-items-center justify-content-center mb-1">
-                                       <small class="fa fa-star text-primary mr-1"></small>
-                                       <small class="fa fa-star text-primary mr-1"></small>
-                                       <small class="fa fa-star text-primary mr-1"></small>
-                                       <small class="fa fa-star text-primary mr-1"></small>
-                                       <small class="fa fa-star text-primary mr-1"></small>
-                                       <small>(99)</small>
-                                   </div>
-                               </div>
+                <% if (products) { %>
+                    <div class="row">
+                        <% for (let i = 0; i < products.length; i++) { %>
+                            <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                                <div class="searchable-item-all value">
+                                    <div class="product-item bg-light mb-6 <%= products[i].stock === 0 ? 'out-of-stock' : '' %>">
+                                        <div class="product-img position-relative overflow-hidden">
+                                            <img class="img-fluid w-100" src="<%= products[i].Images[0]?.slice(6) %>" alt="">
+                                            <div class="product-action">
+                                                <% if(products[i].stock > 0) { %>
+                                                    <a class="btn btn-outline-dark btn-square" id="addToCartButton" onclick="addToCart('<%= products[i].id %>')" data-product-id="<%= products[i].id %>">
+                                                        <i class="fa fa-shopping-cart"></i>
+                                                    </a>
+                                                    <a class="btn btn-outline-dark btn-square" href="/wishlist">
+                                                        <i class="far fa-heart"></i>
+                                                    </a>
+                                                    <a class="btn btn-outline-dark btn-square" href="/search">
+                                                        <i class="fa fa-sync-alt"></i>
+                                                    </a>
+                                                    <a class="btn btn-outline-dark btn-square" href="/productdetails?id=<%= products[i].id %>">
+                                                        <i class="fa fa-search"></i>
+                                                    </a>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <!-- Modal -->
+                                        <!-- ... (your modal code) ... -->
+                                        <div class="text-center py-4">
+                                            <a class="h6 text-decoration-none text-truncate" href="">
+                                                <%= products[i].name %>
+                                            </a>
+                                            <div class="d-flex align-items-center justify-content-center mt-2">
+                                                <h5> ₹<%= products[i].price %></h5>
+                                                <h6 class="text-muted ml-2">
+                                                    <del><!-- product discount display here--></del>
+                                                </h6>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-center mb-1">
+                                                <small class="fa fa-star text-primary mr-1"></small>
+                                                <small class="fa fa-star text-primary mr-1"></small>
+                                                <small class="fa fa-star text-primary mr-1"></small>
+                                                <small class="fa fa-star text-primary mr-1"></small>
+                                                <small class="fa fa-star text-primary mr-1"></small>
+                                                <small>(99)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    <% } %>
+                        <% } %>
+                    </div>
                 <% } else { %>
                     <p>No products were found.</p>
                 <% } %>
-
+                
                                             <div class="col-12">
                                                 <% if(category==='Mens' ){ %>
                                                     <!-- Pagination -->
