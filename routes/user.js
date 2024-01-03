@@ -4,8 +4,11 @@ const userController = require('../controller/userController');
 const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
 const forgotpassController = require('../controller/forgotpassController');
+const returnController = require('../controller/returnController');
+
 const session = require('../middleware/user/userAuth');
 const blockedAuth = require('../middleware/user/userBlockedAuth');
+
 
 router.get('/home', userController.home);
 router.get('/', userController.login)
@@ -45,6 +48,10 @@ router.post('/addCheckoutAddress', session, blockedAuth, orderController.addChec
 router.get('/ListOfOrders', session, blockedAuth, orderController.orderList);
 router.post('/SingleOrderlist/:id', session, blockedAuth, orderController.SingleOrderlist);
 router.post('/cancelOrders/:id', session, blockedAuth, orderController.cancelOrder);
+router.post('/RetrunProduct/:id',session,blockedAuth,orderController.ReturnTotalProduct);
+router.get('/walletLoad',session,blockedAuth,orderController.walletLoad);
+
+
 
 // router.post('/updateCartItem/:productId/decrease',userController.updateCartItem);
 // router.post('/updateCartItem/:productId/increase',userController.updateCartItem);

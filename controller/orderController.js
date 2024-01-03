@@ -3,6 +3,7 @@ const userCollection = require('../model/userCollection');
 const orderCollection = require('../model/orderCollection');
 const productCollection = require('../model/productCollection');
 const addressCollection = require('../model/addressCollection');
+const returnCollection = require('../model/returnCollection');
 const categoryCollection = require('../model/categoryCollection');
 const Razorpay = require('razorpay');
 const mongoose = require('mongoose');
@@ -14,12 +15,11 @@ let instance = new Razorpay({
 
 const submitAddress = async (req, res) => {
     try {
-      // Assuming the form data is available in req.body
+      
       console.log("ENTERED IN SUBMIT");
       const formData = req.body;
       console.log("REQ.BODY", req.body);
   
-      // Save the form data to the addressCollection model
       const newAddress = new addressCollection({
         userId: formData.userId._id,
         productId: formData.productId._id,
@@ -36,22 +36,18 @@ const submitAddress = async (req, res) => {
   
       const totalPrice = formData.totalPrice;
   
-      // Create a new order document using the orderCollection model
       const newOrder = new orderCollection({
         addressId: savedAddress._id,
-        totalPrice: totalPrice, // Use the variable you defined
-        // Add other fields as needed
+        totalPrice: totalPrice, 
       });
   
       const savedOrder = await newOrder.save();
   
-      // Render the order success page with the order details
       res.render('user/ordersuccess', {
         order: savedOrder,
-        // Add other variables as needed
+        // this is the space for adding other variables
       });
     } catch (error) {
-      // Handle any errors that occur during the process
       console.error('Error processing form:', error.message);
       res.render('error', { error: 'An error occurred while processing the form.' });
     }
@@ -107,7 +103,7 @@ const submitAddress = async (req, res) => {
                 throw new Error(`Not enough stock for product: ${productDetails.name}`);
               }
       
-              // Update the stock in the product collection
+              //here iam updating the stock of the product's from the productCollection
               await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
             }
            }
@@ -280,6 +276,51 @@ const submitAddress = async (req, res) => {
     }
   };
 
+  const ReturnTotalProduct = async (req, res) => {
+    try {
+      const orderId = req.params.id;
+      console.log("the return total product", orderId);
+      const user = req.session.user;
+      const userData = await userCollection.findOne({email:user});
+      console.log("The user is here:", userData);
+      const orderDetails = await orderCollection.findById(orderId).populate('productdetails');
+      
+      if (!orderDetails) {
+        return res.status(404).send("Order not found");
+      }
+  
+      const totalPrice = orderDetails.totalPrice;
+
+      const returnOrNot = new returnCollection({
+        productId: orderDetails.productdetails[0],
+        userId: userData._id, 
+        orderId: orderId,
+        amount: totalPrice,
+        status: 'Return Requested',
+      });
+  
+      await returnOrNot.save();
+    
+      res.send("Return saved successfully");
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error.message);
+    }
+  };
+  
+  const walletLoad = async(req,res)=>{
+    try{
+      const user = req.session.user;
+      const product = 
+        res.render('user/wallet');
+    }catch(error){
+     console.log(" error handled in the wallet load");
+     res.send(error.message);
+    }
+}
+
+
+
   const payPost = async(req,res)=>{
     
     try {
@@ -303,6 +344,9 @@ module.exports = {
      addCheckoutAddress,
     checkoutPost,orderList,SingleOrderlist,
     cancelOrder,
-    payPost
+    payPost,
+    ReturnTotalProduct,
+    walletLoad 
+    
 
 };

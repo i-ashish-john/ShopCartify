@@ -275,24 +275,25 @@
  
  <!-- Modal -->
 <!-- Modal -->
-<div class="modal fade" id="limitExceededModal" tabindex="-1" role="dialog" aria-labelledby="limitExceededModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
+<div class="modal fade" id="limitExceededModal" style="color: rgb(65, 65, 59);" tabindex="-1" role="dialog" aria-labelledby="limitExceededModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div class="modal-header" style="background-color: #ffd700; color: #333;">
           <h5 class="modal-title" id="limitExceededModalLabel">Limit Exceeded</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" class="container-fluid">
           The product limit has been exceeded.
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="modal-footer" style="background-color: #ffd700;">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="color: #333;">Close</button>
         </div>
       </div>
     </div>
   </div>
+  
   
 <!-- -----modale ending-----    -->
 
@@ -590,7 +591,7 @@
 
 <script>
 
-function addTocart(productId){
+function addToCart(productId){
 console.log(productId);
     $.get(`/addToCart?id=${productId}`)
       .done(function(response) {

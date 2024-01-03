@@ -29,8 +29,25 @@
               .product-image {
                 max-width: 100px;
                 max-height: 100px;
-           }
+           } 
+           .cart-table {
+    background-color: #3D464D ; /* Dark background color */
+    border-radius: 10px; /* Optional: Add border-radius for rounded corners */
+    padding: 20px; /* Optional: Add padding for inner content */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional: Add box shadow for depth */
+    margin-bottom: 20px; /* Optional: Adjust margin as needed */
+  }
 
+  .cart-table th,
+  .cart-table td {
+    color: #fff; /* Optional: Set text color for table cells */
+  }
+
+  .total-amount {
+    color: #fff; /* Optional: Set text color for total amount */
+  }#remove{
+    color: #FFD333 ;
+  }
      </style>
 
     <!-- Favicon -->
@@ -56,7 +73,7 @@
 
 <body>
     <!-- Topbar Start -->
-    <div class="container-fluid">
+    <div class="container-fluid ">
         <div class="row bg-secondary py-1 px-xl-5">
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="d-inline-flex align-items-center h-100">
@@ -153,7 +170,7 @@
                 </nav>
             </div>
 
-            <div class="col-lg-9">
+            <div class="col-lg-9 ">
                 <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
                     <a href="" class="text-decoration-none d-block d-lg-none">
                         <span class="h1 text-uppercase text-dark bg-light px-2">Shop</span>
@@ -212,7 +229,7 @@
 
 
   <section class="mt-5">
-    <div class="container">
+    <div class="container element">
       <div class="cart">
         <div class="table-responsive cart-table">
           <% if (cartDocument && cartDocument.length> 0) { %>
@@ -271,7 +288,7 @@
                           <div class="product-info">
                             <!-- Product Name -->
                             <div class="product-details">
-                              <h6 class="product-name">
+                              <h6 class="product-name" style="color: #fff;">
                                 <%= product.productId.name %>
                               </h6>
                             </div>
@@ -295,12 +312,12 @@
                             <form action="/removeitems/<%= product.productId._id %>" method="post">
                               <input type="hidden" name="cartId" value="<%= cart._id %>">
                               <!-- <input type="hidden" name="productId" value="<%= product.productId._id %>"> -->
-                              <button type="submit" class="btn btn-danger">Remove</button>
+                              <button type="submit" style="color: #ffffff ;background-color: #FFD333;" class="btn btn-danger">Remove</button>
                             </form>
                             <!-- --- ---- -- -->
 
                             <% if (product.productId.stock < 0 ) { %>
-                              <p id="out-of-stock-message-<%= product.productId._id %>" style="display: none; color: red;">This product is out of stock</p>
+                              <p id="out-of-stock-message-<%= product.productId._id %>" >This product is out of stock</p>
                               <% } else { %>
                               <!-- Display the add to cart button or other relevant actions -->
                               <p></p>
@@ -318,9 +335,6 @@
                           
               </tbody>
 
-
-
-
             </table>
             <% } else { %>
               <p>No items in cart</p>
@@ -336,7 +350,8 @@
     <div class="col-lg-4 offset-lg-4">
       <!-- Existing code for displaying total price -->
 
-      <h5>Total Amount: ₹ <span id="total-price">
+      <h5 class="total-amount"  style="background-color: #576570;">Total Amount: ₹ <span id="total-price" style="color: #ffffff;">
+
         <% let totalPrice = 0; %>
         <% cartDocument.forEach((cart) => { %>
           <% if (cart.products && cart.products.length > 0) { %>
@@ -490,6 +505,18 @@
 <!-- </body> -->
 
 </html>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get all elements with the class "element"
+    var elements = document.querySelectorAll('.element');
+
+    // Check if there are elements
+    if (elements.length > 0) {
+      // Add a class "last-element" to the last element
+      elements[elements.length - 1].classList.add('last-element');
+    }
+  });
+</script>
 
        <!--this script is for the hiding the proceed to checkout button-->
     <script>

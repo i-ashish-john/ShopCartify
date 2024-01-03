@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../WatchBox-E-Commerce-main"
+		}
+	],
+	"settings": {
+		"timeline.pageOnScroll": true
+	}
+}

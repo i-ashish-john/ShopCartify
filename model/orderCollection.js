@@ -72,7 +72,7 @@ const orderSchema = new mongoose.Schema({
 });
 
 orderSchema.pre('find', function (next) {
-  this.populate('productdetails'); //populating the product details
+  this.populate('productdetails');
   next();
 });
 

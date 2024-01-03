@@ -1,143 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Details</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .order-container {
-            margin: 20px;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .product-container {
-            display: flex;
-            margin-bottom: 15px;
-        }
-
-        .product-image {
-            max-width: 140px;
-            height: auto;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-
-        .product-details {
-            flex-grow: 1;
-        }
-
-        .order-status {
-            background-color: #f39c12;
-            color: #fff;
-            padding: 10px;
-            border-radius: 0 0 8px 8px;
-            margin-bottom: 15px;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .button {
-            margin-left: 10px;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .button-cancel {
-            background-color: #f39c12;
-            color: #fff;
-        }
-
-        .button-view {
-            background-color: #95a5a6;
-            color: #fff;
-        }
-
-        .button:hover {
-            opacity: 0.8;
-        }
-
-        .total-container {
-            background-color: #95a5a6;
-            color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            text-align: center;
-            overflow: hidden;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container order-container">
-        <div class="order-status">
-            <% if (orderDetails.orderStatus === 'Delivered') { %>
-                Return Option
-            <% } else { %>
-                Order Status: <%= orderDetails.orderStatus %>
-            <% } %>
-        </div>
-
-        <% for (const product of productsWithImages) { %>
-            <div class="product-container">
-                <img src="<%= product.images[0]?.slice(6) %>" alt="Product Image" class="product-image">
-                <div class="product-details">
-                    <h2><%= product.name %></h2>
-                    <p><%= product.description %></p>
-                    <p>Quantity: <%= product.quantity %></p>
-                    <p>Price: <%= product.price %> each</p>
-                </div>
-            </div>
-        <% } %>
-
-        <div class="button-container">
-            <a href="#" class="button button-cancel">Cancel</a>
-            <a href="#" class="button button-view">View Order</a>
-        </div>
-    </div>
-
-    <div class="row justify-content-center">
-        <div class="col-lg-8total-container">
-            <p>Total Price: <%= orderDetails.totalPrice %></p>
-            <p>Shipping Cost: $10.00</p>
-            <div>
-                <h3>Shipping Address</h3>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</body>
-
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -309,7 +169,7 @@ background: linear-gradient(to top left, rgb(87, 87, 82), rgba(246, 243, 255, 1)
                         
                             <!-- Wishlist Icon -->
                             <a href="" class="btn px-0 ml-3">
-                                <i class="fas fa-heart text-primary"></i>
+                                        <i class="fas fa-heart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                             </a>
                         
@@ -393,9 +253,14 @@ background: linear-gradient(to top left, rgb(87, 87, 82), rgba(246, 243, 255, 1)
                     <div class="order-status">
                         <% if (orderDetails.orderStatus === 'Delivered') { %>
                            <button class="btn btn-secondary"> 
-                              <a href="" style=" color: #0e0d0e;text-decoration: solid;">
-                                Return Option
-                              </a>
+
+                            <form action="/RetrunProduct/<%= orderDetails._id %>" method="post">
+                                <input type="hidden" name="order_id" value="<%= orderDetails._id %>">
+                                <button type="submit" style="color: #0e0d0e; text-decoration: solid; border: none; background: none; cursor: pointer;">
+                                    Return Option
+                                </button>
+                            </form>
+                               
                            </button> 
                      <% }  else if (orderDetails.orderStatus === 'Cancelled') { %>
                                 
