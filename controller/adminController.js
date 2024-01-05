@@ -6,6 +6,7 @@ const productCollection = require('../model/productCollection');
 const CategoryCollection = require('../model/categoryCollection');
 const orderCollection = require('../model/orderCollection');
 const addressCollection = require('../model/addressCollection');
+const returnCollection = require('../model/returnCollection');
 
 const sharp = require('sharp');
 
@@ -61,8 +62,6 @@ const postlogin = async (req, res) => {
     res.render('admin/login');
   }
 };
-
-
 
 
 const createPost = async (req, res) => {
@@ -489,13 +488,51 @@ const ordersPost = async (req, res) => {
   } catch (error) {
       console.error(error.message);
       res.send(error.message);
-  }
+  }     
 };
 
+ const returnManage = async(req,res)=>{
+  try{
+    const orderData = await orderCollection.find();
+    const returnDetails = await returnCollection.find();
+    console.log("returndetails",returnDetails);
+   res.render("admin/returnOrderManage",{orderData,returnDetails});
+  }catch(error){
+    res.send(error.messgae);
+    console.log(error.message);
+  }
+ };
 
+ const Approved = async (req, res) => {
+  try {
+    console.log("here the approved");
+    const orderId = req.params.id;
+    console.log("the order id is here !", orderId);
+    const data = await returnCollection.findOne({ orderId });
+    console.log("the data is here :", data);
+    await returnCollection.findByIdAndUpdate(data._id, { $set: { status: "return approved" } });
 
+    res.json({ status: "return approved" }); 
+  } catch (error) {
+    console.log("the error in the error section of the approved section ");
+    res.status(500).json({ error: error.message });
+  }
+};
+const Denyed = async (req, res) => {
+  try {
+    console.log("111111");
+    const orderId = req.params.id;
+    const Data = await returnCollection.findOne({ orderId });
 
-
+    console.log("entered into the admin denied section");
+    console.log("22222");
+    await returnCollection.findByIdAndUpdate(Data._id, { $set: { status: "return request rejected by admin" } });
+    res.status(200).send({ status: "return rejected by admin" });
+  } catch (error) {
+    console.log("internal error in denied section ");
+    res.status(500).send(error);
+  }
+};
 
 
 module.exports = {
@@ -523,4 +560,7 @@ module.exports = {
   logout,
   orders,
   ordersPost,
+  returnManage,
+  Approved,
+  Denyed
 }

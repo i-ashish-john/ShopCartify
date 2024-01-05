@@ -8,7 +8,7 @@ const generateOtp = require('generate-otp');
 const cartCollection = require('../model/cartCollection');
 const addressCollection = require('../model/addressCollection');
 const orderCollection = require('../model/orderCollection');
-
+const flash = require('connect-flash');
 const { log } = require('console');
 const mongoose = require('mongoose');
 const Swal = require('sweetalert2')

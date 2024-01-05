@@ -44,6 +44,9 @@ router.get('/orders',AdminSession,adminController.orders);
 router.post('/ordersPost/:id',AdminSession,adminController.ordersPost);
 
 
+router.get('/returnOrderManage',adminController.returnManage);
+router.post('/returnApproved/:id',adminController.Approved);
+router.post('/returnDenyed/:id',adminController.Denyed);
 
 
 module.exports = router;

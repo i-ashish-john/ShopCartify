@@ -5,8 +5,10 @@ const productCollection = require('../model/productCollection');
 const addressCollection = require('../model/addressCollection');
 const returnCollection = require('../model/returnCollection');
 const categoryCollection = require('../model/categoryCollection');
+const walletCollection = require('../model/walletCollection');
 const Razorpay = require('razorpay');
 const mongoose = require('mongoose');
+const { stringify } = require('querystring');
 
 let instance = new Razorpay({
   key_id:process.env.key_id ,
@@ -308,18 +310,53 @@ const submitAddress = async (req, res) => {
     }
   };
   
-  const walletLoad = async(req,res)=>{
-    try{
+  const walletLoad = async (req, res) => {
+    try {
       const user = req.session.user;
-      const product = 
-        res.render('user/wallet');
-    }catch(error){
-     console.log(" error handled in the wallet load");
-     res.send(error.message);
+      const userDoc = await userCollection.findOne({ email: user }); 
+      const returnDetailsOfUser = await returnCollection.findOne({ userId: userDoc._id });
+      console.log("user is :",user);
+      console.log("userDoc is :",userDoc._id);
+      console.log("returnDeails:",returnDetailsOfUser.amount);
+      
+      if(returnDetailsOfUser.status ==='return approved'){
+      await returnCollection.findByIdAndUpdate({set:{returnDetailsOfUser:'return approved'}});
+        if(returnDetailsOfUser) {
+          const amounts = {
+            value: returnDetailsOfUser.amount,
+            AddedAmount: +returnDetailsOfUser.amount
+          };
+           req.session.amount = amounts;
+        } else {
+          return res.status(404).send({ message: 'returnDetailsOfUser not found' });
+        }
+
+        
+
+      }else if(returnDetailsOfUser.status ==='return access denied by admin'){
+        await returnCollection.findByIdAndUpdate({set:{returnDetailsOfUser:'return acess denied by admin'}});
+
+      }else{
+       return res.send('status of the returnDetails were not changed ');
+      }
+  
+      const wallet = new walletCollection();
+  
+      const dataForWalletCollection = {
+        AddedAmount: req.session.amount.AddedAmount,
+        normalAmount: req.session.amount.value,
+        customersId: userDoc._id,
+      };
+  
+      await wallet.save(dataForWalletCollection);
+  
+      res.render('user/wallet');
+    } catch (error) {
+      console.log("Error handled in the wallet load");
+      res.send(error.message);
     }
-}
-
-
+  };
+  
 
   const payPost = async(req,res)=>{
     

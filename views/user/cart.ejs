@@ -567,7 +567,7 @@
 
     async function updateQuantity(pid, isIncrease) {
       const url = isIncrease ? `/increaseq/${pid}` : `/decreaseq/${pid}`;
-
+   
       try {
         const response = await fetch(url, {
           method: 'get',

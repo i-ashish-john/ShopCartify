@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -451,7 +451,7 @@
 
           .then(order => {
             console.log(order);
-            // Initialize Razorpay
+            //  her iam  Initialize Razorpay
             const  options = {
             key: 'rzp_test_Jbmx59qoOc1tKj',
             amount: order.amount,
@@ -466,7 +466,6 @@
                 // here handling the success response
                 console.log('Payment success:', response);
   
-                // Now you can submit the form to complete the checkout process
                 document.querySelector('#checkOutForm').submit();
               },
               prefill: {
@@ -480,13 +479,10 @@
           })
           .catch(error => {
             console.error('Error creating Razorpay order:', error);
-            // Handle the error if needed
           });
       } else if (selectedPaymentMethod === 'CashOnDelivery') {
-        // If the payment method is Cash on Delivery, submit the form directly
         document.querySelector('#checkOutForm').submit();
       } else {
-        // If the payment method is not Razorpay or Cash on Delivery, you can handle it accordingly
         alert('Invalid payment method selected.');
       }
     });
