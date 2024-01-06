@@ -932,8 +932,7 @@
                   <td>
                      <button class="btn btn-success approve" id="approveButton" onclick="approveOrder('<%= order.orderId %>')">Approve</button>
                      <button class="btn btn-danger deny" id="denyButton" onclick="denyOrder('<%= order.orderId %>')">Deny</button>
-                     <p id="resultMessage<%= order.orderId %>" style="display: none;"   value="data.message"></p>
-
+                     <p id="resultMessage<%= order.orderId %>" style="display: none;"></p>
                     </td>
               </tr>
             <% }) %>
@@ -954,10 +953,9 @@ async function approveOrder(id) {
        const data = await response.json();
 
        if (data.status === "return approved") {
-           document.querySelector(`#approveButton${id}`).style.display = 'none';
-           document.querySelector(`#denyButton${id}`).style.display = 'none';
-           document.querySelector(`#resultMessage${id}`).innerHTML = data.message;
-           document.querySelector(`#resultMessage${id}`).style.display = 'block';
+           // Set approved status in local storage to persist state after refresh
+           localStorage.setItem(`orderStatus${id}`, 'approved');
+           updateOrderStatusUI(id, 'Order approved');
        } else {
            console.error(" Oop something went wrong inside the admin's order accepting side");
        }
@@ -980,10 +978,9 @@ async function denyOrder(id) {
        const data = await response.json();
 
        if (data.status === "return rejected by admin") {
-           document.querySelector(`#approveButton${id}`).style.display = 'none';
-           document.querySelector(`#denyButton${id}`).style.display = 'none';
-           document.querySelector(`#resultMessage${id}`).innerHTML = data.message;
-           document.querySelector(`#resultMessage${id}`).style.display = 'block';
+           // Set denied status in local storage to persist state after refresh
+           localStorage.setItem(`orderStatus${id}`, 'denied');
+           updateOrderStatusUI(id, 'Order denied');
        } else {
            console.error("Oop something went wrong inside the admin's order rejecting side");
        }
@@ -992,6 +989,32 @@ async function denyOrder(id) {
        console.error('Error denying order:', error);
    }
 }
+
+function updateOrderStatusUI(orderId, message) {
+   //  from this code iam removing the "Approve" and "Deny" buttons
+   const approveButtonElem = document.querySelector(`#approveButton${orderId}`);
+   const denyButtonElem = document.querySelector(`#denyButton${orderId}`);
+   if (approveButtonElem) approveButtonElem.remove();
+   if (denyButtonElem) denyButtonElem.remove();
+
+   const resultMessageElem = document.querySelector(`#resultMessage${orderId}`);
+   resultMessageElem.innerHTML = message;
+   resultMessageElem.style.display = 'block';
+}
+
+//here iam changing the values of the ui design etc accordinglly the  button were clicked
+document.addEventListener('DOMContentLoaded', function () {
+   const orders = document.querySelectorAll('[id^="resultMessage"]');
+   orders.forEach(order => {
+       const id = order.id.replace('resultMessage', '');
+       const status = localStorage.getItem(`orderStatus${id}`);
+       if (status === 'approved') {
+           updateOrderStatusUI(id, 'Order approved');
+       } else if (status === 'denied') {
+           updateOrderStatusUI(id, 'Order denied');
+       }
+   });
+});
 
 </script>
 

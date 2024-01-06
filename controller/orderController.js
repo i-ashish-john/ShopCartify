@@ -309,47 +309,32 @@ const submitAddress = async (req, res) => {
       res.status(500).send(error.message);
     }
   };
-  
   const walletLoad = async (req, res) => {
     try {
       const user = req.session.user;
       const userDoc = await userCollection.findOne({ email: user }); 
       const returnDetailsOfUser = await returnCollection.findOne({ userId: userDoc._id });
-      console.log("user is :",user);
-      console.log("userDoc is :",userDoc._id);
-      console.log("returnDeails:",returnDetailsOfUser.amount);
-      
-      if(returnDetailsOfUser.status ==='return approved'){
-      await returnCollection.findByIdAndUpdate({set:{returnDetailsOfUser:'return approved'}});
-        if(returnDetailsOfUser) {
-          const amounts = {
-            value: returnDetailsOfUser.amount,
-            AddedAmount: +returnDetailsOfUser.amount
-          };
-           req.session.amount = amounts;
-        } else {
-          return res.status(404).send({ message: 'returnDetailsOfUser not found' });
-        }
-
-        
-
-      }else if(returnDetailsOfUser.status ==='return access denied by admin'){
-        await returnCollection.findByIdAndUpdate({set:{returnDetailsOfUser:'return acess denied by admin'}});
-
-      }else{
-       return res.send('status of the returnDetails were not changed ');
+      console.log("user is :", user);
+      console.log("userDoc is :", userDoc._id);
+      console.log("returnDetails:", returnDetailsOfUser.amount);
+      console.log("the return status is here :", returnDetailsOfUser.status);
+  
+      if (returnDetailsOfUser.status === 'return approved') {
+        const sendData = {
+          customersId: userDoc._id,
+          AddedAmount: returnDetailsOfUser.amount,          
+        };
+        const wallet = new walletCollection(sendData);
+        await wallet.save();
+        console.log("Wallet document created");
+      } else if (returnDetailsOfUser.status === 'return access denied by admin') {
+        console.log("Returns access was denied in the wallet load");
+      } else {
+        return res.send('Status of the returnDetails was not changed ');
       }
-  
-      const wallet = new walletCollection();
-  
-      const dataForWalletCollection = {
-        AddedAmount: req.session.amount.AddedAmount,
-        normalAmount: req.session.amount.value,
-        customersId: userDoc._id,
-      };
-  
-      await wallet.save(dataForWalletCollection);
-  
+      
+      const walletData = await walletCollection.findOne({ customersId: userDoc._id });
+      console.log("The wallet's data is :", walletData);
       res.render('user/wallet');
     } catch (error) {
       console.log("Error handled in the wallet load");

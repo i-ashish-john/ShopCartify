@@ -9,11 +9,12 @@ const walletSchema = new mongoose.Schema({
     type:Number,
     required:true
    } ,
-   normalAmount:{
-    type:Number,
-    required:true
-   }
+   time: {
+      type: Date,
+      default: Date.now,
+    },
+
 })
 
-const walletCollection = mongoose.model('collectionOfWallet',walletSchema);
-module.exports = walletCollection
+const walletCollection = new mongoose.model('collectionOfWallet',walletSchema);
+module.exports = walletCollection;

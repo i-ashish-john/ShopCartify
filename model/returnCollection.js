@@ -32,6 +32,6 @@ const returnSchema = new mongoose.Schema({
     }
 
 });
-const returnCollection = mongoose.model('collectionOfReturn',returnSchema);
+const returnCollection =new mongoose.model('collectionOfReturn',returnSchema);
 
 module.exports = returnCollection;
