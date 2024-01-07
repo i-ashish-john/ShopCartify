@@ -1,4 +1,6 @@
 const { verify } = require('crypto');
+// const session = require('session');
+const session = require('express-session');
 const userCollection = require('../model/userCollection');
 const productCollection = require('../model/productCollection');
 // const categoryCollection = require('../model/categoryCollection');
@@ -8,15 +10,16 @@ const generateOtp = require('generate-otp');
 const cartCollection = require('../model/cartCollection');
 const addressCollection = require('../model/addressCollection');
 const orderCollection = require('../model/orderCollection');
-const flash = require('connect-flash');
 const { log } = require('console');
 const mongoose = require('mongoose');
-const Swal = require('sweetalert2')
-
-
+const Swal = require('sweetalert2'); 
+// const flash = require('express-flash');
 require('dotenv').config();
-let otp;
 
+
+ 
+
+let otp;
 
 const home = async (req, res) => {
   try {
@@ -292,8 +295,8 @@ const MensTotalproductlist = async (req, res) => {
   try {
       const page = parseInt(req.query.page) || 1; 
       const pageSize = 10; 
-      const errorMessage = req.flash('error')[0]; 
-      console.log("errorMessage",errorMessage);
+      // const errorMessage = req.flash('error')[0]; 
+      // console.log("errorMessage",errorMessage);
  
       const products = await productCollection.find({ category: "Mens" , deleted: false })
           .skip((page - 1) * pageSize)
@@ -325,7 +328,7 @@ const WomensTotalproductlist = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = 10;
-    const errorMessage = req.flash('error')[0]; 
+    // const errorMessage = req.flash('error')[0]; 
 
     // Example: Fetch products for the requested page
     const products = await productCollection.find({ category: "Womens" , deleted: false })

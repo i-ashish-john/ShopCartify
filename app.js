@@ -7,7 +7,8 @@ const nocache = require('nocache');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const slowDown = require("express-slow-down");
-const flash = require('express-flash');
+// const flash = require('express-flash');
+
 
 const userCollection = require('./model/userCollection');
 const adminCollection = require('./model/adminCollection');
@@ -38,9 +39,18 @@ app.use(session({
  resave: false,
  saveUninitialized: true
 }));
+// if using the flash then use it after configure the session middle ware;
+// app.use(flash());
 
-app.use(flash());
-
+// app.get('/', (req, res) => {
+//   req.flash('info', 'Flash is working!');
+//   res.redirect('/flash');
+//  });
+ 
+//  app.get('/flash', (req, res) => {
+//   res.send(req.flash('info'));
+//  });
+ 
 
 app.use(express.json());
 app.use(bodyParser.json({limit: '5mb'}));
@@ -55,6 +65,7 @@ const speedLimiter = slowDown({
   delayAfter: 50, // allow 50 requests per 15 minutes, then...
   delayMs: 1000 // begin adding 1000ms of delay per request above 50:
  });
+ 
 app.use(speedLimiter); 
 
 app.use('/', usersRouter);

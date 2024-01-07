@@ -59,7 +59,7 @@
     /* background-color: #3D464D ; / */
     border-radius: 10px; 
     padding: 20px; 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.9); 
     margin-bottom: 20px; 
   }
     </style>
@@ -74,18 +74,16 @@
             <h2>Your Wallet</h2>
         </div>
         <div class="balance">
-            Available Balance: $500.00 <!-- Replace with dynamic data -->
+            Available Balance:<%= walletData.AddedAmount%><!-- Replace with dynamic data -->
         </div>
+    
         <div class="transaction-list">
             <div class="transaction">
-                <span class="transaction-date">Jan 1, 2024</span>
-                <span class="transaction-amount">+$100.00</span>
-            </div>
-            <div class="transaction">
-                <span class="transaction-date">Jan 2, 2024</span>
-                <span class="transaction-amount">-$50.00</span>
+                <span class="transaction-date"><%= walletData.time %></span>
+                <span class="transaction-amount"><%= walletData.AddedAmount %></span>
             </div>
             <!-- Add more transactions dynamically -->
+       
         </div>
     </div>
 

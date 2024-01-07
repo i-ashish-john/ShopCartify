@@ -12,7 +12,7 @@
 // };
 
 // module.exports = session;
-const session = (req, res, next) => {
+const Usersession = (req, res, next) => {
     try {
         if (req.session.user) {
             next();
@@ -24,4 +24,4 @@ const session = (req, res, next) => {
     }
 };
 
-module.exports =  session;
+module.exports =  Usersession;

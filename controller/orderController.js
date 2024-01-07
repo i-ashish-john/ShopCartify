@@ -302,8 +302,9 @@ const submitAddress = async (req, res) => {
       });
   
       await returnOrNot.save();
-    
-      res.send("Return saved successfully");
+    // res.render('user/Totalproductlisting');
+    res.redirect('/ListOfOrders');
+      // res.send("Return saved successfully");
     } catch (error) {
       console.log(error);
       res.status(500).send(error.message);
@@ -312,37 +313,48 @@ const submitAddress = async (req, res) => {
   const walletLoad = async (req, res) => {
     try {
       const user = req.session.user;
-      const userDoc = await userCollection.findOne({ email: user }); 
+      const userDoc = await userCollection.findOne({ email: user });
       const returnDetailsOfUser = await returnCollection.findOne({ userId: userDoc._id });
-      console.log("user is :", user);
-      console.log("userDoc is :", userDoc._id);
-      console.log("returnDetails:", returnDetailsOfUser.amount);
-      console.log("the return status is here :", returnDetailsOfUser.status);
   
       if (returnDetailsOfUser.status === 'return approved') {
-        const sendData = {
-          customersId: userDoc._id,
-          AddedAmount: returnDetailsOfUser.amount,          
-        };
-        const wallet = new walletCollection(sendData);
-        await wallet.save();
-        console.log("Wallet document created");
+        const currentTime = new Date();
+        
+        const sendData = await walletCollection.find({
+          userId: userDoc._id,
+          // AddedAmount: returnDetailsOfUser.amount,
+          // time: currentTime
+        });
+        req.session.sendData = sendData[0] || {};
+        console.log("the details of the sendData session is:",req.session.sendData);
+        const duplicateCheck = await walletCollection.findOne({
+          userId: userDoc._id,
+          AddedAmount: returnDetailsOfUser.amount,
+          time: { $gte: currentTime }
+        });
+        
+          if (!duplicateCheck) {
+          const wallet = await walletCollection.create({userId: userDoc._id, AddedAmount: returnDetailsOfUser.amount, time: Date.now()});
+          if(wallet){
+            console.log("Wallet document created");
+          }
+        } else {
+          console.log("Wallet data already exists, no need to update");
+        }
       } else if (returnDetailsOfUser.status === 'return access denied by admin') {
         console.log("Returns access was denied in the wallet load");
       } else {
         return res.send('Status of the returnDetails was not changed ');
       }
-      
-      const walletData = await walletCollection.findOne({ customersId: userDoc._id });
+  
+      const walletData = await walletCollection.findOne({ userId: userDoc._id });
       console.log("The wallet's data is :", walletData);
-      res.render('user/wallet');
+      res.render('user/wallet', { walletData });
     } catch (error) {
-      console.log("Error handled in the wallet load");
-      res.send(error.message);
-    }
+       console.log("Error handled in the wallet load");
+       res.send(error.message);
+     }
   };
   
-
   const payPost = async(req,res)=>{
     
     try {

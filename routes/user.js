@@ -6,7 +6,7 @@ const orderController = require('../controller/orderController');
 const forgotpassController = require('../controller/forgotpassController');
 const returnController = require('../controller/returnController');
 
-const session = require('../middleware/user/userAuth');
+const Usersession = require('../middleware/user/userAuth');
 const blockedAuth = require('../middleware/user/userBlockedAuth');
 
 
@@ -21,35 +21,35 @@ router.post('/signup', userController.signupPost)
 
 // router.get('/OTP',userController.otpGet)
 router.post('/OTP', userController.sendOTPByEmail)
-router.get('/productdetails', session, blockedAuth, userController.productdetails);
-router.get('/backToHome', session, blockedAuth, userController.back);
+router.get('/productdetails', Usersession, blockedAuth, userController.productdetails);
+router.get('/backToHome', Usersession, blockedAuth, userController.back);
 
-router.get('/Totallistpro', blockedAuth, session, userController.MensTotalproductlist);
-router.get('/WomensTotallistpro', session, blockedAuth, userController.WomensTotalproductlist);
+router.get('/Totallistpro', blockedAuth, Usersession, userController.MensTotalproductlist);
+router.get('/WomensTotallistpro', Usersession, blockedAuth, userController.WomensTotalproductlist);
 
-router.get('/checkout', session, blockedAuth, userController.checkout);
-router.post('/Userdetails', session, blockedAuth, userController.UserDetails)
-router.get('/profile', session, blockedAuth, userController.profile)//this is for updating the user profile values
-router.get('/addAddressUser', session, blockedAuth, userController.addAddressUserPage);
-router.post('/NewAddressAddedForUser', session, blockedAuth, userController.NewAddressAddedForUser);
+router.get('/checkout', Usersession, blockedAuth, userController.checkout);
+router.post('/Userdetails', Usersession, blockedAuth, userController.UserDetails)
+router.get('/profile', Usersession, blockedAuth, userController.profile)//this is for updating the user profile values
+router.get('/addAddressUser', Usersession, blockedAuth, userController.addAddressUserPage);
+router.post('/NewAddressAddedForUser', Usersession, blockedAuth, userController.NewAddressAddedForUser);
 
-router.get('/cartload', session, blockedAuth, cartController.cartload)
-router.get('/addToCart', session, blockedAuth, cartController.addToCart);
-router.post('/removeitems/:id', session, blockedAuth, cartController.cartItemRemove);
-router.post('/updateQuantity/:productId/:action', session, blockedAuth, cartController.updateCartItem);
-router.get('/increaseq/:id', session, blockedAuth, cartController.incCart)
-router.get('/decreaseq/:id', session, blockedAuth, cartController.decCart);
+router.get('/cartload', Usersession, blockedAuth, cartController.cartload)
+router.get('/addToCart', Usersession, blockedAuth, cartController.addToCart);
+router.post('/removeitems/:id', Usersession, blockedAuth, cartController.cartItemRemove);
+router.post('/updateQuantity/:productId/:action', Usersession, blockedAuth, cartController.updateCartItem);
+router.get('/increaseq/:id', Usersession, blockedAuth, cartController.incCart)
+router.get('/decreaseq/:id', Usersession, blockedAuth, cartController.decCart);
 
-router.post('/checkoutpost', session, blockedAuth, orderController.checkoutPost);
-router.post('/submitAddress', session, blockedAuth, orderController.submitAddress);
-router.get('/orderstatus', session, blockedAuth, orderController.orderStatus);
-router.get('/addCheckoutAddress', session, blockedAuth, orderController.addCheckoutAddress);
-router.post('/addCheckoutAddress', session, blockedAuth, orderController.addCheckoutAddress);
-router.get('/ListOfOrders', session, blockedAuth, orderController.orderList);
-router.post('/SingleOrderlist/:id', session, blockedAuth, orderController.SingleOrderlist);
-router.post('/cancelOrders/:id', session, blockedAuth, orderController.cancelOrder);
-router.post('/RetrunProduct/:id',session,blockedAuth,orderController.ReturnTotalProduct);
-router.get('/walletLoad',session,blockedAuth,orderController.walletLoad);
+router.post('/checkoutpost', Usersession, blockedAuth, orderController.checkoutPost);
+router.post('/submitAddress', Usersession, blockedAuth, orderController.submitAddress);
+router.get('/orderstatus', Usersession, blockedAuth, orderController.orderStatus);
+router.get('/addCheckoutAddress', Usersession, blockedAuth, orderController.addCheckoutAddress);
+router.post('/addCheckoutAddress', Usersession, blockedAuth, orderController.addCheckoutAddress);
+router.get('/ListOfOrders', Usersession, blockedAuth, orderController.orderList);
+router.post('/SingleOrderlist/:id', Usersession, blockedAuth, orderController.SingleOrderlist);
+router.post('/cancelOrders/:id', Usersession, blockedAuth, orderController.cancelOrder);
+router.post('/RetrunProduct/:id',Usersession,blockedAuth,orderController.ReturnTotalProduct);
+router.get('/walletLoad',Usersession,blockedAuth,orderController.walletLoad);
 
 
 
@@ -66,7 +66,7 @@ router.post('/verifyOtp', forgotpassController.verifyOtp);
 router.post('/update-password', forgotpassController.updatePassword);
 // router.get('/resendOTP', forgotpassController.resend);
 
-router.post('/payPost',session, blockedAuth, orderController.payPost)
+router.post('/payPost',Usersession, blockedAuth, orderController.payPost)
 
 
 module.exports = router;

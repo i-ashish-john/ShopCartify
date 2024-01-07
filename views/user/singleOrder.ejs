@@ -37,13 +37,16 @@ background: linear-gradient(to top left, rgb(87, 87, 82), rgba(246, 243, 255, 1)
                 }
                 .order-container {
             margin: 20px;
-            background-color: #ffd333;
+            background-color: rgb(250, 234, 88);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 1px;
+            box-shadow: 0 0 10px rgb(255, 255, 255);
             overflow: hidden;
         }
-
+#returnButton{
+    background-color: green;
+    color: #ffffff;
+}
     </style>
 
 <link href="img/favicon.ico" rel="icon">
@@ -252,33 +255,27 @@ background: linear-gradient(to top left, rgb(87, 87, 82), rgba(246, 243, 255, 1)
                 <div class="container order-container">
                     <div class="order-status">
                         <% if (orderDetails.orderStatus === 'Delivered') { %>
-                           <button class="btn btn-secondary"> 
-
-                            <form action="/RetrunProduct/<%= orderDetails._id %>" method="post">
+                            <form id="returnForm" action="/RetrunProduct/<%= orderDetails._id %>" method="post">
                                 <input type="hidden" name="order_id" value="<%= orderDetails._id %>">
-                                <button type="submit" style="color: #0e0d0e; text-decoration: solid; border: none; background: none; cursor: pointer;">
-                                    Return Option
+                                <button type="submit" id="returnButton" class="btn btn-secondary" onclick="event.preventDefault(); hideButton();">
+                                    Return?
+                                </button>
+                                 
+                            </form>
+                        <% } else if (orderDetails.orderStatus === 'Cancelled') { %>
+                            <h2 style="text-decoration-thickness: 30px; color: #383a6e;">Sorry!</h2>
+                            <h4 style="color: #38396d">This order is cancelled</h4>
+                        <% } else { %>
+                            <h4 style="align-content: center;"> Your order is now : <%= orderDetails.orderStatus %></h4>
+                            <form action="/cancelOrders/<%= orderDetails._id %>" method="post">
+                                <button class="btn btn-success" type="submit">
+                                    <span class="text-gray">Cancel Your Order</span>
                                 </button>
                             </form>
-                               
-                           </button> 
-                     <% }  else if (orderDetails.orderStatus === 'Cancelled') { %>
-                                
-                        <h2 style="text-decoration-thickness: 30px; color: #ffffff;">Sorry!</h2>
-                        <h4 style="color: #ffffff;">This order is cancelled</h4>
-                        
-                         
-                        <% }  else { %>
-                          <h4> Order Status: <%= orderDetails.orderStatus %></h4>
-
-                          <form action="/cancelOrders/<%= orderDetails._id %>" method="post">
-                            <button class="btn btn-secondary"> cancel your order
-                                <input type="submit" value="cancel">
-                            </button>
-                          </form>
-
                         <% } %>
                     </div>
+                    
+
                 <div class="d-flex justify-content-around mb-1">
                     <p class="text-muted mt-1 mb-0 small ms-xl-5"><%= orderDetails.orderStatus %></p>
                     <p class="text-muted mt-1 mb-0 small ms-xl-5"></p>
@@ -328,11 +325,40 @@ background: linear-gradient(to top left, rgb(87, 87, 82), rgba(246, 243, 255, 1)
 </div>
 </section>
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MQ93zKZZb3W3Cdyg0REbbSjyjRyGYRZ/RXeWm3UgjOAI5yUJ+o2EcMivBhWZAqZ" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+function hideButton() {
+  // Append the item's ID to the localStorage key
+  var itemId = '<%= orderDetails._id %>'; // replace with actual item ID
+  localStorage.setItem('buttonClicked_' + itemId, true);
+
+  // Then hide the button
+  var returnButton = document.getElementById('returnButton');
+  if (returnButton) {
+      returnButton.style.display = 'none';
+  }
+
+  // Submit the form
+  document.getElementById('returnForm').submit();
+}
+
+window.onload = function() {
+  // Append the item's ID to the localStorage key
+  var itemId = '<%= orderDetails._id %>'; // replace with actual item ID
+
+  // Check if the button has been clicked
+  if (localStorage.getItem('buttonClicked_' + itemId)) {
+      // If the button has been clicked, hide it
+      var returnButton = document.getElementById('returnButton');
+      if (returnButton) {
+          returnButton.style.display = 'none';
+      }
+  }
+};
+
+</script>
       <script>
           // Assuming you have a variable 'orderStatus' containing the status value
           var orderStatus = "<%= orderDetails.orderStatus %>";

@@ -4,7 +4,7 @@ const orderCollection = require('../model/orderCollection');
 const productCollection = require('../model/productCollection');
 const addressCollection = require('../model/addressCollection');
 const categoryCollection = require('../model/categoryCollection');
-const flash = require('express-flash');
+// const flash = require('express-flash');
 
 const mongoose = require('mongoose');
 

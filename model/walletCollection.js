@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const walletSchema = new mongoose.Schema({
-   customersId:{
+   userId:{
     type:String,
     required:true
    } ,
