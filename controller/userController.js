@@ -3,6 +3,7 @@ const { verify } = require('crypto');
 const session = require('express-session');
 const userCollection = require('../model/userCollection');
 const productCollection = require('../model/productCollection');
+const walletCollection = require('../model/walletCollection');
 // const categoryCollection = require('../model/categoryCollection');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
@@ -380,6 +381,10 @@ const checkout = async (req, res) => {
       return res.status(404).send('User not found or missing in the session.');
     }
 
+    // Fetch the user's wallet balance
+// Fetch the user's wallet balance
+const wallet = await walletCollection.findOne({ userId: user._id }) || {};
+const walletBalance = wallet.balance !== undefined ? wallet.balance : 0;
 
     let cartFound = await cartCollection.findOne({ userId: user._id }).populate({
       path: 'products.productId',
@@ -390,7 +395,6 @@ const checkout = async (req, res) => {
     if (cartFound) {
       cartFound.total = totalPrice;
       cartFound.products = cartFound.products;
-
     } else {
       cartFound = new cartCollection({
         userId: user._id,
@@ -402,7 +406,7 @@ const checkout = async (req, res) => {
 
     const addresses = user?.address || [];
 
-    res.render('user/checkout', { user, addresses, cartFound });
+    res.render('user/checkout', { user, addresses, cartFound, walletBalance });
   } catch (error) {
     console.error(error.message);
     res.send(error.message);

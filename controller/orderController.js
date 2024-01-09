@@ -75,109 +75,92 @@ const submitAddress = async (req, res) => {
   };
 
 
-  const checkoutPost = async (req, res) => {
-    try {
-      console.log("THE DATA 1 IS IN THE CHECKOUT POST");
-      const { username, email, paymentType, selectedAddressId, totalPrice } = req.body;
-      // console.log("body of checkout page is :", username, email, paymentType, selectedAddressId);
-      console.log("the body values:", req.body);
-  
-      const userId = req.session.user;
-      console.log("logged user in the user is:", userId);
-  
-      const emailOfUser = await userCollection.findOne({ email: userId });
-          const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
-      console.log("cartData:", cartData);
-  
-      if (!cartData) {
-        return res.status(404).json({ message: 'Cart values not found' });
-      }
-      const selectedAddress = emailOfUser.address.find(address => address._id == selectedAddressId);
-        console.log("The  emailOfUser is :",emailOfUser);
-  
-        const productDetailsPromises = cartData.products.map(async product => {
-          const productDetails = await productCollection.findById(product.productId);
-          console.log("the product details is:",productDetails);
-           if(productDetails){
-            if (productDetails) {
-              const newStock = productDetails.stock - product.quantity;
-              if (newStock < 0) {
-                throw new Error(`Not enough stock for product: ${productDetails.name}`);
-              }
-      
-              //here iam updating the stock of the product's from the productCollection
-              await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
-            }
-           }
-          return productDetails;
-        });
-    
-        const productDetailsArray = await Promise.all(productDetailsPromises);
-  
-  
-      const order = new orderCollection({
-        username,
-        email,
-        paymentType,
-        totalPrice,
-        productdetails: productDetailsArray.map(productDetails => productDetails._id),
-        address: {
-          street: selectedAddress?.street,
-          city: selectedAddress?.city,
-          state: selectedAddress?.state,
-          zip: selectedAddress?.zip,
-          country: selectedAddress?.country,
-        }
-      });
-      console.log("the order  is :",order);
-      // console.log("the productdetails is:",productdetails);
-      console.log("the selectedAddress is :",selectedAddress);
-  
-     let result= await order.save();
-      console.log(result);
-      await cartCollection.deleteOne({ userId: emailOfUser._id });
-  
-  
-      if (order.paymentType === 'CashOnDelivery') {
-        return res.render('user/ordersuccess');
-      } 
-      
-      if (order.paymentType === 'NetBanking') {
-        // Use Razorpay for NetBanking payment
-        const options = {
-          amount: order.totalPrice * 100, 
-          currency: 'INR',
-          receipt: `order_${order.orderId}`,
-          notes: {
-            key1: "value3",
-            key2: "value2"
-        }
+const checkoutPost = async (req, res) => {
+  try {
+    const { username, email, paymentType, selectedAddressId, totalPrice } = req.body;
+    const userId = req.session.user;
 
-        };
-  
-        const razorpayOrder = await instance.orders.create(options);
-  
-        return res.render('user/ordersuccess');
+    const emailOfUser = await userCollection.findOne({ email: userId });
+    const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
+
+    if (!cartData) {
+      return res.status(404).json({ message: 'Cart values not found' });
+    }
+    const selectedAddress = emailOfUser.address.find(address => address._id == selectedAddressId);
+
+    const productDetailsPromises = cartData.products.map(async product => {
+      const productDetails = await productCollection.findById(product.productId);
+      if (productDetails) {
+        const newStock = productDetails.stock - product.quantity;
+        if (newStock < 0) {
+          throw new Error(`Not enough stock for product: ${productDetails.name}`);
+        }
+        await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
       }
+      return productDetails;
+    });
+
+    const productDetailsArray = await Promise.all(productDetailsPromises);
+
+    const order = new orderCollection({
+      username,
+      email,
+      paymentType,
+      totalPrice,
+      productdetails: productDetailsArray.map(productDetails => productDetails._id),
+      address: {
+        street: selectedAddress?.street,
+        city: selectedAddress?.city,
+        state: selectedAddress?.state,
+        zip: selectedAddress?.zip,
+        country: selectedAddress?.country,
+      }
+    });
+
+    let result = await order.save();
+    await cartCollection.deleteOne({ userId: emailOfUser._id });
+
+    if (order.paymentType === 'CashOnDelivery') {
+      return res.render('user/ordersuccess');
+    }
+
+    if (order.paymentType === 'NetBanking') {
+      // NetBanking payment logic here
+    }
+
+    if (order.paymentType === 'Wallet') {
+      return res.render('user/ordersuccess');
+    }
+
+    res.status(201).json({ message: 'Order saved successfully' });
+  } catch (error) {
+    console.error(error);
+    res.send(error);
+  }
+};
+
   
-      res.status(201).json({ message: 'Order saved successfully' });
+  const orderList = async (req, res) => {
+    try {
+      const email = req.session.user;
+      const user = await userCollection.findOne({ email: email });
+     console.log("The user details is:",user);
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      const orders = await orderCollection
+        .find({email:user.email})
+        .populate('productdetails')
+        .exec();
+    console.log("hello ^^^",user._id);
+      res.render("user/orderList", { orders });
+      console.log("OrDeRs details is:",orders);
     } catch (error) {
-      console.error(error);
-      res.send(error);
+      console.error(error.message);
+      res.status(500).send(error.message);
     }
   };
   
-  const  orderList = async(req,res)=>{
-      try{
-        const email = req.session.user;
-        const orders = await orderCollection.find({email:email}).populate('productdetails');
-        res.render("user/orderList", { orders });
-      }catch(error){
-        console.log(error.message);
-        res.send(error.message)
-      }
-  
-  };
   
   // const orderList = async (req, res) => {
   //   try {
@@ -210,14 +193,20 @@ const submitAddress = async (req, res) => {
     try {
 
       const orderId = req.params.id;
-       console.log(" the order in the single order list function is here :",orderId);
+      const email = req.session.user;
+      const userDetails = await userCollection.findOne({email : email});
       // Fetch order details with product details populated
+      const returStatus = await returnCollection.find({userId:userDetails.id});
+      const specificReturnStatus = await returnCollection.findOne({orderId:orderId});
+    //  const StatusOfThespecificReturnStatus = specificReturnStatus.status;
+     console.log("About the status :",specificReturnStatus?.status);
       const orderDetails = await orderCollection
       .findOne({ _id: orderId })
       .populate({
         path: 'productdetails',
         model: 'collectionOfProduct',
       });
+
         console.log(" the order details inside the :",orderDetails);
       if (!orderDetails) {
         // If the order with the specified orderId doesn't exist
@@ -243,8 +232,8 @@ const submitAddress = async (req, res) => {
           // Handle the case where a product is not found (optional)
         }
       }
-  
-      res.render('user/singleOrder', { orderDetails, productsWithImages });
+      // console.log("the specialReturn status is :",specificReturnStatus.status);
+      res.render('user/singleOrder', { orderDetails, productsWithImages,specificReturnStatus });
     } catch (error) {
       console.error(error.message);
       res.status(500).send(error.message);
@@ -254,7 +243,7 @@ const submitAddress = async (req, res) => {
   const cancelOrder = async (req, res) => {
     try {
       const orderId = req.params.id;
-  
+    const email = req.session.user;
       const updatedOrder = await orderCollection.findOneAndUpdate(
         { _id: orderId },
         { $set: { orderStatus: 'Cancelled' } },
@@ -265,9 +254,9 @@ const submitAddress = async (req, res) => {
   
       if (updatedOrder) {
         // Fetch all orders again after the update
-        const allOrders = await orderCollection.find();
+        const orders = await orderCollection.find({ email:email});
         
-        res.render("user/orderList", { orders: allOrders });
+        res.render("user/orderList", { orders });
       } else {
         console.log("Error in canceling order");
         res.status(404).json({ error: 'Order not found or error in canceling order' });
@@ -282,8 +271,8 @@ const submitAddress = async (req, res) => {
     try {
       const orderId = req.params.id;
       console.log("the return total product", orderId);
-      const user = req.session.user;
-      const userData = await userCollection.findOne({email:user});
+      const email = req.session.user;
+      const userData = await userCollection.find({email:email});
       console.log("The user is here:", userData);
       const orderDetails = await orderCollection.findById(orderId).populate('productdetails');
       
@@ -310,49 +299,23 @@ const submitAddress = async (req, res) => {
       res.status(500).send(error.message);
     }
   };
+
   const walletLoad = async (req, res) => {
     try {
-      const user = req.session.user;
-      const userDoc = await userCollection.findOne({ email: user });
-      const returnDetailsOfUser = await returnCollection.findOne({ userId: userDoc._id });
+      const email = req.session.user;
+      const userDoc = await userCollection.findOne({ email: email });
+      const walletData = await walletCollection.find({ userId: userDoc._id });
   
-      if (returnDetailsOfUser.status === 'return approved') {
-        const currentTime = new Date();
-        
-        const sendData = await walletCollection.find({
-          userId: userDoc._id,
-          // AddedAmount: returnDetailsOfUser.amount,
-          // time: currentTime
-        });
-        req.session.sendData = sendData[0] || {};
-        console.log("the details of the sendData session is:",req.session.sendData);
-        const duplicateCheck = await walletCollection.findOne({
-          userId: userDoc._id,
-          AddedAmount: returnDetailsOfUser.amount,
-          time: { $gte: currentTime }
-        });
-        
-          if (!duplicateCheck) {
-          const wallet = await walletCollection.create({userId: userDoc._id, AddedAmount: returnDetailsOfUser.amount, time: Date.now()});
-          if(wallet){
-            console.log("Wallet document created");
-          }
-        } else {
-          console.log("Wallet data already exists, no need to update");
-        }
-      } else if (returnDetailsOfUser.status === 'return access denied by admin') {
-        console.log("Returns access was denied in the wallet load");
-      } else {
-        return res.send('Status of the returnDetails was not changed ');
-      }
+      const totalAmount = walletData.reduce((acc, wallet) => acc + wallet.totalAmount, 0);
+      await walletCollection.updateOne(
+        { userId: userDoc._id },
+        { $set: { amounts: [totalAmount] } }
+      );
   
-      const walletData = await walletCollection.findOne({ userId: userDoc._id });
-      console.log("The wallet's data is :", walletData);
-      res.render('user/wallet', { walletData });
+      res.render('user/wallet', { total: totalAmount });
     } catch (error) {
-       console.log("Error handled in the wallet load");
-       res.send(error.message);
-     }
+      res.send(error.message);
+    }
   };
   
   const payPost = async(req,res)=>{

@@ -7,6 +7,7 @@ const CategoryCollection = require('../model/categoryCollection');
 const orderCollection = require('../model/orderCollection');
 const addressCollection = require('../model/addressCollection');
 const returnCollection = require('../model/returnCollection');
+const walletCollection = require('../model/walletCollection')
 
 const sharp = require('sharp');
 
@@ -502,22 +503,39 @@ const ordersPost = async (req, res) => {
     console.log(error.message);
   }
  };
-
  const Approved = async (req, res) => {
   try {
-    console.log("here the approved");
     const orderId = req.params.id;
-    console.log("the order id is here !", orderId);
-    const data = await returnCollection.findOne({ orderId });
-    console.log("the data is here :", data);
-    await returnCollection.findByIdAndUpdate(data._id, { $set: { status: "return approved" } });
-
-    res.json({ status: "return approved" }); 
+    const data = await returnCollection.findOne({ orderId: orderId });
+    if (!data) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    const constConfirmReturn = await returnCollection.findByIdAndUpdate(
+      data._id,
+      { $set: { status: "return approved", time: Date.now() } },
+      { new: true }
+    );
+    if (constConfirmReturn.status === "return approved") {
+      let walletSave = await walletCollection.findOne({ userId: data.userId });
+      if (!walletSave) {
+        let newWalletSave = new walletCollection({
+          userId: data.userId,
+          amounts: [data.amount],
+        });
+        await newWalletSave.save();
+      } else {
+        walletSave.amounts.push(data.amount);
+        await walletSave.save();
+      }
+      res.json({ status: "return approved" });
+    }
   } catch (error) {
-    console.log("the error in the error section of the approved section ");
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.toString() });
   }
 };
+
+
+
 const Denyed = async (req, res) => {
   try {
     console.log("111111");

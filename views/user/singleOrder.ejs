@@ -260,7 +260,9 @@ background: linear-gradient(to top left, rgb(87, 87, 82), rgba(246, 243, 255, 1)
                                 <button type="submit" id="returnButton" class="btn btn-secondary" onclick="event.preventDefault(); hideButton();">
                                     Return?
                                 </button>
-                                 
+                                
+                                <h5 style="color: #0e0d0e;"> <%= specificReturnStatus?.status %></h5>
+
                             </form>
                         <% } else if (orderDetails.orderStatus === 'Cancelled') { %>
                             <h2 style="text-decoration-thickness: 30px; color: #383a6e;">Sorry!</h2>
