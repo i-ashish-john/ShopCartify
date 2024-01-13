@@ -28,11 +28,15 @@ router.post('/unblock/:id',AdminSession, adminController.unblockid);
 router.get('/logout',AdminSession, adminController.logout);
 router.get('/usermanage', AdminSession,adminController.usermanage);
 router.get('/productmanage', AdminSession,adminController.productmanage);
-router.post('/productmanagePost',AdminSession, upload.array('Images', 5), adminController.productmanagePost);
+// router.post('/productmanagePost',AdminSession, upload.array('Images', 5), adminController.productmanagePost);
+router.post('/productmanagePost',AdminSession, upload.array('Images',5), adminController.productmanagePost);
+
 router.get('/productlist', AdminSession,adminController.productlist);
+
 router.post('/deleteproduct/:id', AdminSession,adminController.productDelete);
-router.post('/updateproduct/:id',AdminSession, upload.array('Images', 5), adminController.updateproduct);
 router.get('/editproduct/:id',AdminSession, adminController.editproduct);
+
+router.post('/updateproduct/:id',AdminSession, upload.array('Images', 5), adminController.updateproduct);
 
 router.get('/categoryadd', AdminSession,adminController.categoryadd);
 router.post('/categoryadd',AdminSession, adminController.categoryaddPost)

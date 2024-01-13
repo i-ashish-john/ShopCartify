@@ -1,158 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Product</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
-
-  <style>
-    body {
-      background: #fff;
-    }
-
-    .container-fluid {
-      background: #fff;
-    }
-
-    .container {
-      background: #fff;
-      color: #333;
-    }
-
-    label {
-      color: #333;
-    }
-
-    input, select, textarea {
-      color: #333;
-      border: 1px solid #ccc;
-      margin-top: 5px;
-      padding: 10px;
-      width: 100%;
-    }
-
-    button {
-      background-color: #ffcc00;
-      border-color: #ffcc00;
-      color: #333;
-      padding: 10px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #ffdb4d;
-      border-color: #ffdb4d;
-    }
-
-    #imagePreview {
-      max-width: 100%;
-      height: auto;
-      display: none;
-    }
-
-    #cropperContainer {
-      display: none;
-    }
-  </style>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Add Product</title>
+ <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+ <link rel="stylesheet" href="/product-admin-master/css/fontawesome.min.css" />
+ <link rel="stylesheet" href="/product-admin-master/jquery-ui-datepicker/jquery-ui.min.css" type="text/css" />
+ <link rel="stylesheet" href="/product-admin-master/css/bootstrap.min.css" />
+ <link rel="stylesheet" href="/product-admin-master/css/templatemo-style.css">
 </head>
 <body>
-  
-  <div class="container">
-    <h2>Add Product</h2>
-    <form action="/admin/productmanagePost" method="post" enctype="multipart/form-data">
-      <!-- Image Upload -->
-      <div>
-        <label for="productImage">Product Image:</label>
-        <input type="file" id="productImage" name="Images" accept=".jpg, .jpeg, .png, .gif, .webp" multiple>
-        <img id="imagePreview">
-        <div id="cropperContainer"></div>
-      </div>
-      <!-- Product Name -->
-      <div>
-        <label for="productName">Product Name:</label>
-        <input type="text" id="productName" name="name" required>
-      </div>
-      <!-- Price -->
-      <div>
-        <label for="productPrice">Product Price:</label>
-        <input type="number" id="productPrice" name="price" step="0.01" required>
-      </div>
-      <!-- Category, Stock, Description -->
-      <div>
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-          <option value="Mens">Mens</option>
-          <option value="Womens">Womens</option>
-        </select>
-      </div>
-      <div>
-        <label for="stock">Stock:</label>
-        <input type="number" id="stock" name="stock" required>
-      </div>
-      <div>
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea>
-      </div>
-      <!-- Submit Button -->
-      <button type="submit">Add Product</button>
-    </form>
-  </div>
+ <nav class="navbar navbar-expand-xl">
+   <!-- Navbar code here -->
+ </nav>
+ 
+ <div class="container tm-mt-big tm-mb-big">
+   <div class="row">
+     <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+       <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+         <div class="row">
+           <div class="col-12">
+             <h2 class="tm-block-title d-inline-block">Add Product</h2>
+           </div>
+         </div>
+         <div class="row tm-edit-product-row">
+           <div class="col-xl-6 col-lg-6 col-md-12">
+             <form action="/admin/productmanagePost" method="post" enctype="multipart/form-data">
+               <!-- Image Upload -->
+               <div>
+                <label for="productImage">Product Image:</label>
+                <input type="file" id="productImage" name="Images" accept=".jpg, .jpeg, .png, .gif, .webp" multiple>
+                <img id="imagePreview">
+                <div id="cropperContainer"></div>
+               </div>
+               <!-- Product Name -->
+               <div class="form-group mb-3">
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" name="name" class="form-control validate" required>
+               </div>
+               <!-- Price -->
+               <div class="form-group mb-3">
+                <label for="productPrice">Product Price:</label>
+                <input type="number" id="productPrice" name="price" step="0.01" class="form-control validate" required>
+               </div>
+               <!-- Category, Stock, Description -->
+               <div class="form-group mb-3">
+                <label for="category">Category:</label>
+                <select id="category" name="category" class="custom-select tm-select-accounts" required>
+                  <option value="Mens">Mens</option>
+                  <option value="Womens">Womens</option>
+                </select>
+               </div>
+               <div class="form-group mb-3">
+                <label for="stock">Stock:</label>
+                <input type="number" id="stock" name="stock" class="form-control validate" required>
+               </div>
+               <div class="form-group mb-3">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" class="form-control validate" required></textarea>
+               </div>
+               <!-- Submit Button -->
+               <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block text-uppercase">Add Product Now</button>
+               </div>
+             </form>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ 
+ <footer class="tm-footer row tm-mt-small">
+   <!-- Footer code here -->
+ </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const input = document.getElementById('productImage');
-      const imagePreview = document.getElementById('imagePreview');
-      const cropperContainer = document.getElementById('cropperContainer');
-      let cropper;
-
-      input.addEventListener('change', function (e) {
-        const file = e.target.files[0];
-
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = 'block';
-            cropperContainer.style.display = 'block';
-
-            cropper = new Cropper(imagePreview, {
-              aspectRatio: 1,
-              viewMode: 1,
-              autoCropArea: 1,
-              crop: function (event) {
-                // Handle crop event if needed
-              },
-            });
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-
-      const addButton = document.createElement('button');
-      addButton.innerText = 'Crop and Add Product';
-      addButton.addEventListener('click', function () {
-        if (cropper) {
-          const croppedDataUrl = cropper.getCroppedCanvas().toDataURL();
-
-          const hiddenInput = document.createElement('input');
-          hiddenInput.type = 'hidden';
-          hiddenInput.name = 'croppedImage';
-          hiddenInput.value = croppedDataUrl;
-          document.querySelector('form').appendChild(hiddenInput);
-
-          document.querySelector('form').submit();
-        }
-      });
-
-      document.querySelector('form').appendChild(addButton);
-    });
-  </script>
+ <script>
+   // JavaScript code here
+ </script>
 </body>
 </html>

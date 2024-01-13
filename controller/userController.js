@@ -384,7 +384,8 @@ const checkout = async (req, res) => {
     // Fetch the user's wallet balance
 // Fetch the user's wallet balance
 const wallet = await walletCollection.findOne({ userId: user._id }) || {};
-const walletBalance = wallet.balance !== undefined ? wallet.balance : 0;
+const walletBalance = wallet.amounts !== undefined ? wallet.amounts : 0;
+console.log("========",walletBalance);
 
     let cartFound = await cartCollection.findOne({ userId: user._id }).populate({
       path: 'products.productId',
@@ -480,6 +481,8 @@ const NewAddressAddedForUser = async (req, res) => {
     if (!street || !country || !city || !state || !zip) {
       const noData = 'Please fill in all the fields.';
       return res.render('user/addAddressUser', { noData });
+      // return res.render('user/checkout',{ noData });
+
     }
 
 

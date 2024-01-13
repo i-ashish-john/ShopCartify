@@ -1,28 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Category</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-</head>
-<body class="font-sans text-center p-20">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Category</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
+  <link rel="stylesheet" href="/product-admin-master/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="/product-admin-master/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/product-admin-master/css/templatemo-style.css" />
+  <!-- Additional styling specific to this page -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
 
-    <h2 class="text-3xl mb-8">Edit Category</h2>
+    .form-container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
 
-    <form action="/admin/categoryManagementedit/<%=categoriesData.id %>" method="post" class="max-w-md mx-auto">
-        <!-- Category Name -->
-        <label for="categoryName" class="block mb-2 text-left">Category Name:</label>
-        <input type="text" id="categoryName" name="categoryName" value="<%=categoriesData.categoryName%>" required class="w-full p-2 mb-4 border border-gray-300 rounded">
-      
-        <!-- Category Description -->
-        <label for="categoryDescription" class="block mb-2 text-left">Category Description:</label>
-        <textarea id="categoryDescription" name="categoryDescription" rows="4" required class="w-full p-2 mb-4 border border-gray-300 rounded"><%= categoriesData.categoryDescription %></textarea>
+    label {
+      display: block;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .error-message {
+      color: red;
+      margin-bottom: 16px;
+    }
+  </style>
+ </head>
+ <body>
+  <h2 class="text-3xl mb-8">Edit Category</h2>
+  <div class="form-container">
     
-        <!-- Submit Button -->
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Edit Category</button>
+    <form  action="/admin/categoryManagementedit/<%=categoriesData.id %>"  method="post">
+      <!-- Category Name -->
+      <label for="categoryName">Category Name:</label>
+      <input type="text" id="categoryName" name="categoryName"  value="<%=categoriesData.categoryName%>" required />
+      <!-- Category Description -->
+      <label for="categoryDescription">Category Description:</label>
+      <input id="categoryDescription"  type="text"  name="categoryDescription"  value="<%= categoriesData.categoryDescription %>" required/ >
+      <!-- Deleted -->
+    
+      <!-- Error Message -->
+      <div class="error-message">
+        <p><%= locals.categoryError %></p>
+      </div>
+      <!-- Submit Button -->
+      <button type="submit">edit Category</button>
     </form>
-   
 
-</body>
+  </div>
+  <script src="/product-admin-master/js/jquery-3.3.1.min.js"></script>
+  <script src="/product-admin-master/js/bootstrap.min.js"></script>
+ </body>
 </html>

@@ -7,6 +7,10 @@
   <title>ShopCartify</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
+    .login-form {
+  transform-origin: center;
+  
+}
     body {
       margin: 0;
       padding: 0;
@@ -39,7 +43,7 @@
     }
 
     .login-form {
-      background: rgba(255, 255, 255, 0.9);
+      background: #ffffff;
       padding: 30px;
       border-radius: 15px;
       width: 350px;
@@ -52,7 +56,7 @@
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
-      border: 1px solid #ccc;
+      border: 1px solid #291f1f45;
       border-radius: 8px;
       transition: border-color 0.3s ease-in-out;
       font-size: 16px;
@@ -187,6 +191,22 @@
         overlay.style.pointerEvents = 'auto';
         overlay.style.transition = 'opacity 0.3s ease-in-out';
       });
+    </script>
+
+    
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const loginForm = document.querySelector('.login-form');
+  loginForm.style.transform = 'scale(0)';
+  loginForm.style.opacity = 0;
+  loginForm.style.transition = 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out';
+
+  setTimeout(() => {
+    loginForm.style.transform = 'scale(1)';
+    loginForm.style.opacity = 1;
+  }, 100); // Delay of 100ms to ensure the initial styles are applied
+});
+
     </script>
 </body>
 </html>

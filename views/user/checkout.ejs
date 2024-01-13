@@ -9,25 +9,40 @@
     <meta content="Free HTML Templates" name="description">
 
     <style>
-      .wallet-balance {
-        color: <%= walletBalance < cartFound.total ? 'red' : 'inherit' %>;
-      }
-    
-      .overlay {
-        /* Add your overlay styles here */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 999;
-      }
+
+.wallet-balance.insufficient {
+  color: red;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.box {
+   width: 200px;
+   height: 250px;
+   background: #fff;
+   border-radius: 5px;
+   box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.1);
+}
+.main {
+   width: 200px;
+   height: 250px;
+   background: #fff;
+   border-radius: 5px;
+   box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.1);
+}
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
     
@@ -46,6 +61,9 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/NEW TEMP/online-shop-website-template/css/style.css" rel="stylesheet">
+       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="/NEW TEMP/online-shop-website-template/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -182,13 +200,13 @@
                             <!-- Wishlist Icon -->
                             <a href="" class="btn px-0 ml-3">
                                 <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"></span>
                             </a>
                         
                                 <a href="/cartload" class="btn px-0 ml-3">
                                     <i class="fas fa-shopping-cart text-primary"></i>
-                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"> 0</span>
-                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"> </span>
+                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"></span>
                                 </a>
 
                         </div>
@@ -205,188 +223,216 @@
 
 
 
-  <section class="bg-light py-5" >
-    <div class="container bg-dark" >
-      <div class="row" >
+ <section class="bg-light py-5 ">
+        <div class="container bg-white">
+            <div class="row ma">
         <!-- Checkout Details -->
-        <div class="col-xl-8 col-lg-8 mb-4" >
-          <div class="card mb-4 border shadow-0" >
-            <!-- Checkout Form -->
+        <div class="col-xl-8 col-lg-8 mb-4  ">
+          <div class="card mb-4 border shadow-0">
+              <!-- Checkout Form -->
+<!-- Item in Cart -->
+<div class="card">
+ <div class="card-header">
+   Items  In The CheckOut
+ </div>
+ <ul class="list-group list-group-flush">
+   <% cartFound.products.forEach((product) => { %>
+   <li class="list-group-item">
+     <div class="row">
+       <div class="col-md-2">
+         <img src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>" class="img-thumbnail" alt="Product Image">
+       </div>
+       <div class="col-md-10">
+         <h5><%= product.productId.name %></h5>
+         <p>Quantity: <%= product.quantity %></p>
+         <p>Price: ₹ <%= product.price %></p>
+       </div>
+     </div>
+   </li>
+   <% }); %>
+ </ul>
+</div>
 
-            <form id="checkOutForm"  action="/checkoutpost" method="post">
-              <!-- User Information -->
-              <div class="card shadow-0 border" style="color: #576570;">
-                <div class="p-4">
-                  <h5 class="card-title mb-3">Check out page</h5>
-                  <!-- User Name -->
-                  <div class="row">
-                    <div class="col-6 mb-3">
-                      <p class="mb-0">User name</p>
-                      <div class="form-outline">
-                        <input type="text" id="typename" name="username" class="form-control" value="<%= user.name %>" readonly />
-                      </div>
-                    </div>
-                    <!-- Email -->
-                    <div class="col-6 mb-3">
-                      <p class="mb-0">Email</p>
-                      <div class="form-outline">
-                        <input type="email" id="typeemail"  name="email" class="form-control" value="<%= user.email %>" readonly />
-                      </div>
-                    </div>
-                  </div>
-                  <hr class="my-4" />
-                  <!-- Payment Type -->
-                  <h5 class="card-title mb-3">Choose payment type</h5>
-                  <!-- Payment Options -->
-                  <div class="row mb-3">
-                    <!-- Cash on Delivery -->
+<!-- Checkout Form -->
+<form id="checkOutForm" action="/checkoutpost" method="post">
+ <div class="card">
 
-                    <div class="col-lg-4 mb-3">
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio" value="CashOnDelivery" name="paymentType" id="flexRadioDefault1"  checked />
-                          <label class="form-check-label" for="flexRadioDefault1">Cash on delivery<br /></label>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Net Banking -->
-                    <div class="col-lg-4 mb-3">
-                      <div class="form-check h-100 border rounded-3">
-                        <div class="p-3">
-                          <input class="form-check-input" type="radio"    value="NetBanking"   name="paymentType" id="flexRadioDefault2" checked />
-                          <label class="form-check-label" for="flexRadioDefault2">Net banking <br /></label>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Other Payment Option -->
-                 
-                      <!-- Add more payment options if needed -->
-                      <!-- ... (other payment options) ... -->
-               
-                  <div class="col-lg-4 mb-3">
-                    <div class="form-check h-100 border rounded-3">
-                      <div class="p-3">
-                        <input class="form-check-input" type="radio" value="Wallet" name="paymentType" id="flexRadioDefault3" <%= walletBalance >= cartFound.total ? 'checked' : 'disabled' %> />
-                        <label class="form-check-label" for="flexRadioDefault3">
-                          Pay with wallet
-                          <span class="wallet-balance <%= walletBalance < cartFound.total ? 'insufficient' : '' %>">
-                            ₹ <%= walletBalance.toFixed(2) %>
-                          </span>
-                        </label>
-                        <% if (walletBalance < cartFound.total) { %>
-                          <div class="">
-                            <p>Your wallet balance is insufficient.</p>
-                          </div>
-                        <% } %>
-                      </div>
-                    </div>
-                  </div>
-             
+   <div class="card-body">
+     <h5 class="card-title">User Information</h5>
+     <div class="form-group">
+       <label for="username">Username</label>
+       <input type="text" id="username" name="username" class="form-control" value="<%= user.name %>" readonly />
+     </div>
+     <div class="form-group">
+       <label for="email">Email</label>
+       <input type="email" id="email" name="email" class="form-control" value="<%= user.email %>" readonly />
+     </div>
+     <hr>
+     <h5 class="card-title">Choose Payment Type</h5>
+     <div class="form-check">
+        <input class="form-check-input" type="radio" value="CashOnDelivery" name="paymentType" id="flexRadioDefault1"  checked />
+        <label class="form-check-label" for="flexRadioDefault1">Cash on delivery<br /></label>
+     </div>
 
-                  <!-- Address Selection -->
-                  <div>
-                    <% if (addresses && addresses.length > 0) { %>
-                      <h5 class="card-title mb-3">Choose address</h5>
-                      <!-- Address Selection Dropdown -->
-                      <div class="mb-3">
-                        <label for="addressSelect" class="form-label">Select Address</label>
+     <div class="form-check">
+       <input class="form-check-input" type="radio" value="NetBanking" name="paymentType" id="NetBanking" />
+       <label class="form-check-label" for="NetBanking">Net banking</label>
+     </div>
 
-                        <select class="form-select" id="addressSelect" name="selectedAddressId">
-                          <option value="" disabled>Select an address</option>
-                          <% addresses.forEach(address => { %>
-                            <option value="<%= address._id %>" data-street="<%= address %>" data-city="<%= address %>" data-state="<%= address %>" data-zip="<%= address %>" data-country="<%= address %>">
-                              <%= address.street %>: <%= address.city %>: <%= address.state %> :<%= address.zip %>: <%= address.country %>
-                            </option>
-                          <% }) %>
-                        </select>
-                        
+     <div class="form-check">
+       <input class="form-check-input" type="radio" value="Wallet" name="paymentType" id="wallet" <%= walletBalance >= cartFound.total ? 'checked' : 'disabled' %> />
+       <label class="form-check-label" for="wallet">
+         Pay with wallet
+         <span class="wallet-balance <%= walletBalance < cartFound.total ? 'insufficient' : '' %>">
+           ₹ <%= walletBalance %>
+         </span>
+       </label>
+       <% if (walletBalance < cartFound.total) { %>
+         <small class="form-text text-danger">Your wallet balance is insufficient.</small>
+       <% } %>
+     </div>
+     <hr>
+     <h5 class="card-title">Choose Address</h5>
+     <div class="form-group">
+       <select class="form-control" id="addressSelect" name="selectedAddressId">
+         <option value="" disabled>Select an address</option>
+         <% addresses.forEach(address => { %>
+           <option value="<%= address._id %>" data-street="<%= address %>" data-city="<%= address %>" data-state="<%= address %>" data-zip="<%= address %>" data-country="<%= address %>">
+             <%= address.street %>: <%= address.city %>: <%= address.state %> :<%= address.zip %>: <%= address.country %>
+           </option>
+         <% }) %>
+       </select>
+     </div>
+     <button type="submit" class="btn btn-primary" style="border-radius: 10px;">Continue</button>
+     <button type="button" class="btn btn-primary" id="addAddressBtn">Add Address </button>
 
-                        <div>
-                          <button type="button" class="btn btn-primary" id="addAddressBtn">Add Address </button>
-                          <button class="btn btn-success shadow-0 border" type="submit">Continue</button>
 
-                        </div>
+   </div>
+ </div>
+</form>
 
-                        <!-- Add Address Button -->
-                      </div>
-                      <!-- Checkout Buttons -->
-                      <!-- <div class="float-end">
-                        <button class="btn btn-light border">Cancel</button>
-                      </div> -->
-                    <% } else { %>
-                      <p>No addresses found. Please add an address.</p>
-                    <% } %>
-                  </div>
-                </div>
-              </div>
-              <input type="hidden" name="totalPrice" value="<%= cartFound.total+14 %>" />
-          </form>
-          
 <!-- <-----form ending---> 
           </div>
         </div>
-        <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
-        <div class="ms-lg-4 mt-4 mt-lg-0" style="max-width: 320px;">
-          <h6 class="mb-3">Summary</h6>
-          <div class="d-flex justify-content-between">
-            <p class="mb-2">Total price:</p>
-            <p class="mb-2">₹ <%= cartFound.total %></p>
-          </div>
-          <!-- <div class="d-flex justify-content-between">
-            <p class="mb-2">Discount:</p>
-            <p class="mb-2 text-danger">- ₹60.00</p>
-          </div> -->
-          <div class="d-flex justify-content-between">
-            <p class="mb-2">Shipping cost:</p>
-            <p class="mb-2">+ ₹14.00</p>
-          </div>
-          <hr />
+         <!-- item in check out section part -->
+         <!-- summary starts -->
+         
+         <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end border box ">
+          <div class="ms-lg-4 mt-4 mt-lg-0 " style="max-width: 320px;">
+              <h6 class="mb-3 text-dark"><strong>Summary</strong></h6>
+              <div class="d-flex justify-content-between">
+                  <p class="mb-2"><strong>Total price:</strong></p>
+                  <p class="mb-2">₹ <%= cartFound.total %></p>
+              </div>
+              <!-- <div class="d-flex justify-content-between">
+                  <p class="mb-2">Discount:</p>
+                  <p class="mb-2 text-danger">- ₹60.00</p>
+              </div> -->
+              <div class="d-flex justify-content-between">
+                  <p class="mb-2"><strong>Shipping cost:</strong></p>
+                  <p class="mb-2">+ ₹14.00</p>
+              </div>
+            <br>
 
-          <div class="d-flex justify-content-between">
-            <p class="mb-2">Total price:</p>
-             ₹<%= cartFound.total+14 %>/-
+            <div class="d-flex justify-content-between">
+            <input type="hidden" name="totalPrice" value="<%= cartFound.total+14 %>" />  
+                <p class="mb-2"><strong>Shipping cost:</strong></p>
+                <p class="mb-2">₹<%= cartFound.total+14 %>/-</p>
           </div>
-          
+      
         </form>
-          <!-- <div class="input-group mt-3 mb-4">
+        <div class="input-group mt-3 mb-4">
             <input type="text" class="form-control border" name="" placeholder="Promo code" />
             <button class="btn btn-light text-primary border">Apply</button>
-          </div> -->
-
-          <hr />
-        
-          <h6 class="text-dark my-4">Items in cart</h6>
-          <% cartFound.products.forEach((product) => { %>
-          <div class="d-flex align-items-center mb-4">
-
-            <div class="me-3 position-relative">
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                <%= product.quantity %>
-              </span>
-              <img src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>" style="height: 96px; width: 96x;" class="img-sm rounded border" />
-            </div>
-
-            <div class="">
-              <a href="#" class="nav-link">
-              <%= product.productId.name %><br />
-              <!-- <%= product.productId.description %> -->
-              </a>
-              <div class="price text-muted">Price:₹ <%= product.price%></div>
-            </div>
-          </div>
-          <% }); %>
-
-     
-
-         
         </div>
-
+      
+            
+      
+              <h6 class="text-dark my-4"><br></h6>
+              <% cartFound.products.forEach((product) => { %>
+              <div class="d-flex align-items-center mb-4">
+      
+                  <div class="me-3 position-relative">
+                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
+                          <%= product.quantity %>
+                      </span>
+                      <img src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>" style="height: 96px; width: 96x;" class="img-sm rounded border" />
+                  </div>
+      
+                  <div class="">
+                      <a href="#" class="nav-link">
+                          <%= product.productId.name %><br />
+                          <!-- <%= product.productId.description %> -->
+                      </a>
+                      <div class="price text-muted">Price:₹ <%= product.price%></div>
+                  </div>
+              </div>
+              <% }); %>
+      
+          </div>
       </div>
+      
+
+      <!-- summary ends -->
     </div>
   </div>
+  <!-- ---- the modal for adding address goes here--- -->
+
+   
+  <div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+
+               <!-- Your address form goes here -->
+               <form id="addressForm" action="/NewAddressAddedForUser" method="POST">
+
+                 <div class="form-group">
+                    <label for="Street">Street</label>
+                    <input type="name" class="form-control" id="Street" placeholder="Enter Street" name="street" >
+                 </div>
+
+                 <div class="form-group">
+                    <label for="Country">Country</label>
+                    <input type="text" class="form-control" id="Country" placeholder="Enter Country" name="country" >
+                 </div>
+                 
+                 <div class="form-group">
+                    <label for="City">City</label>
+                    <input type="name" class="form-control" id="City" placeholder="Enter City" name="city" >
+                 </div>
+
+                 <div class="form-group">
+                    <label for="State">State</label>
+                    <input type="text" class="form-control" id="State" placeholder="Enter State" name="state">
+                 </div>
+
+                 <div class="form-group">
+                    <label for="Zip">Zip Code</label>
+                    <input type="text" class="form-control" id="Zip" placeholder="Zip Code" name="zip" >
+                 </div>
+
+                 <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Submit">
+                 </div>
+
+             </form>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
   </section>
-  
-  
+ 
    
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
@@ -459,6 +505,7 @@
   </div>
   <!-- Footer End -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
   <!-- ---razorpay working script--- -->
@@ -473,11 +520,12 @@
       if (paymentType == 'NetBanking') {
         console.log("inside net");
         var razorpayKey = 'rzp_test_Jbmx59qoOc1tKj';
+       
         
         // Fetch other necessary details for the payment
         var totalPriceInRupees = document.querySelector('input[name="totalPrice"]').value;
             var totalPriceInPaisa = Math.round(parseFloat(totalPriceInRupees) * 100);
-
+            console.log("9090099");
             fetch('/payPost', {
               method: 'POST',
               headers: {
@@ -519,7 +567,8 @@
           .catch(error => {
             console.error('Error creating Razorpay order:', error);
           });
-      } else if (selectedPaymentMethod === 'CashOnDelivery') {
+        } else if (paymentType === 'CashOnDelivery') {
+            console.log("1212121");
         document.querySelector('#checkOutForm').submit();
       } else {
         alert('Invalid payment method selected.');
@@ -531,17 +580,43 @@
 
   <!-- Back to Top -->
   <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-  <script>
+
+<script>
     var addAddressBtn = document.getElementById('addAddressBtn');
   
     addAddressBtn.addEventListener('click', function() {
-      window.location.href = '/addAddressUser';
+      // window.location.href = '/addAddressUser';
+      $('#addAddressModal').modal('show');
+
+      document.querySelector('#addressForm').addEventListener('submit', (e) => {
+ e.preventDefault();
+
+ var street = document.querySelector('#Street').value.trim();
+ var country = document.querySelector('#Country').value.trim();
+ var city = document.querySelector('#City').value.trim();
+ var state = document.querySelector('#State').value.trim();
+ var zip = document.querySelector('#Zip').value.trim();
+
+ if (!street || !country || !city || !state || !zip) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Please fill all the fields.',
+  });
+  
+  return false;
+ }
+
+ this.submit();
+});
+
     });
   </script>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+   <!-- JavaScript Libraries -->
 
-  <!-- JavaScript Libraries -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
   <script src="/NEW TEMP/online-shop-website-template/lib/easing/easing.min.js"></script>
   <script src="/NEW TEMP/online-shop-website-template/lib/owlcarousel/owl.carousel.min.js"></script>
 

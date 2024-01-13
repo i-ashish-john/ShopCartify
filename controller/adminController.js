@@ -19,13 +19,15 @@ const uploads = multer({ dest: "public/uploads" });
 
 
 const dashboardForAdmin = async (req, res) => {
-  res.render('admin/dashboard');
+  const fullData  = await orderCollection.find();
+  console.log("fullData is :",fullData);
+  res.render('admin/dashboard',{fullData});
 }
 
 const dashboard = async (req, res) => {
   try {
     if (req.session.admin) {  
-      res.render('admin/dashboard');
+      res.render('admin/dashboard',{fullData:''});
     } else {
       res.redirect("/admin/login");
     }
@@ -38,7 +40,7 @@ const dashboard = async (req, res) => {
 const adminlogin = async (req, res) => {
   if (req.session.admin) {
     const users = await userCollection.find();
-    res.render('admin/dashboard', { users });
+    res.render('admin/dashboard', { users,fullData:'' });
   } else {
     res.render('admin/login')
   }
@@ -56,7 +58,7 @@ const postlogin = async (req, res) => {
       const users = await userCollection.find()
       console.log("user", users);
 
-      res.render('admin/dashboard', { users })
+      res.render('admin/dashboard', { users,fullData:'' })
     }
   } catch (error) {
     console.log(error);
@@ -196,7 +198,7 @@ const productmanage = async (req, res) => {
 const productmanagePost = async (req, res) => {
   try {
     console.log("req.files", req.files);
-
+    console.log("Product management Post Image is updating");
     const images = req.files.map(file => `public/uploads/${file.filename}`);
 
     console.log('body', req.body);
@@ -248,8 +250,11 @@ const productlist = async (req, res) => {
  
     const skip = (page - 1) * limit;
     const products = await productCollection.find(query).skip(skip).limit(limit);
- 
+    const fullProducts = await productCollection.find();
+    const categories = await CategoryCollection.find();
     res.render("admin/productManagement", {
+      categories,
+      fullProducts,
       products,
       currentPage: page,
       totalPages,
@@ -327,8 +332,6 @@ const updateproduct = async (req, res) => {
 
 const editproduct = async (req, res) => {
   try {
-
-
     const id = req.params.id;
     console.log("THE ID IS:", id);
     const product = await productCollection.findById(id);
@@ -378,8 +381,11 @@ const categorymanage = async (req, res) => {
     // Assuming categoryCollection is your MongoDB collection
     // const categories = await CategoryCollection.find({ deleted: false });
     const categories = await CategoryCollection.find();
+    const fullProducts = await productCollection.find();
 
-    res.render("admin/categoryManagement", { categories });
+    // res.render("admin/categoryManagement", { categories });
+    res.render("admin/productManagement", { categories,fullProducts });
+
   } catch (error) {
     // Handle any errors, for example, log the error and render an error page
     console.error("Error fetching categories:", error);
@@ -406,6 +412,7 @@ const categorydelete = async (req, res) => {
 const categoryeditpage = async (req, res) => {
   console.log('editpage');
   try {
+    console.log("the data  is here 1211212");
     const param = req.params.id;
     const categoriesData = await CategoryCollection.findById(param);
     const allCategories = await CategoryCollection.find();

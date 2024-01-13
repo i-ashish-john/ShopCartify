@@ -903,6 +903,17 @@ body{
                     <form method="post" action="/admin/categoryManagementdelete/<%= category._id %>">
                       <button type="submit" class="btn btn-danger">DELETE</button>
                     </form>
+
+
+                    <td>
+                        <form action="/admin/categoryManagementdelete/<%= category.id %>" method="post" class="tm-product-delete-form">
+                          <!-- Add any necessary hidden input fields for identifying the item to delete -->
+                          <button type="submit" class="tm-product-delete-link">
+                            <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                          </button>
+                        </form>
+                      </td>
+
                     <form method="post" action="/admin/categoryeditpage/<%= category._id %>">
                       <button type="submit" class="btn btn-warning">EDIT</button>
                     </form>

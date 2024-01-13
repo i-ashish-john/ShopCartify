@@ -36,6 +36,7 @@
     "path": "^0.12.7",
     "pnpm": "^8.9.2",
     "razorpay": "^2.9.2",
+    "react-spring": "^9.7.3",
     "session": "^0.1.0",
     "sharp": "^0.33.0",
     "sweetalert2": "^11.10.1",
