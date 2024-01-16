@@ -74,39 +74,49 @@ const orderStatus = async (req, res) => {
   }
 };
 
-
 const checkoutPost = async (req, res) => {
   try {
-    const { username, email, paymentType, selectedAddressId, totalPrice } = req.body;
+    const variable = {
+      username: req.body.username,
+      email: req.body.email,
+      paymentType: req.body.paymentType,
+      selectedAddressId: req.body.selectedAddressId,
+      totalPrice: req.body.totalPrice,
+    };
     const userId = req.session.user;
-
     const emailOfUser = await userCollection.findOne({ email: userId });
     const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
-
+ 
     if (!cartData) {
       return res.status(404).json({ message: 'Cart values not found' });
     }
-    const selectedAddress = emailOfUser.address.find(address => address._id == selectedAddressId);
-
+ 
+    const selectedAddress = emailOfUser.address.find(address => address._id == variable.selectedAddressId);
+ 
     const productDetailsPromises = cartData.products.map(async product => {
       const productDetails = await productCollection.findById(product.productId);
+ 
       if (productDetails) {
         const newStock = productDetails.stock - product.quantity;
+        
         if (newStock < 0) {
-          throw new Error(`Not enough stock for product: ${productDetails.name}`);
+          console.log("Insufficient stock for product: ", productDetails.name);
+          return null;
         }
+ 
         await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
       }
+
       return productDetails;
     });
-
-    const productDetailsArray = await Promise.all(productDetailsPromises);
-
+ 
+    const productDetailsArray = (await Promise.all(productDetailsPromises)).filter(detail => detail !== null);
+ 
     const order = new orderCollection({
-      username,
-      email,
-      paymentType,
-      totalPrice,
+      username: variable.username,
+      email: variable.email,
+      paymentType: variable.paymentType,
+      totalPrice: variable.totalPrice,
       productdetails: productDetailsArray.map(productDetails => productDetails._id),
       address: {
         street: selectedAddress?.street,
@@ -117,28 +127,27 @@ const checkoutPost = async (req, res) => {
       }
     });
 
-    let result = await order.save();
+   console.log("F_U_L_L D_A_T_A",order.username,"|",order.email,"|",order.paymentType,"|",order.totalPrice,"|",order.productdetails,"|",order?.address);
+    await order.save();
     await cartCollection.deleteOne({ userId: emailOfUser._id });
-    console.log("order.paymentType$$", order.paymentType);
-    if (order.paymentType === 'CashOnDelivery') {
+ 
+    if (order.paymentType === 'CashOnDelivery' || order.paymentType === 'Wallet') {
       return res.render('user/ordersuccess');
     }
-
+ 
     if (order.paymentType === 'NetBanking') {
       // NetBanking payment logic here
-    }
-
-    if (order.paymentType === 'Wallet') {
       return res.render('user/ordersuccess');
-    }
 
-    res.status(201).json({ message: 'Order saved successfully' });
+    }
+ 
+    // res.status(201).json({ message: 'Order saved successfully' });
   } catch (error) {
     console.error(error);
     res.send(error);
   }
-};
-
+ };
+ 
 
 const orderList = async (req, res) => {
   try {
@@ -273,7 +282,7 @@ const ReturnTotalProduct = async (req, res) => {
     const orderId = req.params.id;
     console.log("the return total product", orderId);
     const email = req.session.user;
-    const userData = await userCollection.find({ email: email });
+    const userData = await userCollection.findOne({ email: email });
     console.log("The user is here:", userData);
     const orderDetails = await orderCollection.findById(orderId).populate('productdetails');
 
@@ -300,9 +309,10 @@ const ReturnTotalProduct = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-
+      
 const walletLoad = async (req, res) => {
   try {
+    //this function is for displaying the wallet's total amount in the wallet template
     const email = req.session.user;
     const userDoc = await userCollection.findOne({ email: email });
     const walletData = await walletCollection.find({ userId: userDoc._id });
@@ -319,7 +329,45 @@ const walletLoad = async (req, res) => {
   }
 };
 
-const payPost = async (req, res) => {
+const walletPay = async (req, res) => {
+  try {
+    console.log("entered in to the walletPay post");
+    const user = req.session.user;
+    const userFullData = await userCollection.findOne({ email: user });
+    const totalPrice = req.body.totalPrice;
+    console.log("userFulldata",userFullData._id);
+
+    let walletBalance = await walletCollection.find({ userId: userFullData._id });
+    console.log("walletBalance is :",walletBalance);
+    console.log("wallet's amounts is :",walletBalance[0].amounts);
+    if (walletBalance && walletBalance[0].amounts && walletBalance[0].amounts.length > 0) {
+      const totalAmount = walletBalance[0].amounts.reduce((acc, amount) => acc + amount, 0);
+      console.log("totalAmount is :",totalAmount);
+      console.log("totalprice is :",totalPrice);
+
+      if (totalAmount > totalPrice) {
+        console.log("entered in to the success case");
+        const newAmounts = walletBalance[0].amounts.map(amount => amount - totalPrice);
+
+        await walletCollection.updateOne(
+          { userId: userFullData._id },
+          { $set: { amounts: newAmounts } } // Corrected this line
+        );
+
+        res.json({ success: true });
+      } else {
+        res.json({ error: 'Insufficient wallet balance' });
+      }
+    } else {
+      res.json({ error: 'No wallet balance found for the user' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const payPost = async (req, res) => {                       
 
   try {
     console.log('paypost');
@@ -344,7 +392,8 @@ module.exports = {
   cancelOrder,
   payPost,
   ReturnTotalProduct,
-  walletLoad
+  walletLoad,
+  walletPay
 
 
 };

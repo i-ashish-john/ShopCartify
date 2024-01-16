@@ -371,6 +371,7 @@ const calculateOverallTotalPrice = async () => {
 const checkout = async (req, res) => {
   try {
     console.log("inside the checkout page");
+    console.log("checkout page loaded");
     const totalPrice = parseFloat(req.query.totalPrice);
     console.log("The total price:", totalPrice);
     const email = req.session.user;
@@ -471,21 +472,16 @@ const addAddressUserPage = async (req, res) => {
   // const isUser = req.session.user;
   res.render('user/addAddressUser', { noData: '' });
 }
-
-
+// -----------------here is the  new address adding
 const NewAddressAddedForUser = async (req, res) => {
   try {
-
     const { street, country, city, state, zip } = req.body;
-
+ 
     if (!street || !country || !city || !state || !zip) {
       const noData = 'Please fill in all the fields.';
-      return res.render('user/addAddressUser', { noData });
-      // return res.render('user/checkout',{ noData });
-
+      return res.status(400).json({ message: noData });
     }
-
-
+ 
     const newData = {
       street: req.body.street,
       country: req.body.country,
@@ -493,9 +489,8 @@ const NewAddressAddedForUser = async (req, res) => {
       state: req.body.state,
       zip: req.body.zip
     };
-    const userEmail = req.session.user
-    console.log("userEmail", userEmail, req.session.user)
-
+    const userEmail = req.session.user;
+ 
     const updatedUser = await userCollection.findOneAndUpdate(
       { email: userEmail },
       {
@@ -506,19 +501,61 @@ const NewAddressAddedForUser = async (req, res) => {
       { new: true }
     );
     if (updatedUser) {
-      return res.redirect('/home');
-
+      return res.status(200).json({ message: 'Address added successfully.' });
     } else {
-      res.render('/home');
-      console.log("update user", updatedUser)
-
-      res.send("new addres for user error");
+      return res.status(500).json({ message: 'Error updating user.' });
     }
   } catch (error) {
-    console.log(error); // Log the entire error object
-    res.send("Internal Server Error: " + error.message);
+    console.log(error); 
+    return res.status(500).json({ message: 'Internal Server Error: ' + error.message });
   }
-};
+ };
+ 
+
+// const NewAddressAddedForUser = async (req, res) => {
+//   try {
+
+//     const { street, country, city, state, zip } = req.body;
+
+//     if (!street || !country || !city || !state || !zip) {
+//       const noData = 'Please fill in all the fields.';
+//       return res.render('user/addAddressUser', { noData });
+//       // return res.render('user/checkout',{ noData });
+//     }
+
+//     const newData = {
+//       street: req.body.street,
+//       country: req.body.country,
+//       city: req.body.city,
+//       state: req.body.state,
+//       zip: req.body.zip
+//     };
+//     const userEmail = req.session.user;
+//     console.log("userEmail", userEmail, req.session.user);
+
+//     const updatedUser = await userCollection.findOneAndUpdate(
+//       { email: userEmail },
+//       {
+//         $push: {
+//           'address': newData
+//         }
+//       },
+//       { new: true }
+//     );
+//     if (updatedUser) {
+//       return res.redirect('/home');
+
+//     } else {
+//       res.render('/home');
+//       console.log("update user", updatedUser)
+
+//       res.send("new addres for user error");
+//     }
+//   } catch (error) {
+//     console.log(error); // Log the entire error object
+//     res.send("Internal Server Error: " + error.message);
+//   }
+// };
 
 // const addCheckoutAddress = async (req, res) => {
 //   res.render("user/AddingCheckoutAddress");

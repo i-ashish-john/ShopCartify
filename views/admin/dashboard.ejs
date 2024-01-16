@@ -217,26 +217,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% for(let i = 0; i < fullData.length; i++) { %> 
+                                    <% fullData.forEach(function(item) { %>
                                         <tr>
-                                            <th scope="row"><b><%= fullData[i].orderId %> </b></th>
-                                            <td><%= fullData[i].totalPrice %> </td>
+                                            <th scope="row"><b><%= item.orderId %> </b></th>
+                                            <td><%= item.totalPrice %> </td>
                                             <td>
-                                                <select class="form-select" name="orderStatus" id="orderStatus-<%= fullData[i]._id %> "
-                                                    onchange="updateOrderStatus('<%= fullData[i]._id %> ')">
-                                                    <option value="Pending" <%= fullData[i].orderStatus === 'Pending' ? 'selected' : '' %> >Pending</option>
-                                                    <option value="Confirm Order" <%= fullData[i].orderStatus === 'Confirm Order' ? 'selected' : '' %> >Confirm Order</option>
-                                                    <option value="Shipped" <%= fullData[i].orderStatus === 'Shipped' ? 'selected' : '' %> >Shipped</option>
-                                                    <option value="Out for delivery" <%= fullData[i].orderStatus === 'Out for delivery' ? 'selected' : '' %> >Out for delivery</option>
-                                                    <option value="Delivered" <%= fullData[i].orderStatus === 'Delivered' ? 'selected' : '' %> >Delivered</option>
+                                                <select class="form-select" name="orderStatus" id="orderStatus-<%= item._id %> "
+                                                     onchange="updateOrderStatus('<%= item._id %> ')">
+                                                    <option value="Pending" <%= item.orderStatus === 'Pending' ? 'selected' : '' %> >Pending</option>
+                                                    <option value="Confirm Order" <%= item.orderStatus === 'Confirm Order' ? 'selected' : '' %> >Confirm Order</option>
+                                                    <option value="Shipped" <%= item.orderStatus === 'Shipped' ? 'selected' : '' %> >Shipped</option>
+                                                    <option value="Out for delivery" <%= item.orderStatus === 'Out for delivery' ? 'selected' : '' %> >Out for delivery</option>
+                                                    <option value="Delivered" <%= item.orderStatus === 'Delivered' ? 'selected' : '' %> >Delivered</option>
                                                 </select>
                                             </td>
-                                            <td><%= fullData[i].address.street %> , <%= fullData[i].address.city %> , <%= fullData[i].address.state %>  - <%= fullData[i].address.zip %> , <%= fullData[i].address.country %> 
+                                            <td><%= item.address.street %> , <%= item.address.city %> , <%= item.address.state %> - <%= item.address.zip %> , <%= item.address.country %> 
                                             </td>
-                                            <td><%= fullData[i].orderDate %> </td>
+                                            <td><%= item.orderDate %> </td>
                                         </tr>
-                                     <% } %> 
-                                     
+                                    <% }) %>
                                 </tbody>
                             </table>
                         </div>
@@ -292,7 +291,8 @@
     </script>
     
     <script>
-        function updateOrderStatus(orderId) {
+        console.log("hey helloi");
+        function updateOrderStatus(orderId) { 
    const selectedStatus = document.getElementById(`orderStatus-${orderId}`).value;
 
    // Use fetch to send an asynchronous request to update the order status

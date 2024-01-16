@@ -883,6 +883,7 @@ body{
                 </td>
                 <td data-label="Total Price"><%= order.totalPrice %>/-</td>
                 <% if (['Pending', 'Confirm Order', 'Shipped', 'Out for delivery', 'Delivered'].includes(order.orderStatus)) { %>
+
                 <td data-label="Order Status">
                     <select class="form-select" name="orderStatus" id="orderStatus-<%= order._id %>"
                         onchange="updateOrderStatus('<%= order._id %>')">
@@ -894,6 +895,7 @@ body{
                         <option value="Delivered" <%= order.orderStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
                     </select>
                 </td>
+                
                 <% } else { %>
                 <td data-label="Order Status" style="background-color: $purple-700;">
                     <a href="#"><h5>This item is cancelled by the user</h5></a>

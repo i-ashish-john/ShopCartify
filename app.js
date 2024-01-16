@@ -63,7 +63,8 @@ app.use(compression());
 const speedLimiter = slowDown({
   windowMs: 15 * 60 * 1000, // 15 minutes
   delayAfter: 50, // allow 50 requests per 15 minutes, then...
-  delayMs: 1000 // begin adding 1000ms of delay per request above 50:
+  delayMs: 1000,
+  options: { delayMs: false } // begin adding 1000ms of delay per request above 50:
  });
  
 app.use(speedLimiter); 

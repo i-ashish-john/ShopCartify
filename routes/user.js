@@ -50,6 +50,7 @@ router.post('/SingleOrderlist/:id', Usersession, blockedAuth, orderController.Si
 router.post('/cancelOrders/:id', Usersession, blockedAuth, orderController.cancelOrder);
 router.post('/RetrunProduct/:id',Usersession,blockedAuth,orderController.ReturnTotalProduct);
 router.get('/walletLoad',Usersession,blockedAuth,orderController.walletLoad);
+router.post('/walletPay',Usersession,blockedAuth,orderController.walletPay);
 
 
 

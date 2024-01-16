@@ -27,7 +27,8 @@ const dashboardForAdmin = async (req, res) => {
 const dashboard = async (req, res) => {
   try {
     if (req.session.admin) {  
-      res.render('admin/dashboard',{fullData:''});
+      const fullData  = await orderCollection.find();
+      res.render('admin/dashboard',{fullData});
     } else {
       res.redirect("/admin/login");
     }
@@ -40,7 +41,8 @@ const dashboard = async (req, res) => {
 const adminlogin = async (req, res) => {
   if (req.session.admin) {
     const users = await userCollection.find();
-    res.render('admin/dashboard', { users,fullData:'' });
+    const fullData  = await orderCollection.find();
+    res.render('admin/dashboard', { users,fullData });
   } else {
     res.render('admin/login')
   }
@@ -52,13 +54,14 @@ const postlogin = async (req, res) => {
   try {
     const admin = await adminCollection.findOne({ username: username, password: password });
     const users = await userCollection.find();
+    const fullData  = await orderCollection.find();
     if (admin.password === req.body.password) {
       req.session.admin = username;
 
       const users = await userCollection.find()
       console.log("user", users);
 
-      res.render('admin/dashboard', { users,fullData:'' })
+      res.render('admin/dashboard', { users,fullData })
     }
   } catch (error) {
     console.log(error);
@@ -468,7 +471,8 @@ const orders = async (req, res) => {
     // Calculate total pages based on the limit
     const totalPages = Math.ceil(totalOrders / limit);
 
-    res.render('admin/orders', {
+    // res.render('admin/orders', {
+      res.render('admin/dashboard', {
       orders,
       currentPage: page,
       totalPages,
@@ -482,23 +486,23 @@ const orders = async (req, res) => {
 
 const ordersPost = async (req, res) => {
   try {
+    console.log(" HERE HERE HERE HERE HERE HERE HERE HERE HEREH HERE HERE HERE HERE");
       const orderId = req.params.id;
       const newStatus = req.body.orderStatus;
-
       const updatedOrder = await orderCollection.findByIdAndUpdate(
           orderId,
           { $set: { orderStatus: newStatus } },
           { new: true }
       );
-
+ 
       console.log("Updated Order:", updatedOrder);
-      res.redirect("/admin/dashboardForAdmin");
+      res.status(200).json(updatedOrder);
   } catch (error) {
       console.error(error.message);
-      res.send(error.message);
-  }     
-};
-
+      res.status(500).send(error.message);
+  }    
+ };
+ 
  const returnManage = async(req,res)=>{
   try{
     const orderData = await orderCollection.find();
