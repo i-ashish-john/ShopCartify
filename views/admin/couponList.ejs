@@ -76,13 +76,13 @@
                   </a>
                </li>
 
-
                <li class="nav-item">
                 <a class="nav-link" href="/admin/couponAddingGet">
                   <i class="fas fa-plus-circle"></i> <!-- Plus Circle Icon -->
                   Add Coupons
                 </a>
               </li>
+
 
             </ul>
             <ul class="navbar-nav">
@@ -96,41 +96,113 @@
     </div>
 
 </nav>
-
-   <div class="container mt-5 bg-light">
-     <div class="row tm-content-row ">
-       <div class="col-12 tm-block-col  bg-dark">
-         <div class="tm-bg-primary-dark tm-block tm-block-h-auto ">
-           <h2 class="tm-block-title">Return Orders</h2>
-           <p class="text-white">Return Orders</p>
-           <table class="table table-bordered bg-light">
-            <thead >
+<!-- Coupon Manage Table -->
+<div class="container mt-5">
+    <div class="row tm-content-row">
+      <div class="col-12 tm-block-col">
+        <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+          <h2 class="tm-block-title">Coupon Management</h2>
+          <p class="text-white">Coupon Management</p>
+          <table class="table table-bordered">
+            <thead>
               <tr>
-                  <th>Serial Number</th>
-                  <th>Order ID</th>
-                  <th>Amount</th>
-                  <th>Action</th>
+                <th>Serial Number</th>
+                <th>Coupon Code</th>
+                <th>Expiry Date</th>
+                <th>Added Date</th>
+                <th>product Discount</th>
+                <th>Minimum Purchase Value</th>
+                <th>Action</th>
               </tr>
-          </thead>
-          <tbody>
-              <% returnDetails.forEach((order,index)=>{ %>
-                  <tr>
-                      <td><%= index + 1 %></td>
-                      <td><%= order.orderId %></td>
-                      <td>$<%= order.amount %></td>
-                      <td>
-                         <button class="btn btn-warning" id="approveButton" onclick="approveOrder('<%= order.orderId %>')">Approve</button>
-                         <button class="btn btn-warning" id="denyButton" onclick="denyOrder('<%= order.orderId %>')">Deny</button>
-                         <p id="resultMessage<%= order.orderId %>" style="display: none;"></p>
-                        </td>
-                  </tr>
-                <% }) %>
-          </tbody>
-           </table>
-         </div>
-       </div>
-     </div>
+            </thead>
+            <tbody>
+                
+              <% couponDetails.forEach((coupon, index) => { %>
+                <tr class="bg-light">
+                  <td><%= index + 1 %></td>
+                  <td><%= coupon.couponCode %></td>
+                  <td><%= coupon.expiryDate %></td>
+                  <td><%= coupon.addedDate %></td>
+                  <td>%<%= coupon.productDiscount %></td>
+                  <td>₹<%= coupon.minimumPurchaseValue %></td>
+                  <td>
+                   <button class="btn btn-warning" id="editButton" onclick="editCoupon('<%= coupon.couponCode %>')">Edit</button> <hr>
+                   <button class="btn btn-warning fa fa-bars" id="deleteButton" onclick="deleteCoupon('<%= coupon.couponCode %>')">Delete</button>
+                   <p id="resultMessage<%= coupon.couponCode %>" style="display: none;"></p>
+                  </td>
+                </tr>
+              <% }) %>
+
+            </tbody>
+          </table>
+        </div>   
+      </div>
+    </div>
    </div>
+
+   <script>//coupon editting get and post 
+function editCoupon(couponCode) {
+    console.log("edit coupon code is:", couponCode);
+    const url = `couponEdit/${encodeURIComponent(couponCode)}`;
+    window.location.href = url;
+
+    console.log("here",url);
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ couponCode: couponCode }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Edit response:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+</script>
+<!-- -----another script for deleting the  coupon is here------ -->
+<script>//deleting post fetch is here 
+  function deleteCoupon(couponCode) {
+    console.log("12312312312");
+      console.log("delete coupon code is :", couponCode);
+    
+      const url = `couponDelete/${encodeURIComponent(couponCode)}`;
+      console.log("url is here",url);
+      window.location.href = url;
+
+      fetch(url, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ couponCode: couponCode }),
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log('Edit response:', data);
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+    
+  }
+//here needed delete get and post methods
+
+    </script>
 
    <footer class="tm-footer row tm-mt-small">
      <div class="col-12 font-weight-light">
@@ -145,57 +217,7 @@
    <script src="/product-admin-master/js/bootstrap.min.js"></script>
 
   <script>
-function approveOrder(orderId) {
-  const selectedStatus = "return approved";
-  const approveButton = document.getElementById(`approveButton${orderId}`);
 
-  fetch(`returnApproved/${orderId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ orderStatus: selectedStatus }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response data if needed
-      console.log("here in the approve order");
-      console.log(data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    })
-    .finally(() => {
-      // Disable the button after the fetch request
-      approveButton.disabled = true;
-    });
-}
-
-function denyOrder(orderId) {
-  const selectedStatus = "return request rejected by admin";
-  const denyButton = document.getElementById(`denyButton${orderId}`);
-
-  // Use fetch to send an asynchronous request to update the order status
-  fetch(`returnDenyed/${orderId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ orderStatus: selectedStatus }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response data if needed
-      console.log(data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    })
-    .finally(() => {
-      // Disable the button after the fetch request
-      denyButton.disabled = true;
-    });
-}
 
   </script>
 

@@ -7,7 +7,8 @@ const CategoryCollection = require('../model/categoryCollection');
 const orderCollection = require('../model/orderCollection');
 const addressCollection = require('../model/addressCollection');
 const returnCollection = require('../model/returnCollection');
-const walletCollection = require('../model/walletCollection')
+const walletCollection = require('../model/walletCollection');
+const couponCollection = require('../model/couponCollection');
 
 const sharp = require('sharp');
 
@@ -564,6 +565,7 @@ const Denyed = async (req, res) => {
 };
 
 
+
 module.exports = {
   dashboardForAdmin,
   dashboard,
@@ -591,5 +593,5 @@ module.exports = {
   ordersPost,
   returnManage,
   Approved,
-  Denyed
+  Denyed,
 }

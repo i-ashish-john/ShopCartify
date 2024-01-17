@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="ie=edge"
+    />
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+      }
+ 
+      .content {
+        flex: 1;
+      }
+    </style>
+
+    <title>Add Coupon - Product Admin Template</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+    />
+    <link
+      rel="stylesheet"
+      href="/product-admin-master/css/fontawesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/product-admin-master/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/product-admin-master/css/templatemo-style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+
+
+  <body id="addCouponPage">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-xl">
+      <div class="container h-100">
+        <a class="navbar-brand" href="/admin/dashboardForAdmin">
+          <h1 class="tm-site-title mb-0">Product Admin</h1>
+        </a>
+        <button
+          class="navbar-toggler ml-auto mr-0"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="fas fa-bars tm-nav-icon"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Your existing navbar content... -->
+        </div>
+      </div>
+    </nav>
+
+    <!-- Coupon Form -->
+  
+    <div class="content">
+      <h1 class="mb-4">Add Coupon</h1>
+      <form action="/admin/couponmanagePost" method="POST">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="couponCode">Coupon Code:</label>
+            <input type="text" id="couponCode" name="couponCode" class="form-control" placeholder="Enter coupon code" required />
+
+            <% if(error){%>
+              <p style="color: red;"><%= error %></p>
+              <%}%>
+              
+          </div>
+          <div class="form-group col-md-6">
+            <label for="expiryDate">Expiry Date:</label>
+            <input type="date" id="expiryDate" name="expiryDate" class="form-control" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="productDiscount">productDiscount:</label>
+            <div class="input-group">
+              <input type="number" id="productDiscount" name="productDiscount" step="0.01" class="form-control" placeholder="Enter discount amount" required />
+              <div class="input-group-append">
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="minimumPurchaseValue">Minimum Purchase Value:</label>
+            <div class="input-group">
+              <input type="number" id="minimumPurchaseValue" name="minimumPurchaseValue" step="0.01" class="form-control" placeholder="Enter minimum purchase value" required />
+              <div class="input-group-append">
+                <span class="input-group-text">₹</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+ 
+    <!-- Footer -->
+    <footer class="tm-footer row tm-mt-small">
+      <div class="col-12 font-weight-light">
+        <p class="text-center text-white mb-0 px-4 small">
+          Copyright &copy; <b>2018</b> All rights reserved. Design:
+          <a
+            rel="nofollow noopener"
+            href="https://templatemo.com"
+            class="tm-footer-link"
+          >
+            Template Mo
+          </a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script
+      src="/product-admin-master/js/jquery-3.3.1.min.js"
+    ></script>
+    <script
+      src="/product-admin-master/js/bootstrap.min.js"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

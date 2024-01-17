@@ -67,7 +67,8 @@ const orderSchema = new mongoose.Schema({
     set: function(value) {
       return moment(value).format('YYYY-MM-DD');
     },
-  }
+  },
+  
 
 });
 

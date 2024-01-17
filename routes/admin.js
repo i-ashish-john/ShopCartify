@@ -4,6 +4,7 @@ router.use(express.urlencoded({ extended: true }))
 const multer = require('multer')
 const AdminSession = require('../middleware/admin/AdminSession');
 const adminController = require('../controller/adminController');
+const couponController = require('../controller/couponController');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -46,6 +47,14 @@ router.post('/categoryeditpage/:id',AdminSession, adminController.categoryeditpa
 router.post('/categoryManagementedit/:id',AdminSession, adminController.categoryedit);
 router.get('/orders',AdminSession,adminController.orders);
 router.post('/ordersPost/:id',AdminSession,adminController.ordersPost);
+
+router.get('/couponmanage',AdminSession,couponController.couponPageLoad);
+router.get('/couponAddingGet',AdminSession,couponController.couponAdding);
+router.post('/couponmanagePost',AdminSession,couponController.couponAddingPost);
+router.get('/couponEdit/:code',AdminSession,couponController.geteditCoupon)
+router.post('/couponEditBackPost', AdminSession, couponController.posteditCoupon);
+
+router.get('/couponDelete/:code',AdminSession,couponController.getDeleteCoupon)
 
 
 router.get('/returnOrderManage',adminController.returnManage);
