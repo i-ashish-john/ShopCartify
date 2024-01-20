@@ -14,6 +14,7 @@ const orderCollection = require('../model/orderCollection');
 const { log } = require('console');
 const mongoose = require('mongoose');
 const Swal = require('sweetalert2'); 
+const couponCollection = require('../model/couponCollection');
 // const flash = require('express-flash');
 require('dotenv').config();
 
@@ -370,18 +371,16 @@ const calculateOverallTotalPrice = async () => {
 
 const checkout = async (req, res) => {
   try {
-    console.log("inside the checkout page");
-    console.log("checkout page loaded");
+    // console.log("inside the checkout page");
+    // console.log("checkout page loaded");
+    // console.log("The total price:", totalPrice);
+    // console.log("user in checkout:", user);
     const totalPrice = parseFloat(req.query.totalPrice);
-    console.log("The total price:", totalPrice);
     const email = req.session.user;
     const user = await userCollection.findOne({ email: email });
-    console.log("user in checkout:", user);
-
     if (!user) {
       return res.status(404).send('User not found or missing in the session.');
     }
-
     // Fetch the user's wallet balance
 // Fetch the user's wallet balance
 const wallet = await walletCollection.findOne({ userId: user._id }) || {};
@@ -406,9 +405,11 @@ console.log("========",walletBalance);
     }
     await cartFound.save();
 
+    //here finding coupons 
     const addresses = user?.address || [];
+    const coupons = await couponCollection.find()
 
-    res.render('user/checkout', { user, addresses, cartFound, walletBalance });
+    res.render('user/checkout', { user, addresses, cartFound, walletBalance, UsedMessage:'',coupons });
   } catch (error) {
     console.error(error.message);
     res.send(error.message);

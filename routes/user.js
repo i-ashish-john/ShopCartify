@@ -52,6 +52,8 @@ router.post('/RetrunProduct/:id',Usersession,blockedAuth,orderController.ReturnT
 router.get('/walletLoad',Usersession,blockedAuth,orderController.walletLoad);
 router.post('/walletPay',Usersession,blockedAuth,orderController.walletPay);
 
+router.post('/couponChecking',Usersession,blockedAuth,orderController.couponChecking);
+
 
 
 // router.post('/updateCartItem/:productId/decrease',userController.updateCartItem);

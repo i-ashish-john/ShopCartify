@@ -40,7 +40,28 @@
    background: #fff;
    border-radius: 5px;
    box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.1);
-}
+   .coupon {
+           margin: 1em auto;
+           padding: 1em;
+           max-width: 300px;
+           font-size: 1.2em;
+           background-color: #eee;
+           border-radius: 5px;
+           box-shadow: 0 0 10px rgba(0,0,0,0.1);
+           text-align: center;
+           transition: box-shadow 0.3s ease-in-out;
+       }
+       .coupon:hover {
+           box-shadow: 0 0 20px rgba(0,0,0,0.2);
+       }
+       .copied {
+           box-shadow: 0 0 20px rgba(0,0,0,0.2);
+           animation: flash 1s infinite;
+       }
+       @keyframes flash {
+           0%, 50%, 100% { opacity: 1; }
+           25%, 75% { opacity: 0.5; }
+       }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- Favicon -->
@@ -64,6 +85,7 @@
        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
    <link rel="stylesheet" href="/NEW TEMP/online-shop-website-template/css/style.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -346,17 +368,20 @@
             <br>
 
             <div class="d-flex justify-content-between">
-              <input type="hidden" name="totalPrice" value="<%= cartFound.total+14 %>" />  
+              <input type="hidden" name="totalPrice"  class="total-price"  value="<%= cartFound.total+14 %>" />  
                   <p class="mb-2"><strong>Shipping cost:</strong></p>
                   <p class="mb-2">₹<%= cartFound.total+14 %>/-</p>
             </div>
       
-        </form>
-        <div class="input-group mt-3 mb-4">
-            <input type="text" class="form-control border" name="" placeholder="Promo code" />
-            <button class="btn btn-light text-primary border">Apply</button>
-        </div>
-      
+            
+          </form>
+          <div class="input-group mt-3 mb-4">
+              <input type="text" class="form-control border" name="couponCode"    placeholder="Coupon code" />
+              <button class="btn btn-light text-primary border" id="applyCouponButton"  >Apply</button>
+               <p style="color: red;"><%= UsedMessage  %></p>
+          
+          </div>
+        
             
       
               <h6 class="text-dark my-4"><br></h6>
@@ -441,6 +466,29 @@
     </div>
 </div>
 
+<!-- ------ -->
+<div class="card text-center coupon-card">
+  <div class="card-body">
+    <h5 class="card-title">Available Coupons</h5>
+    <ul class="list-group list-group-flush">
+      <% coupons.forEach((coupon) => { %>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-md-7">
+              <h5><%= coupon.couponCode %></h5>
+              <p>Discount: <%= coupon.productDiscount%>%</p>
+              <p>Purchase Limmit: ₹<%= coupon.minimumPurchaseValue%></p>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary copy-btn" data-clipboard-text="<%= coupon.couponCode %>">Copy</button>
+            </div>
+          </div>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+ </div>
+
   </section>
  
    
@@ -516,6 +564,7 @@
   <!-- Footer End -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 
 
   <!-- ---razorpay working script--- -->
@@ -665,49 +714,94 @@ document.addEventListener('click', function (event) {
    });
   }
 });
-//-------
 
-// var addAddressBtn = document.getElementById('addAddressBtn');
-  
-//   addAddressBtn.addEventListener('click', function() {
-//     // window.location.href = '/addAddressUser';
-//     $('#addAddressModal').modal('show');
+</script>
 
-//     document.querySelector('#addressForm').addEventListener('submit', (e) => {
-// e.preventDefault();
+<script>//sending request to the coupon checking function in orderController!
+document.querySelector('#applyCouponButton').addEventListener('click', async () => {
+ console.log("came here ");
+ const couponCodeInput = document.querySelector('input[name="couponCode"]');
+ const couponCode = couponCodeInput.value;
+ const totalPriceInput = document.querySelector('input[name="totalPrice"]');
+ console.log("totalAmount is :",totalPriceInput.value );
+ const totalPrice = totalPriceInput.value;
+ console.log("4444");
+ const response = await fetch('/couponChecking', {
+   method: 'POST',
+   headers: {
+     'Content-Type': 'application/json',
+     'Authorization': `Bearer ${localStorage.getItem('token')}`
+   },
+   body: JSON.stringify({ couponCode, totalPrice })
+ });
+ const data = await response.json();
+ if (data.success) {
+   Swal.fire({ icon: 'success', title: 'Coupon applied', text: data.message });
+   if(data.message == 'This coupon is used '){
+     Swal.fire({ icon: 'warning', title: 'Coupon is used', text: data.message });
+   } else if(data.message == 'this coupon does not exist'){
+     Swal.fire({ icon: 'error', title: 'This coupon does not exist', text: data.message });
+   } else if( data.message == 'Need more more purchase value' ){
+     Swal.fire({ icon: 'error', title: 'Cannot use this Coupon', text: data.message });
+   } else if (!data.message){
+     Swal.fire({ icon: 'error', title: 'Nothing Found', text:data.message });
+   }
+   // Update the total price in the UI
+   const newTotalPrice = parseInt(data.newTotalPrice);
+   console.log("newTotalPrice is:",newTotalPrice);
+   totalPriceInput.value = newTotalPrice;
 
-// var street = document.querySelector('#Street').value.trim();
-// var country = document.querySelector('#Country').value.trim();
-// var city = document.querySelector('#City').value.trim();
-// var state = document.querySelector('#State').value.trim();
-// var zip = document.querySelector('#Zip').value.trim();
+//another method for changing the totalPrice
+  // if (data.newTotalPrice) {
+  //    document.querySelector('.total-price').innerTextHTML = data.newTotalPrice;
+  //  }
 
-// if (!street || !country || !city || !state || !zip) {
-// Swal.fire({
-//   icon: 'error',
-//   title: 'Oops...',
-//   text: 'Please fill all the fields.',
-// });
+   localStorage.setItem('totalPrice', newTotalPrice);
 
-// return false;
-// }
+ } else {
+   Swal.fire({ icon: 'error', title: 'Error applying coupon', text: data.message });
+ }
+});
+// On page load, update the total price input with the value from local storage
+// window.onload = function() {
+//  const totalPriceInput = document.querySelector('input[name="totalPrice"]');
+//  const storedTotalPrice = localStorage.getItem('totalPrice');
+//  if (storedTotalPrice) {
+//    totalPriceInput.value = storedTotalPrice;
+//  }
+// };
+</script>
 
-// this.submit();
-// });
+<script>
+  var clipboard = new ClipboardJS('.copy-btn');
+ 
+  clipboard.on('success', function(e) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Copied!',
+      text: 'Coupon code copied to clipboard.',
+      confirmButtonText: 'OK'
+    });
+  });
+ 
+  clipboard.on('error', function(e) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Failed to copy coupon code.',
+      confirmButtonText: 'Try Again'
+    });
+  });
+ </script>
 
-//   });
-//   </script>
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-   <!-- JavaScript Libraries -->
 
   <script src="/NEW TEMP/online-shop-website-template/lib/easing/easing.min.js"></script>
   <script src="/NEW TEMP/online-shop-website-template/lib/owlcarousel/owl.carousel.min.js"></script>
 
-  <!-- Contact Javascript File -->
   <script src="/NEW TEMP/online-shop-website-template/mail/jqBootstrapValidation.min.js"></script>
   <script src="/NEW TEMP/online-shop-website-template/mail/contact.js"></script>
 
-  <!-- Template Javascript -->
   <script src="/NEW TEMP/online-shop-website-template/js/main.js"></script>

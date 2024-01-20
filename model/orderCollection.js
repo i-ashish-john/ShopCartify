@@ -68,8 +68,18 @@ const orderSchema = new mongoose.Schema({
       return moment(value).format('YYYY-MM-DD');
     },
   },
-  
-
+//   redeemedCoupons: [
+//     {
+//         couponCode: {
+//             type: String,
+//         },
+//         redeemedAt: {
+//             type: Date,
+//             default: Date.now,
+//         },
+//     },
+//  ]
+ 
 });
 
 orderSchema.pre('find', function (next) {

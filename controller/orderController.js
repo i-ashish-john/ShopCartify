@@ -6,9 +6,11 @@ const addressCollection = require('../model/addressCollection');
 const returnCollection = require('../model/returnCollection');
 const categoryCollection = require('../model/categoryCollection');
 const walletCollection = require('../model/walletCollection');
+const couponCollection = require('../model/couponCollection');
 const Razorpay = require('razorpay');
 const mongoose = require('mongoose');
 const { stringify } = require('querystring');
+const { error } = require('console');
 
 let instance = new Razorpay({
   key_id: process.env.key_id,
@@ -73,81 +75,6 @@ const orderStatus = async (req, res) => {
     res.status(500).send('Internal Server Error'); // Send an error response if there's an issue
   }
 };
-
-const checkoutPost = async (req, res) => {
-  try {
-    const variable = {
-      username: req.body.username,
-      email: req.body.email,
-      paymentType: req.body.paymentType,
-      selectedAddressId: req.body.selectedAddressId,
-      totalPrice: req.body.totalPrice,
-    };
-    const userId = req.session.user;
-    const emailOfUser = await userCollection.findOne({ email: userId });
-    const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
- 
-    if (!cartData) {
-      return res.status(404).json({ message: 'Cart values not found' });
-    }
- 
-    const selectedAddress = emailOfUser.address.find(address => address._id == variable.selectedAddressId);
- 
-    const productDetailsPromises = cartData.products.map(async product => {
-      const productDetails = await productCollection.findById(product.productId);
- 
-      if (productDetails) {
-        const newStock = productDetails.stock - product.quantity;
-        
-        if (newStock < 0) {
-          console.log("Insufficient stock for product: ", productDetails.name);
-          return null;
-        }
- 
-        await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
-      }
-
-      return productDetails;
-    });
- 
-    const productDetailsArray = (await Promise.all(productDetailsPromises)).filter(detail => detail !== null);
- 
-    const order = new orderCollection({
-      username: variable.username,
-      email: variable.email,
-      paymentType: variable.paymentType,
-      totalPrice: variable.totalPrice,
-      productdetails: productDetailsArray.map(productDetails => productDetails._id),
-      address: {
-        street: selectedAddress?.street,
-        city: selectedAddress?.city,
-        state: selectedAddress?.state,
-        zip: selectedAddress?.zip,
-        country: selectedAddress?.country,
-      }
-    });
-
-   console.log("F_U_L_L D_A_T_A",order.username,"|",order.email,"|",order.paymentType,"|",order.totalPrice,"|",order.productdetails,"|",order?.address);
-    await order.save();
-    await cartCollection.deleteOne({ userId: emailOfUser._id });
- 
-    if (order.paymentType === 'CashOnDelivery' || order.paymentType === 'Wallet') {
-      return res.render('user/ordersuccess');
-    }
- 
-    if (order.paymentType === 'NetBanking') {
-      // NetBanking payment logic here
-      return res.render('user/ordersuccess');
-
-    }
- 
-    // res.status(201).json({ message: 'Order saved successfully' });
-  } catch (error) {
-    console.error(error);
-    res.send(error);
-  }
- };
- 
 
 const orderList = async (req, res) => {
   try {
@@ -385,6 +312,154 @@ const payPost = async (req, res) => {
 
 };
 
+const checkoutPost = async (req, res) => {
+  try {
+    const variable = {
+      username: req.body.username,
+      email: req.body.email,
+      paymentType: req.body.paymentType,
+      selectedAddressId: req.body.selectedAddressId,
+      totalPrice: req.body.totalPrice,
+      couponCode:req.body.couponCode
+    }
+    const userId = req.session.user;
+    const emailOfUser = await userCollection.findOne({ email: userId });
+    const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
+    if (!cartData) {
+      return res.status(404).json({ message: 'Cart values not found' });
+    }
+    const selectedAddress = emailOfUser.address.find(address => address._id == variable.selectedAddressId);
+    const productDetailsPromises = cartData.products.map(async product => {
+      const productDetails = await productCollection.findById(product.productId);
+      if (productDetails) {
+        const newStock = productDetails.stock - product.quantity;
+        if (newStock < 0) {
+          console.log("Insufficient stock for product: ", productDetails.name);
+          return null;
+        }
+        await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
+      }
+      return productDetails;
+    });
+    const productDetailsArray = (await Promise.all(productDetailsPromises)).filter(detail => detail !== null);
+
+    const order = new orderCollection({
+      username: variable.username,
+      email: variable.email,
+      paymentType: variable.paymentType,
+      totalPrice: variable.totalPrice,
+      productdetails: productDetailsArray.map(productDetails => productDetails._id),
+      address: {
+        street: selectedAddress?.street,
+        city: selectedAddress?.city,
+        state: selectedAddress?.state,
+        zip: selectedAddress?.zip,
+        country: selectedAddress?.country,
+      },                   
+    });
+    console.log("F_U_L_L D_A_T_A",order.username,"|",order.email,"|",order.paymentType,"|",order.totalPrice,"|",order.productdetails,"|",order?.address);
+    await order.save();
+    await cartCollection.deleteOne({ userId: emailOfUser._id });
+    if (order.paymentType === 'CashOnDelivery' || order.paymentType === 'Wallet') {
+      return res.render('user/ordersuccess');
+    }
+    if (order.paymentType === 'NetBanking') {
+      return res.render('user/ordersuccess');
+    }
+    // res.status(201).json({ message: 'Order saved successfully' });
+    res.render('user/ordersuccess');
+  } catch (error) {
+    console.error(error);
+    res.send(error);
+  }
+ };
+ 
+ const couponChecking = async(req, res) => {
+  try {
+   
+    console.log("came here couponchecking");
+    const coupons = await couponCollection.find();
+    const email = req.session.user;
+    const variable = {
+      couponCode:req.body.couponCode,
+      totalPrice:req.body.totalPrice
+    };
+ 
+    const user = await userCollection.findOne({ email: email });
+    if (!user) {
+      return res.status(404).send('User not found or missing in the session.');
+    };
+ 
+    const redeemedArrayChecking = user.redeemedCoupons.map(c => c.couponCode);
+    let UsedMessage;
+ 
+    const couponCheck = await couponCollection.findOne({ couponCode: variable.couponCode });
+    if(variable.couponCode){
+      if(!couponCheck){
+        UsedMessage = 'this coupon does not exist';
+      } else if(redeemedArrayChecking.includes(variable.couponCode)){
+        UsedMessage = 'This coupon is used ';
+      }else if (!couponCheck ){
+        UsedMessage = 'Nothing Found';
+      }else if ( variable.totalPrice < couponCheck.minimumPurchaseValue ) {
+        UsedMessage = 'Need more more purchase value';
+      } else {
+        UsedMessage = 'Coupon applied successfully';
+        await userCollection.updateOne(//adding coupon to the redeemed array
+          { email: email },
+          { $push: { redeemedCoupons: { couponCode: variable.couponCode, redeemedAt: new Date() } } }
+        );
+      }
+    }
+    console.log("the vaiable amount is :",variable.totalPrice,variable.couponCode);
+    let order = {};
+
+    if(UsedMessage === 'Coupon applied successfully'){
+      order.appliedCoupon = variable.couponCode;
+      order.totalAmount = variable.totalPrice - (variable.totalPrice * (couponCheck.productDiscount / 100));
+      console.log("The details is here :",order.totalAmount);
+    }
+
+    res.send({ success: true, message: UsedMessage, newTotalPrice: order.totalAmount });
+  } catch (error) {
+    res.send({ success: false, message: error.message });
+  }
+};
+// //  };
+// let order = {};
+// if(UsedMessage === 'Coupon applied successfully'){
+//   order.appliedCoupon = variable.couponCode;
+//   order.totalAmount = variable.totalPrice - (variable.totalPrice * (couponCheck.productDiscount / 100));
+//   console.log("variable is or not:",order.totalAmount);
+//   req.session.newPrice = order.totalAmount;
+// }
+// console.log("The details is here :", req.session.newPrice);
+// res.send({ success: true, message: UsedMessage, newTotalPrice: req.session.newPrice });
+// } catch (error) {
+// res.send({ success: false, message: error.message });
+// }
+//  };
+ 
+  /////////
+//   res.render('user/checkout', { UsedMessage, coupons, user, addresses, cartFound, walletBalance });
+
+// const order = {};
+// if (UsedMessage === 'Coupon applied successfully') {
+//   order.appliedCoupon = variable.couponCode;
+//   order.totalAmount = variable.totalPrice - (variable.totalPrice * (couponCheck.productDiscount / 100));
+
+//   res.send({ success: true, message: UsedMessage, newTotalPrice: order.totalAmount });
+// } else {
+//   res.send({ success: false, message:  });
+// }
+
+//  }catch(error){
+
+//   console.log("error is in the coupon checking",error);
+//  }
+
+// };
+
 module.exports = {
   submitAddress, orderStatus,
   addCheckoutAddress,
@@ -393,7 +468,8 @@ module.exports = {
   payPost,
   ReturnTotalProduct,
   walletLoad,
-  walletPay
-
+  walletPay,
+  //coupon Managing
+couponChecking
 
 };

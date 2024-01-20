@@ -51,8 +51,20 @@ const UserSchema=new mongoose.Schema({
   zip: {
       type: String,
       required: true
-  }
-  }]
+  }   
+  }],  
+  redeemedCoupons: [
+    {
+        couponCode: {
+            type: String,
+        },
+        redeemedAt: {
+            type: Date,
+            default: Date.now,
+        },
+    },
+ ]
+
  });
 
   const userCollection=new mongoose.model("collectionOfUser",UserSchema)
