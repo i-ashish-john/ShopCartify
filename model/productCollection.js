@@ -22,15 +22,16 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  // currency: {
-//   type: String,
-  //   required: true,
-  //   trim: true,
-  // },
   stock: {
     type: Number,
     required: true,
     min: 0,
+  },
+  Discount: {
+    type: Number,
+    min: 0,
+    max: 100, 
+    default: 0, 
   },
   Images: [String],
 

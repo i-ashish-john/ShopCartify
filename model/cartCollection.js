@@ -40,8 +40,6 @@ const cartSchema = new mongoose.Schema({
     default: 0,
   },
 });
-
-
 cartSchema.methods.calculateTotal = lodash.debounce(async function () {
   // Check if already calculating total to avoid parallel save
   if (this.calculatingTotal) {
@@ -53,10 +51,21 @@ cartSchema.methods.calculateTotal = lodash.debounce(async function () {
 
   try {
     let total = 0;
+
     for (const product of this.products) {
       const productDetails = await productCollection.findById(product.productId);
-      const productPrice = productDetails.price;
-      total += product.price * productPrice * product.quantity;
+      let productPrice = productDetails.price;
+
+      if (productDetails.Discount > 0) {
+        // Corrected to use lowercase 'discount'
+        const discount = productDetails.Discount / 100;
+        productPrice -= productPrice * discount;
+
+        // Update the individual total in the cart
+        product.individualTotal = (product.quantity * productPrice).toFixed(2);
+      }
+
+      total += productPrice * product.quantity;
     }
 
     this.total = total;
@@ -66,8 +75,7 @@ cartSchema.methods.calculateTotal = lodash.debounce(async function () {
     this.calculatingTotal = false;
   }
 
-}, 1000); 
-
+}, 1000);
 const cartCollection = mongoose.model('collectionOfCart', cartSchema);
 
 module.exports = cartCollection;

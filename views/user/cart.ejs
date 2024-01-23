@@ -297,12 +297,17 @@
                         <!-- Total -->
                         <td>
 
-                          <div class="product-total">
-                            <h6 class="total" id="total-price" data-product-id="<%= product._id %>">
-                              ₹<%= (product.quantity * product.price).toFixed(2) %>
-                            </h6>
-                          </div>
-
+                          <td>
+                      <div class="product-total">
+                        <% if (product.productId.Discount > 0) { %>
+                          <del>₹<%= (product.quantity * product.price).toFixed(2) %></del>
+                          <ins>₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
+                        <% } else { %>
+                          ₹<%= (product.quantity * product.price).toFixed(2) %>
+                        <% } %>
+                      </div>
+                    </td>          
+                          
                         </td>
                         <!-- Remove button -->
 
@@ -350,18 +355,19 @@
     <div class="col-lg-4 offset-lg-4">
       <!-- Existing code for displaying total price -->
 
-      <h5 class="total-amount"  style="background-color: #576570;">Total Amount: ₹ <span id="total-price" style="color: #ffffff;">
+      <h5 class="total-amount" style="background-color: #576570;">Total Amount: ₹ <span id="total-price" style="color: #ffffff;">
 
         <% let totalPrice = 0; %>
         <% cartDocument.forEach((cart) => { %>
           <% if (cart.products && cart.products.length > 0) { %>
             <% cart.products.forEach((product) => { %>
-              <% totalPrice += product.quantity * product.price; %>
+              <% totalPrice += parseFloat(product.individualTotal || (product.quantity * product.price).toFixed(2)); %>
             <% }); %>
           <% } %>
         <% }); %>
         <%= totalPrice.toFixed(2) %>
       </span>/-</h5>
+      
 
       <div class="modal fade" id="outOfStockModal" tabindex="-1" role="dialog" aria-labelledby="outOfStockModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

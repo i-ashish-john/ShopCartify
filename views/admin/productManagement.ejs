@@ -118,6 +118,7 @@
                     <th scope="col">Category</th>
                     <th scope="col">Price</th>
                     <th scope="col">Stock</th>
+                    <th scope="col">product discount</th>
                     <th scope="col">Action</th>
                  </tr>
                 </thead>
@@ -129,6 +130,7 @@
                     <td><%= product.category %></td>
                     <td><%= product.price %></td>
                     <td><%= product.stock%></td>
+                    <td><%= product.Discount%>%</td>
                     <td>
                       <form action="/admin/deleteproduct/<%= product.id %>" method="post" class="tm-product-delete-form">
                         <!-- Add any necessary hidden input fields for identifying the item to delete -->

@@ -251,7 +251,6 @@
                             </div>
                         </div>
                 <!-- <div class="not-found">not found</div> -->
-
                 <% if (products) { %>
                     <div class="row">
                         <% for (let i = 0; i < products.length; i++) { %>
@@ -283,12 +282,20 @@
                                             <a class="h6 text-decoration-none text-truncate" href="">
                                                 <%= products[i].name %>
                                             </a>
+
                                             <div class="d-flex align-items-center justify-content-center mt-2">
-                                                <h5> ₹<%= products[i].price %></h5>
-                                                <h6 class="text-muted ml-2">
-                                                    <del><!-- product discount display here--></del>
-                                                </h6>
+                                                <p style="color: black;">
+                                                    <% if (products[i].Discount && products[i].Discount > 0) { %>
+                                                        <% const discountedPrice = products[i].price - (products[i].price * (products[i].Discount / 100)); %>
+                                                        <del>₹<%= products[i].price.toFixed(2) %></del> 
+                                                        ₹<%= discountedPrice.toFixed(2) %>
+                                                    <% } else { %>
+                                                        ₹<%= products[i].price.toFixed(2) %>
+                                                    <% } %>
+                                                </p>
                                             </div>
+                                        
+
                                             <div class="d-flex align-items-center justify-content-center mb-1">
                                                 <small class="fa fa-star text-primary mr-1"></small>
                                                 <small class="fa fa-star text-primary mr-1"></small>
@@ -298,6 +305,7 @@
                                                 <small>(99)</small>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

@@ -31,6 +31,7 @@
          </div>
          <div class="row tm-edit-product-row">
            <div class="col-xl-6 col-lg-6 col-md-12">
+
              <form action="/admin/productmanagePost" method="post" enctype="multipart/form-data">
                <!-- Image Upload -->
                <div>
@@ -42,34 +43,42 @@
                <!-- Product Name -->
                <div class="form-group mb-3">
                 <label for="productName">Product Name:</label>
-                <input type="text" id="productName" name="name" class="form-control validate" required>
+                <input type="text" id="productName" name="Name" class="form-control validate" >
                </div>
                <!-- Price -->
                <div class="form-group mb-3">
                 <label for="productPrice">Product Price:</label>
-                <input type="number" id="productPrice" name="price" step="0.01" class="form-control validate" required>
+                <input type="number" id="productPrice" name="price" step="0.01" class="form-control validate" >
                </div>
                <!-- Category, Stock, Description -->
                <div class="form-group mb-3">
                 <label for="category">Category:</label>
-                <select id="category" name="category" class="custom-select tm-select-accounts" required>
+                <select id="category" name="category" class="custom-select tm-select-accounts" >
                   <option value="Mens">Mens</option>
                   <option value="Womens">Womens</option>
                 </select>
                </div>
+
                <div class="form-group mb-3">
                 <label for="stock">Stock:</label>
-                <input type="number" id="stock" name="stock" class="form-control validate" required>
+                <input type="number" id="stock" name="stock" class="form-control validate" >
                </div>
+
+               <div class="form-group mb-3">
+                <label for="Discount">Product Discount:</label>
+                <input type="number" id="Discount" name="Discount" class="form-control validate" >
+               </div>
+
                <div class="form-group mb-3">
                 <label for="description">Description:</label>
-                <textarea id="description" name="description" class="form-control validate" required></textarea>
+                <textarea id="description" name="description" class="form-control validate" ></textarea>
                </div>
                <!-- Submit Button -->
                <div class="col-12">
                 <button type="submit" class="btn btn-primary btn-block text-uppercase">Add Product Now</button>
                </div>
              </form>
+
            </div>
          </div>
        </div>

@@ -260,11 +260,6 @@ const sendOTPByEmail = async (req, res) => {
  };
  
 
-
-
-
-
-
 const productdetails = async (req, res) => {
   try {
     console.log("product details");
@@ -297,24 +292,14 @@ const MensTotalproductlist = async (req, res) => {
   try {
       const page = parseInt(req.query.page) || 1; 
       const pageSize = 10; 
-      // const errorMessage = req.flash('error')[0]; 
-      // console.log("errorMessage",errorMessage);
- 
       const products = await productCollection.find({ category: "Mens" , deleted: false })
           .skip((page - 1) * pageSize)
           .limit(pageSize);
-         
-          // if(products.quantity > products.stock){
-          //   products.stock--;
-          // }
-
       if (products.length > 0) {
         const category = products[0].category; 
         console.log("The men's product is here#:", category);
- 
         const totalProducts = await productCollection.countDocuments({ category: "Mens" });
         const totalPages = Math.ceil(totalProducts / pageSize);
- 
         res.render('user/Totalproductlisting', { products, currentPage: page, totalPages, category});
       } else {
         res.render('user/Totalproductlisting', { products: [], currentPage: page, totalPages: 0, category: null });
@@ -371,10 +356,6 @@ const calculateOverallTotalPrice = async () => {
 
 const checkout = async (req, res) => {
   try {
-    // console.log("inside the checkout page");
-    // console.log("checkout page loaded");
-    // console.log("The total price:", totalPrice);
-    // console.log("user in checkout:", user);
     const totalPrice = parseFloat(req.query.totalPrice);
     const email = req.session.user;
     const user = await userCollection.findOne({ email: email });
@@ -408,7 +389,7 @@ console.log("========",walletBalance);
     //here finding coupons 
     const addresses = user?.address || [];
     const coupons = await couponCollection.find()
-
+    await cartFound.calculateTotal();
     res.render('user/checkout', { user, addresses, cartFound, walletBalance, UsedMessage:'',coupons });
   } catch (error) {
     console.error(error.message);

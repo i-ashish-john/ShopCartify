@@ -56,7 +56,7 @@ const postlogin = async (req, res) => {
     const admin = await adminCollection.findOne({ username: username, password: password });
     const users = await userCollection.find();
     const fullData  = await orderCollection.find();
-    if (admin.password === req.body.password) {
+    if (admin.password === password) {
       req.session.admin = username;
 
       const users = await userCollection.find()
@@ -73,9 +73,9 @@ const postlogin = async (req, res) => {
 
 const createPost = async (req, res) => {
   const createData = {
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email
+    username: username,
+    password: password,
+    email: email
   }
 
   await adminCollection.create(createData);
@@ -177,12 +177,12 @@ const productmanage = async (req, res) => {
 
 //     console.log('body', req.body);
 //     const productDetails = {
-//       name: req.body.name,
-//       price: req.body.price,
-//       currency: req.body.currency,
-//       category: req.body.category,
-//       stock: req.body.stock,
-//       description: req.body.description,
+//       name: name,
+//       price: price,
+//       currency: currency,
+//       category: category,
+//       stock: stock,
+//       description: description,
 //       Images: croppedImages
 //     };
 
@@ -206,14 +206,15 @@ const productmanagePost = async (req, res) => {
     const images = req.files.map(file => `public/uploads/${file.filename}`);
 
     console.log('body', req.body);
-
+   console.log("name of the product in the productManagePost",req.body.Name);
     const productDetails = {
-      name: req.body.name,
-      price: req.body.price,
-      category: req.body.category,
-      stock: req.body.stock,
-      description: req.body.description,
-      Images: images,
+      name:req.body.Name,
+      price:req.body.price,
+      category:req.body.category,
+      stock:req.body.stock,
+      description:req.body.description,
+      Discount:req.body.Discount,
+      Images:images,
     };
 
     // Assuming `productCollection` is defined somewhere in your code
@@ -226,7 +227,7 @@ const productmanagePost = async (req, res) => {
     }
   } catch (error) {
     console.log('error in add post*');
-    console.log(error);
+    console.log(error.message);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -300,12 +301,13 @@ const productDelete = async (req, res) => {
     res.send(error.message)
   }
 };
+
 const updateproduct = async (req, res) => {
   try {
     const productId = req.params.id;
     const product = await productCollection.findById(productId);
-    const { name, description, price, stock } = req.body;
-    console.log("the stock  of the product is:",stock);
+    const { name, description, price, stock,Discount } = req.body;
+    console.log("the discount  of the product is:", Discount);
     // Handling Images separately
     let updatedImages = product.Images;
 
@@ -320,10 +322,16 @@ const updateproduct = async (req, res) => {
         description,
         price,
         stock,
-        Images: updatedImages, // Update the Images field with the new or existing images
+        Discount,
+        Images: updatedImages,
       },
       { new: true }
     );
+  
+    if (!updatedProduct) {
+      console.error("Product not found for update");
+      return res.status(404).send("Product not found");
+    }
 
     res.redirect("/admin/productlist");
   } catch (error) {
@@ -331,7 +339,6 @@ const updateproduct = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 
 const editproduct = async (req, res) => {
@@ -359,8 +366,8 @@ const categoryadd = async (req, res) => {
 
 const categoryaddPost = async (req, res) => {
   const datas = {
-    categoryName: req.body.categoryName,
-    categoryDescription: req.body.categoryDescription,
+    categoryName: categoryName,
+    categoryDescription: categoryDescription,
   };
 
   try {
@@ -489,7 +496,7 @@ const ordersPost = async (req, res) => {
   try {
     console.log(" HERE HERE HERE HERE HERE HERE HERE HERE HEREH HERE HERE HERE HERE");
       const orderId = req.params.id;
-      const newStatus = req.body.orderStatus;
+      const newStatus = orderStatus;
       const updatedOrder = await orderCollection.findByIdAndUpdate(
           orderId,
           { $set: { orderStatus: newStatus } },

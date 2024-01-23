@@ -7,6 +7,7 @@ const returnCollection = require('../model/returnCollection');
 const categoryCollection = require('../model/categoryCollection');
 const walletCollection = require('../model/walletCollection');
 const couponCollection = require('../model/couponCollection');
+const easyinvoice = require('easyinvoice');
 const Razorpay = require('razorpay');
 const mongoose = require('mongoose');
 const { stringify } = require('querystring');
@@ -98,29 +99,6 @@ const orderList = async (req, res) => {
 };
 
 
-// const orderList = async (req, res) => {
-//   try {
-//     const user = req.session.user;
-//     const userIdObject = await userCollection.findOne({ email: user }); 
-//     if (!userIdObject) {
-//       throw new Error("Userin  not found");
-//     }
-//     const userId = userIdObject._id; 
-
-//     console.log("The user ID in the orderlist is:", userId);
-
-//     const orders = await orderCollection
-//       .find({ userId: userId }) 
-//       .populate('productdetails')
-//       .exec();
-
-//     res.render('user/orderList', { user, orders }); 
-
-//   }catch(error){
-//     console.log(error.message);
-//     res.send(error.message);
-//   }
-// };
 const addCheckoutAddress = async (req, res) => {
   res.render("user/AddingCheckoutAddress");
 };
@@ -425,50 +403,54 @@ const checkoutPost = async (req, res) => {
     res.send({ success: false, message: error.message });
   }
 };
-// //  };
-// let order = {};
-// if(UsedMessage === 'Coupon applied successfully'){
-//   order.appliedCoupon = variable.couponCode;
-//   order.totalAmount = variable.totalPrice - (variable.totalPrice * (couponCheck.productDiscount / 100));
-//   console.log("variable is or not:",order.totalAmount);
-//   req.session.newPrice = order.totalAmount;
-// }
-// console.log("The details is here :", req.session.newPrice);
-// res.send({ success: true, message: UsedMessage, newTotalPrice: req.session.newPrice });
-// } catch (error) {
-// res.send({ success: false, message: error.message });
-// }
-//  };
+const downloadInvoice = async (req, res) => {
+  try {
+     console.log("inside of the downloadInvoice");
+     const orderId = req.params.orderId;
+     console.log("the orderID is here:",orderId);
+     if (!mongoose.Types.ObjectId.isValid(orderId)) {
+       return res.status(400).send("Not a valid objectId");
+     }
  
-  /////////
-//   res.render('user/checkout', { UsedMessage, coupons, user, addresses, cartFound, walletBalance });
-
-// const order = {};
-// if (UsedMessage === 'Coupon applied successfully') {
-//   order.appliedCoupon = variable.couponCode;
-//   order.totalAmount = variable.totalPrice - (variable.totalPrice * (couponCheck.productDiscount / 100));
-
-//   res.send({ success: true, message: UsedMessage, newTotalPrice: order.totalAmount });
-// } else {
-//   res.send({ success: false, message:  });
-// }
-
-//  }catch(error){
-
-//   console.log("error is in the coupon checking",error);
-//  }
-
-// };
-
+     const orderData = await orderCollection. findById(orderId).populate('productdetails');
+     if (!orderData) {
+       return res.status(404).send("Order not found.");
+     }
+ 
+     const userData = await userCollection.findOne({ email: req.session.user });
+     console.log("userdata is :",userData);
+     const userId = userData._id;
+     console.log("userId is ",userId);
+     let addressDetails = {};
+     if(userData && userData.address){
+       addressDetails = userData.address[0];
+       console.log("the addressDetails is :",addressDetails);
+     } else {
+       console.log("No address found for this user");
+     }
+ 
+     const orderProducts = await productCollection.find({ _id: { $in: orderData.productdetails } });
+     console.log("orderProducts is :",orderProducts);
+     res.json({ orderData, orderProducts, userData, addressDetails });
+  } catch (error) {
+     console.error("Error in downloadInvoice:", error);
+     res.status(500).send("Internal Server Error");
+  }
+ };
+ 
+ 
 module.exports = {
   submitAddress, orderStatus,
   addCheckoutAddress,
-  checkoutPost, orderList, SingleOrderlist,
+  checkoutPost, 
+  orderList,
+   SingleOrderlist,
   cancelOrder,
   payPost,
   ReturnTotalProduct,
   walletLoad,
   walletPay,
+  downloadInvoice,
   //coupon Managing
 couponChecking
 

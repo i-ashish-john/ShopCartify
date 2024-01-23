@@ -41,7 +41,7 @@ const cartItemRemove = async (req, res) => {
   const updateCartItem = async (req, res) => {
     console.log("HELLO");
     try {
-      const { action, productId } = req.body;
+      const { action, productId } = req.body;//discount price also need to take here 
       // const productId = req.params.productId;
       // const userId = req.session.user;
       console.log("req.session.user: " + req.session.user);
@@ -168,21 +168,15 @@ const cartItemRemove = async (req, res) => {
       if (!products || !user) {
         return res.status(404).send('Product or user not found.');
       }
- 
       const cart = await cartCollection.findOne({ userId: user._id });
-  
       if (cart) {
         const existingProduct = cart.products.find((p) => p.productId.equals(products._id));
-  
         if (existingProduct) {
           const newQuantity = existingProduct.quantity + 1;
-          
-          
           if (newQuantity > products.stock) {
               req.flash('error', 'Stock limit exceeded.'); 
             return res.status(404).send("limit exeeds");
           }
-                  
           await cartCollection.findOneAndUpdate(
             { userId: user._id, 'products.productId': products._id },
             { $set: { 'products.$.quantity': newQuantity } }

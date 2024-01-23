@@ -54,7 +54,7 @@ router.post('/walletPay',Usersession,blockedAuth,orderController.walletPay);
 
 router.post('/couponChecking',Usersession,blockedAuth,orderController.couponChecking);
 
-
+router.get('/invoice/:orderId',Usersession,blockedAuth,orderController.downloadInvoice);
 
 // router.post('/updateCartItem/:productId/decrease',userController.updateCartItem);
 // router.post('/updateCartItem/:productId/increase',userController.updateCartItem);
