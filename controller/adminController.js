@@ -9,6 +9,9 @@ const addressCollection = require('../model/addressCollection');
 const returnCollection = require('../model/returnCollection');
 const walletCollection = require('../model/walletCollection');
 const couponCollection = require('../model/couponCollection');
+const moment = require('moment');
+const excel = require('exceljs');
+const stream = require('stream');
 
 const sharp = require('sharp');
 
@@ -17,19 +20,125 @@ const { log } = require('console');
 const multer = require('multer');
 
 const uploads = multer({ dest: "public/uploads" });
+//below is sperate gunction for the chart displaying
+const getWeeklyOrderCount = async () => {
+  const startOfWeek = new Date();
+  startOfWeek.setHours(0, 0, 0, 0);
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+  const endOfWeek = new Date();
+  endOfWeek.setHours(23, 59, 59, 999);
+  endOfWeek.setDate(endOfWeek.getDate() + (6 - endOfWeek.getDay()));
+
+
+
+  const orderCount = await orderCollection.aggregate([
+    {
+      $match: {
+        orderDate: {
+          $gte: startOfWeek,
+          $lte: endOfWeek,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalOrders: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalOrders: 1,
+      },
+    },
+  ]);
+
+  const [{ totalOrders }] = orderCount;
+  return totalOrders;
+};
+
+const getMonthlyOrderCount = async () => {
+  const currentYear = new Date().getFullYear();
+  console.log("reached");
+
+  const monthlyCounts = await orderCollection.aggregate([
+    {
+      $match: {
+        orderDate: {
+          $gte: new Date(`${currentYear}-01-01`),
+          $lt: new Date(`${currentYear + 1}-01-01`),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { $dateToString: { format: '%Y-%m', date: '$orderDate' } },
+        totalOrders: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        month: '$_id',
+        totalOrders: 1,
+      },
+    },
+  ]);
+
+  return monthlyCounts;
+};
+
+const getYearlyOrderCount = async () => {
+  const yearlyCount = await orderCollection.aggregate([
+    {
+      $group: {
+        _id: { $dateToString: { format: '%Y', date: '$orderDate' } },
+        totalOrders: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        year: '$_id',
+        totalOrders: 1,
+      },
+    },
+  ]);
+
+  return yearlyCount;
+};
+
+
+
+
+
+
+
+
 
 
 const dashboardForAdmin = async (req, res) => {
   const fullData  = await orderCollection.find();
   console.log("fullData is :",fullData);
-  res.render('admin/dashboard',{fullData});
+  const weeklyOrderCount = await getWeeklyOrderCount();
+  console.log("weekly",weeklyOrderCount);
+const monthlyOrderCounts = await getMonthlyOrderCount();
+console.log("monthly",monthlyOrderCounts);
+
+const yearlyOrderCount = await getYearlyOrderCount();
+console.log("yearly",yearlyOrderCount)
+  res.render('admin/dashboard',{fullData,weeklyOrderCount,monthlyOrderCounts,yearlyOrderCount});
 }
 
 const dashboard = async (req, res) => {
   try {
     if (req.session.admin) {  
       const fullData  = await orderCollection.find();
-      res.render('admin/dashboard',{fullData});
+      const weeklyOrderCount = await getWeeklyOrderCount();
+      const monthlyOrderCounts = await getMonthlyOrderCount();
+      const yearlyOrderCount = await getYearlyOrderCount();
+      res.render('admin/dashboard',{fullData,weeklyOrderCount,monthlyOrderCounts,yearlyOrderCount});
     } else {
       res.redirect("/admin/login");
     }
@@ -43,7 +152,10 @@ const adminlogin = async (req, res) => {
   if (req.session.admin) {
     const users = await userCollection.find();
     const fullData  = await orderCollection.find();
-    res.render('admin/dashboard', { users,fullData });
+    const weeklyOrderCount = await getWeeklyOrderCount();
+    const monthlyOrderCounts = await getMonthlyOrderCount();
+    const yearlyOrderCount = await getYearlyOrderCount();
+    res.render('admin/dashboard', { users,fullData,weeklyOrderCount ,monthlyOrderCounts,yearlyOrderCount});
   } else {
     res.render('admin/login')
   }
@@ -61,8 +173,10 @@ const postlogin = async (req, res) => {
 
       const users = await userCollection.find()
       console.log("user", users);
-
-      res.render('admin/dashboard', { users,fullData })
+      const weeklyOrderCount = await getWeeklyOrderCount();
+      const monthlyOrderCounts = await getMonthlyOrderCount();
+      const yearlyOrderCount = await getYearlyOrderCount();
+      res.render('admin/dashboard', { users,fullData,weeklyOrderCount,monthlyOrderCounts ,yearlyOrderCount})
     }
   } catch (error) {
     console.log(error);
@@ -478,12 +592,18 @@ const orders = async (req, res) => {
 
     // Calculate total pages based on the limit
     const totalPages = Math.ceil(totalOrders / limit);
-
+    const weeklyOrderCount = await getWeeklyOrderCount();
+    const monthlyOrderCounts = await getMonthlyOrderCount();
+    const yearlyOrderCount = await getYearlyOrderCount();
     // res.render('admin/orders', {
       res.render('admin/dashboard', {
       orders,
       currentPage: page,
       totalPages,
+      weeklyOrderCount,
+      monthlyOrderCounts,
+      yearlyOrderCount,
+      dayCounts
     });
   } catch (error) {
     console.error(error.message);
@@ -572,6 +692,119 @@ const Denyed = async (req, res) => {
 };
 
 
+const getMonthlyData = async(req,res)=>{
+  try {
+    console.log("reached in monthly dta");
+    const last12Months = Array.from({ length: 12 }, (_, i) =>
+      moment().subtract(i, 'months').format('MMMM YYYY')
+    );
+    const monthlyData = await orderCollection.aggregate([
+      {
+        $match: {
+          orderDate: {
+            $gte: moment().subtract(12, 'months').toDate(),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: '$orderDate' },
+          totalOrders: { $sum: 1 },
+        },
+      },
+    ]);
+    const labels = last12Months;
+    const values = monthlyData.map((monthData) =>
+      monthData ? monthData.totalOrders : 0
+    );
+    res.json({ labels, values });
+  } catch (error) {
+    console.error('Error fetching monthly data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+const getYearlyData = async(req,res)=>{
+
+  try {
+    // Example: Fetch yearly order data for the last 5 years
+    const last5Years = Array.from({ length: 5 }, (_, i) =>
+      moment().subtract(i, 'years').format('YYYY')
+    );
+
+    const yearlyData = await orderCollection.aggregate([
+      {
+        $match: {
+          orderDate: {
+            $gte: moment().subtract(5, 'years').toDate(),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $year: '$orderDate' },
+          totalOrders: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const labels = last5Years;
+    const values = yearlyData.map((yearData) =>
+      yearData ? yearData.totalOrders : 0
+    );
+
+    res.json({ labels, values });
+  } catch (error) {
+    console.error('Error fetching yearly data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+const excelDownload = async (req, res) => {
+  try {
+    const startDate = new Date(req.query.startDate);
+    const endDate = new Date(req.query.endDate);
+
+    const orders = await orderCollection
+      .find({
+        orderDate: { $gte: startDate, $lte: endDate },
+      })
+      .populate('productdetails'); // Assuming 'productdetails' is the field referencing the 'collectionOfProduct' model
+    if (!orders || orders.length === 0) {
+      return res.status(404).send("No orders found");
+    }
+    let workbook = new excel.Workbook();
+    let worksheet = workbook.addWorksheet("Orders");
+
+    worksheet.columns = [
+      { header: "Order ID", key: "orderId", width: 12 },
+      { header: "Customer Name", key: "username", width: 20 },
+      { header: "Email", key: "email", width: 20 },
+      // ... other columns
+    ];
+    orders.forEach((order) => {
+      worksheet.addRow({
+        orderId: order.orderId,
+        username: order.username,
+        email: order.email,
+        // ... populate other columns based on your schema
+      });
+    });
+    const streamifier = new stream.PassThrough();
+
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", "attachment; filename=orders.xlsx");
+   
+    res.send(buffer);
+
+    streamifier.pipe(res);
+  } catch (error) {
+    console.error("Error due to excel:", error);
+    res.status(500).send("Error due to excel");
+  }
+ };
+ 
 
 module.exports = {
   dashboardForAdmin,
@@ -601,4 +834,7 @@ module.exports = {
   returnManage,
   Approved,
   Denyed,
+  getMonthlyData,
+  getYearlyData,
+  excelDownload
 }

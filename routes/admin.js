@@ -56,6 +56,11 @@ router.post('/couponEditBackPost', AdminSession, couponController.posteditCoupon
 
 router.get('/couponDelete/:code',AdminSession,couponController.getDeleteCoupon)
 
+//chart js route
+router.get('/getMonthlyData',AdminSession,adminController.getMonthlyData);
+router.get('/getYearlyData',AdminSession,adminController.getYearlyData);
+
+router.get('/exportOrdersToExcel',AdminSession,adminController.excelDownload)
 
 router.get('/returnOrderManage',adminController.returnManage);
 router.post('/returnApproved/:id',adminController.Approved);
