@@ -145,7 +145,7 @@
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
                     <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
                         <h2 class="tm-block-title">Download sales report</h2>
-                        <form id="salesReportForm" onsubmit="return validateDates()">
+                        <form id="salesReportForm">
                             <div class="mb-3">
                                 <label for="startDate" class="form-label">From Date:</label>
                                 <input type="date" class="form-control" id="startDate" name="startDate" required>
@@ -407,7 +407,7 @@
                 // Check if both dates are selected
                 if (startDate && endDate) {
                     // Construct the URL for the Excel export route with the selected dates
-                    const url = `/excelSheet?startDate=${startDate}&endDate=${endDate}`;
+                    const url = `/admin/exportOrdersToExcel?startDate=${startDate}&endDate=${endDate}`;
     
                     try {
                         const response = await fetch(url);
@@ -426,7 +426,7 @@
                             a.href = blobUrl;
     
                             // Set the filename for the download
-                            a.download = "sales_report.xlsx";
+                            a.download = "sales_report.xls";
     
                             // Trigger the click event to start the download
                             a.click();

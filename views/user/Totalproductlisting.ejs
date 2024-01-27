@@ -33,7 +33,7 @@
             padding: 15px;
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+        }  
     </style>
  
 
@@ -219,17 +219,21 @@
 
     <body>
         <div class="container">
-            <div class="row">
+<!--filtering part is here-->
+
+<div class="d-flex align-items-center justify-content-center mt-2 col-6 " style="align-content: start;">
+    <input type="number" id="minPrice" class="form-control mr-2" placeholder="Min Price" min="0" step="0.01">
+    <input type="number" id="maxPrice" class="form-control mr-2" placeholder="Max Price" min="0" step="0.01">
+    <button type="button" class="btn btn-primary" onclick="applyPriceFilter()">Apply</button>
+</div>
+               <div class="row">
                 <!-- Shop Product Start -->
-                <div class="col-lg-9 col-md-8">
+                <div class="col-lg-12 col-md-8"><hr
                     <div class="row pb-3">
                         <div class="col-12 pb-1">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <div>
-                                    <button class="btn btn-sm btn-light"><i class="fa fa-th-large"></i></button>
-                                    <button class="btn btn-sm btn-light ml-2"><i class="fa fa-bars"></i></button>
-                                </div>
-                                <div class="ml-2">
+                            
+                                <div class="ml-2  col-lg-12">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-light dropdown-toggle"
                                             data-toggle="dropdown"> Category Sorting</button>
@@ -238,15 +242,7 @@
                                             <a class="dropdown-item" href="/WomensTotallistpro">Womens</a>
                                         </div>
                                     </div>
-                                    <!-- <div class="btn-group ml-2">
-                                    <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">Showing</button>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#">10</a>
-                                        <a class="dropdown-item" href="#">20</a>
-                                        <a class="dropdown-item" href="#">30</a>
-                                    </div>
-                                </div> -->
-
+                          
                                 </div>
                             </div>
                         </div>
@@ -281,6 +277,8 @@
                                         <div class="text-center py-4">
                                             <a class="h6 text-decoration-none text-truncate" href="">
                                                 <%= products[i].name %>
+                                                <!-- <span class="price">₹<%= products[i].price.toFixed(2) %></span> -->
+
                                             </a>
 
                                             <div class="d-flex align-items-center justify-content-center mt-2">
@@ -625,6 +623,29 @@ console.log(productId);
   
     });
   </script>
+
+
+<!--  here filtering-->
+<script>
+    function applyPriceFilter() {
+    const minPrice = parseFloat(document.getElementById('minPrice').value);
+    const maxPrice = parseFloat(document.getElementById('maxPrice').value);
+
+    // Hide all products initially
+    searchableItems.forEach(item => {
+        item.style.display = 'none';
+    });
+
+    // Show products within the price range
+    searchableItems.forEach(item => {
+        const price = parseFloat(item.querySelector('.price').textContent.replace('₹', ''));
+
+        if (price >= minPrice && price <= maxPrice) {
+            item.style.display = 'block';
+        }
+    });
+}
+</script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 

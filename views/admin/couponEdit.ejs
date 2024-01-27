@@ -19,6 +19,7 @@
    </style>
 
    <title>Edit Coupon - Product Admin Template</title>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
    <link rel="stylesheet" href="/product-admin-master/css/fontawesome.min.css" />
    <link rel="stylesheet" href="/product-admin-master/css/bootstrap.min.css" />
@@ -45,21 +46,25 @@
 
    <!-- Coupon Edit Form -->
    <%if(editedCoupon){ %>
-   <div class="content">
-     <h1 class="mb-4">Edit Coupon</h1>
+   <div class="content card container" style=" background-color:  rgb(217, 217, 217);">
+     <h1 class="mb-4" style="text-align: center;">Update the  coupon</h1>
      <form action="/admin/couponEditBackPost" method="POST">
        <div class="form-row">
 
          <div class="form-group col-md-6">
             
            <label for="couponCode">Coupon Code:</label>
-           <input type="text" id="couponCode" name="couponCode" class="form-control" placeholder="Enter coupon code" value="<%= editedCoupon.couponCode %>" required />
+           <input type="text" id="couponCode" name="couponCode" class="form-control" placeholder="Enter coupon code" value="<%= editedCoupon.couponCode %>"  />
 
          </div>
 
          <div class="form-group col-md-6">
            <label for="expiryDate">Expiry Date:</label>
-           <input type="date" id="expiryDate" name="expiryDate" class="form-control" value="<%= editedCoupon.expiryDate %>" required />
+           <input type="date" id="expiryDate" name="expiryDate" class="form-control" value="<%= editedCoupon.expiryDate %>"  />
+           <% if(message){%>
+            <span style="color: red;"><%= message %></span>
+            <%}%>
+
          </div>
 
        </div>
@@ -69,7 +74,7 @@
          <div class="form-group col-md-6">
            <label for="productDiscount">productDiscount:</label>
            <div class="input-group">
-             <input type="number" id="productDiscount" name="productDiscount" step="0.01" class="form-control" placeholder="Enter discount amount" value="<%= editedCoupon.productDiscount %>" required />
+             <input type="number" id="productDiscount" name="productDiscount" step="0.01" class="form-control" placeholder="Enter discount amount" value="<%= editedCoupon.productDiscount %>"  />
              <div class="input-group-append">
                <span class="input-group-text">%</span>
              </div>
@@ -79,7 +84,7 @@
          <div class="form-group col-md-6">
            <label for="minimumPurchaseValue">Minimum Purchase Value:</label>
            <div class="input-group">
-             <input type="number" id="minimumPurchaseValue" name="minimumPurchaseValue" step="0.01" class="form-control" placeholder="Enter minimum purchase value" value="<%= editedCoupon.minimumPurchaseValue %>" required />
+             <input type="number" id="minimumPurchaseValue" name="minimumPurchaseValue" step="0.01" class="form-control" placeholder="Enter minimum purchase value" value="<%= editedCoupon.minimumPurchaseValue %>"  />
              <div class="input-group-append">
                <span class="input-group-text">₹</span>
              </div>
@@ -88,10 +93,30 @@
 
        </div>
 
-       <button type="submit" class="btn btn-primary">Update</button>
+       <button type="submit" id="updateButton" class="btn btn-primary">Update</button>
      </form>
 <% } %>
+<div class="modal fade" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="validationModalLabel">Validation Error</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Please enter valid values in all fields.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
    </div>
+
+
 
    <!-- Footer -->
    <footer class="tm-footer row tm-mt-small">
@@ -103,6 +128,7 @@
      </div>
    </footer>
 
+  
 
    <!-- <script>
     function editCoupon(couponCode) {
@@ -132,6 +158,37 @@
     }
 
    </script> -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+   <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector('form');
+    const validationModal = new bootstrap.Modal(document.getElementById('validationModal'));
+
+    form.addEventListener('submit', function (event) {
+        const couponCode = document.getElementById('couponCode').value.trim();
+        const expiryDate = new Date(document.getElementById('expiryDate').value);
+        const productDiscount = parseFloat(document.getElementById('productDiscount').value);
+        const minimumPurchaseValue = parseFloat(document.getElementById('minimumPurchaseValue').value);
+
+        if (couponCode === '' || isNaN(productDiscount) || isNaN(minimumPurchaseValue)) {
+            event.preventDefault();
+            validationModal.show();
+        } else if (productDiscount < 1 || productDiscount > 100 || minimumPurchaseValue <= 1 || expiryDate < new Date()) {
+            event.preventDefault();
+            validationModal.show();
+        }
+    });
+});
+
+  </script>
+
+  
+    
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
    <!-- Scripts -->
    <script src="/product-admin-master/js/jquery-3.3.1.min.js"></script>
    <script src="/product-admin-master/js/bootstrap.min.js"></script>

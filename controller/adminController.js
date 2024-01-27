@@ -160,30 +160,37 @@ const adminlogin = async (req, res) => {
     res.render('admin/login')
   }
 };
-
 const postlogin = async (req, res) => {
   const { username, password } = req.body;
+
+  // Check if username or password is not provided or contains only spaces
+  if (!username || !password || username.trim() === '' || password.trim() === '') {
+    // Render login page with an error message
+     res.render('admin/login', { errorMessage: 'Username and password are required.' });
+  }
 
   try {
     const admin = await adminCollection.findOne({ username: username, password: password });
     const users = await userCollection.find();
     const fullData  = await orderCollection.find();
-    if (admin.password === password) {
+    if (admin && admin.password === password) {
       req.session.admin = username;
 
-      const users = await userCollection.find()
+      const users = await userCollection.find();
       console.log("user", users);
       const weeklyOrderCount = await getWeeklyOrderCount();
       const monthlyOrderCounts = await getMonthlyOrderCount();
       const yearlyOrderCount = await getYearlyOrderCount();
-      res.render('admin/dashboard', { users,fullData,weeklyOrderCount,monthlyOrderCounts ,yearlyOrderCount})
+      res.render('admin/dashboard', { users, fullData, weeklyOrderCount, monthlyOrderCounts, yearlyOrderCount });
+    } else {
+      // Render login page with an error message if admin is not found or password is incorrect
+      res.render('admin/login', { errorMessage: 'Invalid username or password.' });
     }
   } catch (error) {
     console.log(error);
-    res.render('admin/login');
+    res.render('admin/login', { errorMessage: 'An error occurred during login.' });
   }
 };
-
 
 const createPost = async (req, res) => {
   const createData = {
@@ -318,6 +325,11 @@ const productmanagePost = async (req, res) => {
     console.log("req.files", req.files);
     console.log("Product management Post Image is updating");
     const images = req.files.map(file => `public/uploads/${file.filename}`);
+
+    if (!req.body.Name.trim() || !req.body.price.trim() || !req.body.category.trim() || !req.body.stock.trim() || !req.body.description.trim() || !req.body.Discount.trim()) {
+      return res.render('admin/productAdd', { productError: 'All fields are required and cannot be just spaces' });
+    }
+
 
     console.log('body', req.body);
    console.log("name of the product in the productManagePost",req.body.Name);
@@ -480,9 +492,17 @@ const categoryadd = async (req, res) => {
 
 const categoryaddPost = async (req, res) => {
   const datas = {
-    categoryName: categoryName,
-    categoryDescription: categoryDescription,
+    categoryName: req.body.categoryName,
+    categoryDescription: req.body.categoryDescription,
   };
+    // Check if category name or category description is empty
+    if (!datas.categoryName || !datas.categoryDescription) {
+      return res.render('admin/categoryAdd', { categoryError: 'Category name and description are required' });
+    }
+    if (!datas.categoryName.trim() || !datas.categoryDescription.trim()) {
+      return res.render('admin/categoryAdd', { categoryError: 'Category name and description are required and cannot be just spaces' });
+    }
+    
 
   try {
     const existingCategory = await CategoryCollection.findOne({ categoryName: { $regex: new RegExp('^' + datas.categoryName + '$', 'i') } });
@@ -763,7 +783,7 @@ const excelDownload = async (req, res) => {
   try {
     const startDate = new Date(req.query.startDate);
     const endDate = new Date(req.query.endDate);
-
+    console.log("hwllooo");
     const orders = await orderCollection
       .find({
         orderDate: { $gte: startDate, $lte: endDate },
@@ -779,14 +799,17 @@ const excelDownload = async (req, res) => {
       { header: "Order ID", key: "orderId", width: 12 },
       { header: "Customer Name", key: "username", width: 20 },
       { header: "Email", key: "email", width: 20 },
-      // ... other columns
+      { header: "TotalPrice", key: "TotalPrice", width: 20 },
+      { header: "OrderStatus", key: "orderStatus", width: 20 },
+      
     ];
     orders.forEach((order) => {
       worksheet.addRow({
         orderId: order.orderId,
         username: order.username,
         email: order.email,
-        // ... populate other columns based on your schema
+        TotalPrice:order.totalPrice,
+        orderStatus:order.orderStatus
       });
     });
     const streamifier = new stream.PassThrough();

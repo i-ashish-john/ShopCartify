@@ -14,7 +14,7 @@
 
  <body id="returnOrdersPage">
    <!-- Navigation Bar -->
-   <nav class="navbar navbar-expand-xl">
+   <nav class="navbar navbar-expand-xl" >
     <div class="container h-100">
         <a class="navbar-brand" href="/admin/dashboardForAdmin">
             <h1 class="tm-site-title mb-0">Product Admin</h1>
@@ -106,7 +106,7 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Serial Number</th>
+                <th >Serial Number</th>
                 <th>Coupon Code</th>
                 <th>Expiry Date</th>
                 <th>Added Date</th>
@@ -118,7 +118,7 @@
             <tbody>
                 
               <% couponDetails.forEach((coupon, index) => { %>
-                <tr class="bg-light">
+                <tr   style=" background-color:  rgb(217, 217, 217);">
                   <td><%= index + 1 %></td>
                   <td><%= coupon.couponCode %></td>
                   <td><%= coupon.expiryDate %></td>

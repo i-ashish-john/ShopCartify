@@ -51,7 +51,7 @@ router.post('/ordersPost/:id',AdminSession,adminController.ordersPost);
 router.get('/couponmanage',AdminSession,couponController.couponPageLoad);
 router.get('/couponAddingGet',AdminSession,couponController.couponAdding);
 router.post('/couponmanagePost',AdminSession,couponController.couponAddingPost);
-router.get('/couponEdit/:code',AdminSession,couponController.geteditCoupon)
+router.get('/couponEdit/:code',AdminSession,couponController.geteditCoupon);
 router.post('/couponEditBackPost', AdminSession, couponController.posteditCoupon);
 
 router.get('/couponDelete/:code',AdminSession,couponController.getDeleteCoupon)
