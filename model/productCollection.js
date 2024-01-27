@@ -42,7 +42,7 @@ const productSchema = new mongoose.Schema({
 
 });
 
-// Create a Product model based on the schema
+
 const ProductCollection = new mongoose.model('collectionOfProduct', productSchema);
 
 module.exports = ProductCollection;
