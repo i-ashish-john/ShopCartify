@@ -208,6 +208,38 @@
                 <% } %> 
                 
             </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <% if (currentPage > 1) { %>
+                        <li class="page-item">
+                            <a class="page-link" href="/admin/dashboardForAdmin?page=<%= currentPage - 1 %>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <% } %>
+                
+                        <% for (let i = 1; i < fullData.length; i++) { %>
+                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                            <a class="page-link" href="/admin/dashboardForAdmin?page=<%= i %>"><%= i %></a>
+                        </li>
+                        <% } %>
+                
+                        <% if (currentPage < fullData.length) { %>
+                        <li class="page-item">
+                            <a class="page-link" href="/admin/dashboardForAdmin?page=<%= currentPage + 1 %>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <% } %>
+                    </ul>
+                    </nav>
+                </div>
+                
+
+
         </div>
         <footer class="tm-footer row tm-mt-small">
             <div class="col-12 font-weight-light">
@@ -302,77 +334,6 @@
     
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <!-- <script>
-        function validateDates() {
-            var startDate = document.getElementById('startDate').value;
-            var endDate = document.getElementById('endDate').value;
-    
-            if (!startDate || !endDate) {
-                showAlert('Please select both start and end dates.');
-                return false;
-            }
-    
-            var startDateObj = new Date(startDate);
-            var endDateObj = new Date(endDate);
-    
-            if (startDateObj > endDateObj) {
-                showAlert('Start date must be before end date.');
-                return false;
-            }
-    
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-    
-            if (endDateObj <= today) {
-                showAlert('Enter Today or before date.');
-                return false;
-            }
-    
-            // Proceed with form submission or further processing
-            submitForm(startDate, endDate);
-    
-            return true;
-        }
-    
-        function showAlert(message) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                text: message,
-            });
-        }
-    
-        console.log("before the submitForm");
-  
-
-    
-        function submitForm(startDate, endDate) {
-            fetch('/admin/excelSheet', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ startDate: startDate, endDate: endDate }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Sales report generated successfully!',
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Show an error alert if needed
-                showAlert('Error generating sales report. Please try again.');
-            })
-            .finally(() => {
-                console.log("After the submitForm");
-            });
-        }
-    </script> -->
     
     <!-- here is  the   code for the excel -->
 
@@ -493,7 +454,6 @@
    })
    .then(response => response.json())
    .then(data => {
-       // Handle the response data if needed
        console.log(data);
    })
    .catch(error => {

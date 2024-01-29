@@ -42,11 +42,11 @@
        .table td {
          text-align: left;
             vertical-align: middle;
-            background-color: #706959;
+            background-color: #a49494;
             color: #ffffff;
             padding: 15px;
             border: 1px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 4px 8px rgba(36, 34, 34, 0.9);
 }
        .table thead th {
            background-color: #a49494;
@@ -119,21 +119,12 @@
    </style>
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-    
-
-
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
-
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
     <link href="/NEW TEMP/online-shop-website-template/lib/animate/animate.min.css" rel="stylesheet">
     <link href="/NEW TEMP/online-shop-website-template/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="/NEW TEMP/online-shop-website-template/css/style.css" rel="stylesheet">
 
 </head>
@@ -337,6 +328,17 @@
                   <% } %>
                </tbody>
            </table>
+           <div class="container mt-3">
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                  </li>
+                <% } %>
+              </ul>
+            </nav>
+          </div>
        </div>
    </div>
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -22,40 +22,47 @@ const multer = require('multer');
 const uploads = multer({ dest: "public/uploads" });
 //below is sperate gunction for the chart displaying
 const getWeeklyOrderCount = async () => {
-  const startOfWeek = new Date();
-  startOfWeek.setHours(0, 0, 0, 0);
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-  const endOfWeek = new Date();
-  endOfWeek.setHours(23, 59, 59, 999);
-  endOfWeek.setDate(endOfWeek.getDate() + (6 - endOfWeek.getDay()));
+  try {
+    const startOfWeek = new Date();
+    startOfWeek.setHours(0, 0, 0, 0);
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+    const endOfWeek = new Date();
+    endOfWeek.setHours(23, 59, 59, 999);
+    endOfWeek.setDate(endOfWeek.getDate() + (6 - endOfWeek.getDay()));
 
-
-
-  const orderCount = await orderCollection.aggregate([
-    {
-      $match: {
-        orderDate: {
-          $gte: startOfWeek,
-          $lte: endOfWeek,
+    const orderCount = await orderCollection.aggregate([
+      {
+        $match: {
+          orderDate: {
+            $gte: startOfWeek,
+            $lte: endOfWeek,
+          },
         },
       },
-    },
-    {
-      $group: {
-        _id: null,
-        totalOrders: { $sum: 1 },
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 },
+        },
       },
-    },
-    {
-      $project: {
-        _id: 0,
-        totalOrders: 1,
+      {
+        $project: {
+          _id: 0,
+          totalOrders: 1,
+        },
       },
-    },
-  ]);
+    ]);
 
-  const [{ totalOrders }] = orderCount;
-  return totalOrders;
+    if (orderCount && orderCount.length > 0 && orderCount[0].totalOrders !== undefined) {
+      const [{ totalOrders }] = orderCount;
+      return totalOrders;
+    } else {
+      return 0; // Handle the case where totalOrders is not available
+    }
+  } catch (error) {
+    console.error("Error in getWeeklyOrderCount:", error);
+    return 0; // Handle the error by returning a default value
+  }
 };
 
 const getMonthlyOrderCount = async () => {
@@ -110,35 +117,45 @@ const getYearlyOrderCount = async () => {
 };
 
 
-
-
-
-
-
-
-
-
 const dashboardForAdmin = async (req, res) => {
-  const fullData  = await orderCollection.find();
-  console.log("fullData is :",fullData);
-  const weeklyOrderCount = await getWeeklyOrderCount();
-  console.log("weekly",weeklyOrderCount);
-const monthlyOrderCounts = await getMonthlyOrderCount();
-console.log("monthly",monthlyOrderCounts);
-
-const yearlyOrderCount = await getYearlyOrderCount();
-console.log("yearly",yearlyOrderCount)
-  res.render('admin/dashboard',{fullData,weeklyOrderCount,monthlyOrderCounts,yearlyOrderCount});
+  const ITEMS_PER_PAGE = 10;
+ const page = parseInt(req.query.page) || 1;
+ const skip = (page - 1) * ITEMS_PER_PAGE;
+ const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
+ const totalCount = await orderCollection.countDocuments();
+ const weeklyOrderCount = await getWeeklyOrderCount();
+ const monthlyOrderCounts = await getMonthlyOrderCount();
+ const yearlyOrderCount = await getYearlyOrderCount();
+ res.render('admin/dashboard', {
+    fullData,
+    weeklyOrderCount,
+    monthlyOrderCounts,
+    yearlyOrderCount,
+    currentPage: page,
+    totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
+ });
 }
+
 
 const dashboard = async (req, res) => {
   try {
     if (req.session.admin) {  
-      const fullData  = await orderCollection.find();
+      const ITEMS_PER_PAGE = 10;
+      const page = parseInt(req.query.page) || 1;
+      const skip = (page - 1) * ITEMS_PER_PAGE;
+      const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
+      const totalCount = await orderCollection.countDocuments();
       const weeklyOrderCount = await getWeeklyOrderCount();
       const monthlyOrderCounts = await getMonthlyOrderCount();
       const yearlyOrderCount = await getYearlyOrderCount();
-      res.render('admin/dashboard',{fullData,weeklyOrderCount,monthlyOrderCounts,yearlyOrderCount});
+      res.render('admin/dashboard', {
+         fullData,
+         weeklyOrderCount,
+         monthlyOrderCounts,
+         yearlyOrderCount,
+         currentPage: page,
+         totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
+      });
     } else {
       res.redirect("/admin/login");
     }
@@ -150,12 +167,22 @@ const dashboard = async (req, res) => {
 
 const adminlogin = async (req, res) => {
   if (req.session.admin) {
-    const users = await userCollection.find();
-    const fullData  = await orderCollection.find();
+    const ITEMS_PER_PAGE = 10;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * ITEMS_PER_PAGE;
+    const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
+    const totalCount = await orderCollection.countDocuments();
     const weeklyOrderCount = await getWeeklyOrderCount();
     const monthlyOrderCounts = await getMonthlyOrderCount();
     const yearlyOrderCount = await getYearlyOrderCount();
-    res.render('admin/dashboard', { users,fullData,weeklyOrderCount ,monthlyOrderCounts,yearlyOrderCount});
+    res.render('admin/dashboard', {
+       fullData,
+       weeklyOrderCount,
+       monthlyOrderCounts,
+       yearlyOrderCount,
+       currentPage: page,
+       totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
+    });
   } else {
     res.render('admin/login')
   }
@@ -177,11 +204,24 @@ const postlogin = async (req, res) => {
       req.session.admin = username;
 
       const users = await userCollection.find();
-      console.log("user", users);
+      console.log("user in the post login", users);
+      const ITEMS_PER_PAGE = 10;
+      const page = parseInt(req.query.page) || 1;
+      const skip = (page - 1) * ITEMS_PER_PAGE;
+      const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
+      const totalCount = await orderCollection.countDocuments();
       const weeklyOrderCount = await getWeeklyOrderCount();
       const monthlyOrderCounts = await getMonthlyOrderCount();
       const yearlyOrderCount = await getYearlyOrderCount();
-      res.render('admin/dashboard', { users, fullData, weeklyOrderCount, monthlyOrderCounts, yearlyOrderCount });
+      res.render('admin/dashboard', {
+         fullData,
+         users,
+         weeklyOrderCount,
+         monthlyOrderCounts,
+         yearlyOrderCount,
+         currentPage: page,
+         totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
+      });
     } else {
       // Render login page with an error message if admin is not found or password is incorrect
       res.render('admin/login', { errorMessage: 'Invalid username or password.' });
@@ -241,11 +281,8 @@ const ITEMS_PER_PAGE = 10;
 const usermanage = async (req, res) => {
   const page = parseInt(req.query.page) || 1; //neede page requesting
   const skip = (page - 1) * ITEMS_PER_PAGE;
-
   const users = await userCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
-  
   const totalCount = await userCollection.countDocuments();
-
   res.render("admin/userManagement", { users, currentPage: page, totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE) });
 };
 
@@ -326,10 +363,9 @@ const productmanagePost = async (req, res) => {
     console.log("Product management Post Image is updating");
     const images = req.files.map(file => `public/uploads/${file.filename}`);
 
-    if (!req.body.Name.trim() || !req.body.price.trim() || !req.body.category.trim() || !req.body.stock.trim() || !req.body.description.trim() || !req.body.Discount.trim()) {
+    if (!req.body.Name.trim() || !req.body.price.trim() || !req.body.category.trim() || !req.body.stock.trim() || !req.body.description.trim() ) {
       return res.render('admin/productAdd', { productError: 'All fields are required and cannot be just spaces' });
     }
-
 
     console.log('body', req.body);
    console.log("name of the product in the productManagePost",req.body.Name);
@@ -343,9 +379,7 @@ const productmanagePost = async (req, res) => {
       Images:images,
     };
 
-    // Assuming `productCollection` is defined somewhere in your code
     const Product = await productCollection.insertMany([productDetails]);
-
     if (productDetails && Product) {
       res.redirect('/admin/productlist');
     } else {
@@ -361,28 +395,28 @@ const productmanagePost = async (req, res) => {
 // module.exports = {
 //   productmanagePost,
 // };
-
 const productlist = async (req, res) => {
   try {
+    const fullProducts = await productCollection.find();
+    const categories = await CategoryCollection.find();
+
     let query = {};
     const searchTerm = req.query.search;
- 
+
     if (searchTerm) {
       query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }], deleted: false };
     } else {
       query = { deleted: false };
     }
- 
+
     const page = parseInt(req.query.page) || 1;
-    const limit = 10;
- 
+    const limit = 5;
+
     const totalProducts = await productCollection.countDocuments(query);
     const totalPages = Math.ceil(totalProducts / limit);
- 
+
     const skip = (page - 1) * limit;
     const products = await productCollection.find(query).skip(skip).limit(limit);
-    const fullProducts = await productCollection.find();
-    const categories = await CategoryCollection.find();
     res.render("admin/productManagement", {
       categories,
       fullProducts,
@@ -395,8 +429,7 @@ const productlist = async (req, res) => {
     console.error("Error in productlist:", error);
     res.status(500).send("Internal Server Error");
   }
- };
- 
+};
 
 
 const productDelete = async (req, res) => {
@@ -527,10 +560,31 @@ const categorymanage = async (req, res) => {
     // const categories = await CategoryCollection.find({ deleted: false });
     const categories = await CategoryCollection.find();
     const fullProducts = await productCollection.find();
-
-    // res.render("admin/categoryManagement", { categories });
-    res.render("admin/productManagement", { categories,fullProducts });
-
+    let query = {};
+    const searchTerm = req.query.search;
+ 
+    if (searchTerm) {
+      query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }], deleted: false };
+    } else {
+      query = { deleted: false };
+    }
+ 
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+ 
+    const totalProducts = await productCollection.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limit);
+ 
+    const skip = (page - 1) * limit;
+    const products = await productCollection.find(query).skip(skip).limit(limit);
+    res.render("admin/productManagement", {
+      categories,
+      fullProducts,
+      products,
+      currentPage: page,
+      totalPages,
+      searchTerm,
+    });
   } catch (error) {
     // Handle any errors, for example, log the error and render an error page
     console.error("Error fetching categories:", error);
@@ -611,20 +665,22 @@ const orders = async (req, res) => {
     const totalOrders = await orderCollection.countDocuments();
 
     // Calculate total pages based on the limit
-    const totalPages = Math.ceil(totalOrders / limit);
-    const weeklyOrderCount = await getWeeklyOrderCount();
-    const monthlyOrderCounts = await getMonthlyOrderCount();
-    const yearlyOrderCount = await getYearlyOrderCount();
-    // res.render('admin/orders', {
-      res.render('admin/dashboard', {
-      orders,
-      currentPage: page,
-      totalPages,
-      weeklyOrderCount,
-      monthlyOrderCounts,
-      yearlyOrderCount,
-      dayCounts
-    });
+    const ITEMS_PER_PAGE = 10;
+ const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
+ const totalCount = await orderCollection.countDocuments();
+ const weeklyOrderCount = await getWeeklyOrderCount();
+ const monthlyOrderCounts = await getMonthlyOrderCount();
+ const yearlyOrderCount = await getYearlyOrderCount();
+ res.render('admin/dashboard', {
+    orders,
+    daycount,
+    fullData,
+    weeklyOrderCount,
+    monthlyOrderCounts,
+    yearlyOrderCount,
+    currentPage: page,
+    totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
+ });
   } catch (error) {
     console.error(error.message);
     res.status(500).send(error.message);
@@ -651,18 +707,35 @@ const ordersPost = async (req, res) => {
   }    
  };
  
- const returnManage = async(req,res)=>{
-  try{
-    const orderData = await orderCollection.find();
-    const returnDetails = await returnCollection.find();
-    console.log("returndetails",returnDetails);
-   res.render("admin/returnOrderManage",{orderData,returnDetails});
-  }catch(error){
-    res.send(error.messgae);
-    console.log(error.message);
+ const returnManage = async (req, res) => {
+  try {
+     const pageSize = 3;
+     const currentPage = req.query.page || 1; 
+ 
+     const skip = (currentPage - 1) * pageSize;
+ 
+     const orderData = await orderCollection.find().skip(skip).limit(pageSize);
+     const returnDetails = await returnCollection.find().skip(skip).limit(pageSize);
+ 
+     const totalOrders = await orderCollection.countDocuments();
+     const totalReturns = await returnCollection.countDocuments();
+
+     const totalPages = Math.ceil(Math.max(totalOrders, totalReturns) / pageSize);
+ 
+     res.render("admin/returnOrderManage", {
+       orderData,
+       returnDetails,
+       currentPage,
+       totalPages,
+     });
+  } catch (error) {
+     res.send(error.message);
+     console.log(error.message);
   }
  };
- const Approved = async (req, res) => {
+ 
+
+  const Approved = async (req, res) => {
   try {
     const orderId = req.params.id;
     const data = await returnCollection.findOne({ orderId: orderId });

@@ -68,7 +68,7 @@ couponSchema.statics.removeExpiredCoupons = async function () {
 
 const couponCollection = mongoose.model('Coupon', couponSchema);
 
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('0 */24 * * *', async () => {
     console.log('Running job to remove expired coupons...');
     await couponCollection.removeExpiredCoupons();
     console.log('Job completed.');

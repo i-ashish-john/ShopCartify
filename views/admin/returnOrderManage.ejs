@@ -127,6 +127,43 @@
                 <% }) %>
           </tbody>
            </table>
+
+           <div class="row mt-3">
+            <div class="col-12">
+
+
+            </div>
+          </div>
+         <!-- Pagination -->
+<div class="pagination">
+  <nav aria-label="Page navigation example">
+     <ul class="pagination justify-content-center">
+       <% if (currentPage > 1) { %>
+         <li class="page-item">
+           <a class="page-link" href="/admin/returnOrderManage?page=<%= currentPage - 1 %>" aria-label="Previous">
+             <span aria-hidden="true">&laquo;</span>
+           </a>
+         </li>
+       <% } %>
+ 
+       <% for (let i = 1; i < returnDetails.length; i++) { %>
+         <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+           <a class="page-link" href="/admin/returnOrderManage?page=<%= i %>"><%= i %></a>
+         </li>
+       <% } %>
+ 
+       <% if (currentPage <  returnDetails.length) { %>
+         <li class="page-item">
+           <a class="page-link" href="/admin/returnOrderManage?page=<%= currentPage + 1 %>" aria-label="Next">
+             <span aria-hidden="true">&raquo;</span>
+           </a>
+         </li>
+       <% } %>
+     </ul>
+  </nav>
+ </div>
+ 
+           
          </div>
        </div>
      </div>

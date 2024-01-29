@@ -15,8 +15,17 @@ const couponControllerFunction={
 
     couponPageLoad:async(req,res)=>{
         try{
-            let couponDetails = await couponCollection.find();
-            res.render('admin/couponList',{couponDetails});
+            const page = parseInt(req.query.page) || 1; 
+            const limit = 3; 
+            const skip = (page - 1) * limit;
+    
+            let couponDetails = await couponCollection.find().skip(skip).limit(limit);
+    
+            const totalCoupons = await couponCollection.countDocuments();
+    
+            const totalPages = Math.ceil(totalCoupons / limit);
+    
+            res.render('admin/couponList', { couponDetails, totalPages, currentPage: page });
         }catch(error){
             res.send(error);
         }
@@ -29,6 +38,7 @@ const couponControllerFunction={
         }catch(error){
             res.send(error.message);
         }
+
     },
     couponAddingPost: async (req, res) => {
         try {
@@ -101,8 +111,17 @@ const couponControllerFunction={
             const updated = await couponCollection.findOneAndUpdate(DatasToUpdate);
             console.log("Updated or not",updated);
             // res.redirect('/admin/couponmanage');
-            let couponDetails = await couponCollection.find();
-            res.render('admin/couponList',{couponDetails});
+            // let couponDetails = await couponCollection.find();
+            const page = parseInt(req.query.page) || 1; 
+            const limit = 3; 
+            const skip = (page - 1) * limit;
+    
+            let couponDetails = await couponCollection.find().skip(skip).limit(limit);
+    
+            const totalCoupons = await couponCollection.countDocuments();
+    
+            const totalPages = Math.ceil(totalCoupons / limit);
+            res.render('admin/couponList',{couponDetails, totalPages, currentPage: page});
 
 
         }catch(error){

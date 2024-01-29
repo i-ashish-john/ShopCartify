@@ -81,22 +81,30 @@ const orderList = async (req, res) => {
   try {
     const email = req.session.user;
     const user = await userCollection.findOne({ email: email });
-    console.log("The user details is:", user);
+
     if (!user) {
       return res.status(404).send("User not found");
     }
+
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 6; 
+
     const orders = await orderCollection
       .find({ email: user.email })
       .populate('productdetails')
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
       .exec();
-    console.log("hello ^^^", user._id);
-    res.render("user/orderList", { orders });
-    console.log("OrDeRs details is:", orders);
+
+    const totalOrders = await orderCollection.countDocuments({ email: user.email });
+
+    res.render("user/orderList", { orders, currentPage: page, totalPages: Math.ceil(totalOrders / pageSize) });
   } catch (error) {
     console.error(error.message);
     res.status(500).send(error.message);
   }
 };
+
 
 
 const addCheckoutAddress = async (req, res) => {
@@ -168,7 +176,6 @@ const cancelOrder = async (req, res) => {
     console.log("The updated order in the cancel order is:", updatedOrder);
 
     if (updatedOrder) {
-      // Fetch all orders again after the update
       const orders = await orderCollection.find({ email: email });
 
       res.render("user/orderList", { orders });
