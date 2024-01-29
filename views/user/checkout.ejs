@@ -641,7 +641,7 @@
       if (paymentType === 'NetBanking') {
         var razorpayKey = 'rzp_test_Jbmx59qoOc1tKj';
         var totalPriceInRupees = document.querySelector('input[name="totalPrice"]').value;
-        var totalPriceInPaisa = Math.round(parseFloat(totalPriceInRupees) * 100);
+        var totalPriceInPaisa =Number(totalPriceInRupees) * 100;
   
         fetch('/payPost', {
           method: 'POST',
@@ -840,14 +840,7 @@ document.querySelector('#applyCouponButton').addEventListener('click', async () 
    Swal.fire({ icon: 'error', title: 'Error applying coupon', text: data.message });
  }
 });
-// On page load, update the total price input with the value from local storage
-window.onload = function() {
- const totalPriceInput = document.querySelector('input[name="totalPrice"]');
- const storedTotalPrice = localStorage.getItem('totalPrice');
- if (storedTotalPrice) {
-   totalPriceInput.value = storedTotalPrice;
- }
-};
+
 </script>
 
 <script>

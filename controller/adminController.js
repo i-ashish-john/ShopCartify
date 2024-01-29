@@ -55,7 +55,7 @@ const getWeeklyOrderCount = async () => {
 
     if (orderCount && orderCount.length > 0 && orderCount[0].totalOrders !== undefined) {
       const [{ totalOrders }] = orderCount;
-      return totalOrders;
+      return orderCount;
     } else {
       return 0; // Handle the case where totalOrders is not available
     }
@@ -92,7 +92,6 @@ const getMonthlyOrderCount = async () => {
       },
     },
   ]);
-
   return monthlyCounts;
 };
 
@@ -112,7 +111,6 @@ const getYearlyOrderCount = async () => {
       },
     },
   ]);
-
   return yearlyCount;
 };
 
@@ -671,13 +669,14 @@ const orders = async (req, res) => {
  const weeklyOrderCount = await getWeeklyOrderCount();
  const monthlyOrderCounts = await getMonthlyOrderCount();
  const yearlyOrderCount = await getYearlyOrderCount();
+
  res.render('admin/dashboard', {
     orders,
     daycount,
     fullData,
     weeklyOrderCount,
     monthlyOrderCounts,
-    yearlyOrderCount,
+ yearlyOrderCount,
     currentPage: page,
     totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
  });

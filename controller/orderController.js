@@ -282,7 +282,7 @@ const walletPay = async (req, res) => {
 const payPost = async (req, res) => {                       
 
   try {
-    console.log('paypost');
+    console.log('paypost',req.body.totalPrice);
     const razorpayOrder = await instance.orders.create({
       amount: req.body.totalPrice,
       currency: 'INR',

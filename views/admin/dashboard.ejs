@@ -256,6 +256,7 @@
       <script>
          // Monthly Chart
         const monthlyOrderCounts ='<%= JSON.stringify(monthlyOrderCounts) %>';
+       
         // const monthlyLabels = monthlyOrderCounts.map(entry => entry.month);
         // const monthlyValues = monthlyOrderCounts.map(entry => entry.totalOrders);
 
@@ -264,10 +265,10 @@
         new Chart(monthlyChartCanvas, {
           type: 'bar',
           data: {
-            labels: "MonthlyOrder",
+            labels: ['JAN','FEB','MAR','APR','MAY','JUN','JULY','AUG','SEP','OCT','NOV','DEC'],
             datasets: [{
-              label: '# of Votes',
-              data:monthlyOrderCounts,
+              label: 'ORDER',
+              data:['<%=monthlyOrderCounts[0].totalOrders%>'],
               borderWidth: 1
             }]
           },
@@ -284,13 +285,14 @@
 
             // Weekly Chart
     const weeklyOrderCount = '<%= JSON.stringify(weeklyOrderCount) %>';
+    console.log('<%=weeklyOrderCount%>')
     const weeklyChartCanvas = document.getElementById('weeklyChart');
     new Chart(weeklyChartCanvas, {
           type: 'bar',
           data: {
-            labels: "  ",
+            labels:['SUN','MON','TUE','WED','THURS','FRI','SAT',],
             datasets: [{
-              label: '# of Votes',
+              label: 'Orders',
               data: weeklyOrderCount,//[12, 19, 3, 5, 2, 3],
               borderWidth: 1
             }]
@@ -303,22 +305,25 @@
             }
           }
         });
-      </script>
-
+      </script> 
+        <% 
+        console.log(weeklyOrderCount);
+        %>
       <script>
   
         // Yearly Chart
-        const yearlyOrderCount = '<%= JSON.stringify(yearlyOrderCount) %>';
+        const yearlyOrderCount = '<%=JSON.stringify(yearlyOrderCount[0])%>';
+        
         // const yearlyLabels = yearlyOrderCount.map(entry => entry.year);
         // const yearlyValues = yearlyOrderCount.map(entry => entry.totalOrders);
         const yearlyChartCanvas = document.getElementById('yearlyChart');
         new Chart(yearlyChartCanvas, {
               type: 'bar',
               data: {
-                labels:"Yearly",
+                labels:[2024,2025,2026],
                 datasets: [{
-                  label: '# of Votes',
-                  data: yearlyOrderCount,
+                  label: 'orders',
+                  data: ['<%=yearlyOrderCount[0].totalOrders%>'],
                   borderWidth: 1
                 }]
               },
