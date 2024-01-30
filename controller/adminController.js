@@ -691,7 +691,8 @@ const ordersPost = async (req, res) => {
   try {
     console.log(" HERE HERE HERE HERE HERE HERE HERE HERE HEREH HERE HERE HERE HERE");
       const orderId = req.params.id;
-      const newStatus = orderStatus;
+      const newStatus = req.body.orderStatus;
+      console.log("new status:",newStatus);
       const updatedOrder = await orderCollection.findByIdAndUpdate(
           orderId,
           { $set: { orderStatus: newStatus } },
@@ -699,10 +700,10 @@ const ordersPost = async (req, res) => {
       );
  
       console.log("Updated Order:", updatedOrder);
-      res.status(200).json(updatedOrder);
+      // res.status(200).json(updatedOrder);
+      res.redirect('/admin/dashboard');
   } catch (error) {
-      console.error(error.message);
-      res.status(500).send(error.message);
+      console.send(error.message);
   }    
  };
  
@@ -734,31 +735,33 @@ const ordersPost = async (req, res) => {
  };
  
 
-  const Approved = async (req, res) => {
+ const Approved = async (req, res) => {
   try {
     const orderId = req.params.id;
     const data = await returnCollection.findOne({ orderId: orderId });
     if (!data) {
       return res.status(404).json({ message: "Order not found" });
     }
+    const returnStatus = "return approved";
     const constConfirmReturn = await returnCollection.findByIdAndUpdate(
       data._id,
-      { $set: { status: "return approved", time: Date.now() } },
+      { $set: { status: returnStatus, time: Date.now() } },
       { new: true }
     );
-    if (constConfirmReturn.status === "return approved") {
+    if (constConfirmReturn.status === returnStatus) {
       let walletSave = await walletCollection.findOne({ userId: data.userId });
       if (!walletSave) {
         let newWalletSave = new walletCollection({
           userId: data.userId,
-          amounts: [data.amount],
+          creditAmounts: [data.amount], // Save data.amount in creditAmounts
+          debitAmounts: [],
         });
         await newWalletSave.save();
       } else {
-        walletSave.amounts.push(data.amount);
+        walletSave.creditAmounts.push(data.amount); // Save data.amount in creditAmounts
         await walletSave.save();
       }
-      res.json({ status: "return approved" });
+      res.json({ status: returnStatus });
     }
   } catch (error) {
     res.status(500).json({ error: error.toString() });

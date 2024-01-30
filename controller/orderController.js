@@ -224,46 +224,52 @@ const ReturnTotalProduct = async (req, res) => {
       
 const walletLoad = async (req, res) => {
   try {
-    //this function is for displaying the wallet's total amount in the wallet template
     const email = req.session.user;
     const userDoc = await userCollection.findOne({ email: email });
-    const walletData = await walletCollection.find({ userId: userDoc._id });
+    const walletData = await walletCollection.findOne({ userId: userDoc._id });
 
-    const totalAmount = walletData.reduce((acc, wallet) => acc + wallet.totalAmount, 0);
-    await walletCollection.updateOne(
-      { userId: userDoc._id },
-      { $set: { amounts: [totalAmount] } }
-    );
+    // Pagination logic
+    const page = req.query.page || 1; // Default to page 1
+    const itemsPerPage = 10; // Choose the number of items per page
 
-    res.render('user/wallet', { total: totalAmount });
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = page * itemsPerPage;
+
+    const totalAmounts = walletData.amounts.slice(startIndex, endIndex);
+
+    res.render('user/wallet', { total: walletData.amounts[0], walletData: walletData, totalAmounts, currentPage: page });
   } catch (error) {
     res.send(error.message);
   }
 };
 
+
 const walletPay = async (req, res) => {
   try {
-    console.log("entered in to the walletPay post");
+    console.log("entered into the walletPay post");
     const user = req.session.user;
     const userFullData = await userCollection.findOne({ email: user });
     const totalPrice = req.body.totalPrice;
-    console.log("userFulldata",userFullData._id);
+    console.log("userFullData", userFullData._id);
 
-    let walletBalance = await walletCollection.find({ userId: userFullData._id });
-    console.log("walletBalance is :",walletBalance);
-    console.log("wallet's amounts is :",walletBalance[0].amounts);
-    if (walletBalance && walletBalance[0].amounts && walletBalance[0].amounts.length > 0) {
-      const totalAmount = walletBalance[0].amounts.reduce((acc, amount) => acc + amount, 0);
-      console.log("totalAmount is :",totalAmount);
-      console.log("totalprice is :",totalPrice);
+    let walletBalance = await walletCollection.findOne({ userId: userFullData._id });
+    console.log("walletBalance is:", walletBalance);
+    console.log("wallet's amounts are:", walletBalance.amounts);
+    
+    if (walletBalance && walletBalance.amounts && walletBalance.amounts.length > 0) {
+      const totalAmount = walletBalance.amounts.reduce((acc, amount) => acc + amount, 0);
+      console.log("totalAmount is:", totalAmount);
+      console.log("totalPrice is:", totalPrice);
 
-      if (totalAmount > totalPrice) {
-        console.log("entered in to the success case");
-        const newAmounts = walletBalance[0].amounts.map(amount => amount - totalPrice);
+      if (totalAmount >= totalPrice) {
+        console.log("entered into the success case");
+        const newAmounts = walletBalance.amounts.map(amount => amount - totalPrice);
+        const debitAmount = totalAmount - newAmounts.reduce((acc, amount) => acc + amount, 0);
+        walletBalance.debitAmounts.push(debitAmount);
 
         await walletCollection.updateOne(
           { userId: userFullData._id },
-          { $set: { amounts: newAmounts } } // Corrected this line
+          { $set: { amounts: newAmounts, debitAmounts: walletBalance.debitAmounts } }
         );
 
         res.json({ success: true });

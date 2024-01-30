@@ -1,4 +1,6 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const router = express.Router();
 router.use(express.urlencoded({ extended: true }))
 const multer = require('multer')
@@ -46,7 +48,8 @@ router.post('/categoryManagementdelete/:id',AdminSession, adminController.catego
 router.post('/categoryeditpage/:id',AdminSession, adminController.categoryeditpage);
 router.post('/categoryManagementedit/:id',AdminSession, adminController.categoryedit);
 router.get('/orders',AdminSession,adminController.orders);
-router.post('/ordersPost/:id',AdminSession,adminController.ordersPost);
+//herer
+router.post('/ordersPost/:id',AdminSession,adminController.ordersPost);//this is the code
 
 router.get('/couponmanage',AdminSession,couponController.couponPageLoad);
 router.get('/couponAddingGet',AdminSession,couponController.couponAdding);

@@ -117,7 +117,7 @@
                   <tr>
                       <td><%= index + 1 %></td>
                       <td><%= order.orderId %></td>
-                      <td>$<%= order.amount %></td>
+                      <td>₹<%= order.amount %></td>
                       <td>
                          <button class="btn btn-warning" id="approveButton" onclick="approveOrder('<%= order.orderId %>')">Approve</button>
                          <button class="btn btn-warning" id="denyButton" onclick="denyOrder('<%= order.orderId %>')">Deny</button>
@@ -134,34 +134,33 @@
 
             </div>
           </div>
-         <!-- Pagination -->
-<div class="pagination">
-  <nav aria-label="Page navigation example">
-     <ul class="pagination justify-content-center">
-       <% if (currentPage > 1) { %>
-         <li class="page-item">
-           <a class="page-link" href="/admin/returnOrderManage?page=<%= currentPage - 1 %>" aria-label="Previous">
-             <span aria-hidden="true">&laquo;</span>
-           </a>
-         </li>
-       <% } %>
- 
-       <% for (let i = 1; i < returnDetails.length; i++) { %>
-         <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-           <a class="page-link" href="/admin/returnOrderManage?page=<%= i %>"><%= i %></a>
-         </li>
-       <% } %>
- 
-       <% if (currentPage <  returnDetails.length) { %>
-         <li class="page-item">
-           <a class="page-link" href="/admin/returnOrderManage?page=<%= currentPage + 1 %>" aria-label="Next">
-             <span aria-hidden="true">&raquo;</span>
-           </a>
-         </li>
-       <% } %>
-     </ul>
-  </nav>
- </div>
+          <div class="pagination">
+            <nav aria-label="Page navigation example">
+               <ul class="pagination justify-content-center">
+                 <% if (currentPage > 1) { %>
+                   <li class="page-item">
+                     <a class="page-link" href="/admin/returnOrderManage?page=<%= currentPage - 1 %>" aria-label="Previous">
+                       <span aria-hidden="true">&laquo;</span>
+                     </a>
+                   </li>
+                 <% } %>
+           
+                 <% for (let i = 0; i < returnDetails.length; i++) { %>
+                   <li class="page-item <%= i + 1 === currentPage ? 'active' : '' %>">
+                     <a class="page-link" href="/admin/returnOrderManage?page=<%= i + 1 %>"><%= i + 1 %></a>
+                   </li>
+                 <% } %>
+           
+                 <% if (currentPage < returnDetails.length ) { %>
+                   <li class="page-item">
+                     <a class="page-link" href="/admin/returnOrderManage?page=<%= currentPage + 1 %>" aria-label="Next">
+                       <span aria-hidden="true">&raquo;</span>
+                     </a>
+                   </li>
+                 <% } %>
+               </ul>
+            </nav>
+          </div>
  
            
          </div>

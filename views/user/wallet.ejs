@@ -1,83 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Wallet</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        .wallet-container {
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
 
-        .header {
-            background-color: #ffd700;
-            color: #333;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 2px solid #ddd;
-        }
+  <style>
+    .out-of-stock {
+        position: relative;
+    }
 
-        .balance {
-            padding: 20px;
-            text-align: center;
-        }
+    .out-of-stock::after {
+        content: "Out of Stock";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }.value{
+        text-align: left;
+        vertical-align: middle;
+        /* background-color: #ffffff; */
+        color: #ffffff;
+        padding: 15px;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }  
+</style>
 
-        .btn-back {
-            display: block;
-            margin: 20px auto;
-            text-align: center;
-        }
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
 
-        /* SweetAlert styles (Include SweetAlert library) */
-        .swal-title {
-            color: #333;
-        }
+  <link rel="stylesheet" href="css-table-12/fonts/icomoon/style.css">
+  <link rel="stylesheet" href="css-table-12/css/owl.carousel.min.css">
 
-        .swal-text {
-            color: #666;
-        }
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css-table-12/css-table-12/css/bootstrap.min.css">
 
-        .swal-button {
-            background-color: #ffd700;
-            color: #333;
-        }
-    </style>
+  <!-- Style -->
+  <link rel="stylesheet" href="css-table-12/css/style.css">
+
+  <title>Wallet History</title>
 </head>
+
 <body>
-    <div class="wallet-container">
-        <div class="header">
-            <h2>Your Wallet Balance</h2>
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row bg-secondary py-1 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center h-100">
+                    <a class="text-body mr-3" href="">shop cartify</a>
+                    <a class="text-body mr-3" href=""></a>
+
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My
+                            Account</button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="/signout" class="dropdown-item">Logout</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="d-inline-flex align-items-center d-block d-lg-none">
+                    <a href="" class="btn px-0 ml-2">
+                        <i class="fas fa-heart text-dark"></i>
+                        <span class="badge text-dark border border-dark rounded-circle"
+                            style="padding-bottom: 2px;"></span>
+                    </a>
+                    <a href="" class="btn px-0 ml-2">
+                        <i class="fas fa-shopping-cart text-dark"></i>
+                        <span class="badge text-dark border border-dark rounded-circle"
+                            style="padding-bottom: 2px;"></span>
+                    </a>
+                </div>
+
+            </div>
         </div>
-        <div class="balance">
-            <button  class=" btn btn-secondary"  onclick="showWalletBalance()">Show Wallet Balance</button>
+
+        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+            <div class="col-lg-4">    
+                <a href="" class="text-decoration-none">
+                    <span class="h1 text-uppercase text-warning bg-dark px-2">Shop</span>
+                    <span class="h1 text-uppercase text-dark bg-warning px-2 ml-n1">Cartify</span>
+                </a>
+            </div>
+
+            <div class="col-lg-4 col-6 text-left">
+                <form action="">
+                    <div class="input-group">
+                        <input type="search"  id="userSearch-all"  class="form-control" placeholder="Search for products">
+                        <!-- <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-warning">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div> -->
+                    </div>
+                </form>
+            </div>
+
         </div>
-        <a href="/profile" class="btn-back">Back to Profile</a>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-dark mb-30">
+        <div class="row px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a class="btn d-flex align-items-center justify-content-between bg-warning w-100" data-toggle="collapse"
+                    href="#navbar-vertical" style="height: 65px; padding: 0 30px;">
+                    <h6 class="text-dark m-0"><i class="fa fa-bars mr-2"></i>Categories</h6>
+                    <i class="fa fa-angle-down text-dark"></i>
+                </a>
+                <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light"
+                    id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999;">
+                    <div class="navbar-nav w-100">
+                        <div class="nav-item dropdown dropright">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dresses <i
+                                    class="fa fa-angle-right float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
+                                <a href="/Totallistpro" class="dropdown-item">Men's Dresses</a>
+                                <a href="/WomensTotallistpro" class="dropdown-item">Women's Dresses</a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </nav>
+            </div>
+
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+                    <a href="" class="text-decoration-none d-block d-lg-none">
+                        <span class="h1 text-uppercase text-dark bg-light px-2">Shop</span>
+                        <span class="h1 text-uppercase text-light bg-warning px-2 ml-n1">Cartify</span>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            <a href="/home" class="nav-item nav-link active">Home</a>
+                            <a href="/Totallistpro" class="nav-item nav-link">Shop</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i
+                                        class="fa fa-angle-down mt-1"></i></a>
+                                <div class="dropdown-menu bg-warning rounded-0 border-0 m-0">
+                                    <a href="/cartload" class="dropdown-item">Shopping Cart</a>
+                                    <a href="/checkout" class="dropdown-item">Checkout</a>
+                                </div>
+                            </div>
+                            <!-- <a href="/NEW TEMP/online-shop-website-template/contact.html" class="nav-item nav-link">Contact</a> -->
+                        </div>
+                        <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+                            <!-- User Profile Icon -->
+                            <a href="/profile" class="btn px-0">
+                                <i class="fas fa-user text-warning"></i>
+                            </a>
+
+                            <!-- Logout Icon -->
+                            <a href="/signout" class="btn px-0 ml-3">
+                                <i class="fas fa-sign-out-alt text-warning"></i>
+                            </a>
+
+                            <!-- Wishlist Icon -->
+                            <a href="" class="btn px-0 ml-3">
+                                <i class="fas fa-heart text-warning"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle"
+                                    style="padding-bottom: 2px;"></span>
+                            </a>
+
+                            <a href="/cartload" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-warning"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle"
+                                    style="padding-bottom: 2px;"> </span>
+                                <span class="badge text-secondary border border-secondary rounded-circle"
+                                    style="padding-bottom: 2px;"></span>
+                            </a>
+
+                        </div>
+
+                    </div>
+                </nav>
+            </div>
+
+
+
+        </div>
+    </div>
+    <div class="total-amount text-center mb-3" style="margin-top: 50px;">
+        <h2 style="background-color:rgb(187, 181, 181);" class="btn btn-warning">Wallet History </h2>
+    </div>
+    
+
+    <div class="container">
+        <div class="content">
+            <div class="table-responsive">
+                <h4><strong>Total Amount: ₹<%= total %></strong></h4>
+                <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Transaction Type</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% walletData.creditAmounts.forEach(amount => { %>
+                                <tr class="text-success">
+                                    <td>Credited</td>
+                                    <td style="color: rgb(7, 177, 41);">₹<%= amount %></td>
+                                </tr>
+                            <% }); %>
+                            <% walletData.debitAmounts.forEach(amount => { %>
+                            <tr class="text-danger">
+                                <td>Debited</td>
+                                <td style="color: red;">₹<%= amount %></td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <% if (currentPage > 1) { %>
+                          <a href="?page=<%= currentPage - 1 %>" class="btn btn-primary">Previous</a>
+                        <% } %>
+                      
+                        <% for (let i = 1; i <= Math.ceil(walletData.amounts.length ); i++) { %>
+                          <a href="?page=<%= i %>" class="btn btn-primary <%= currentPage == i ? 'active' : '' %>"><%= i %></a>
+                        <% } %>
+                      
+                        <% if (currentPage < Math.ceil(walletData.amounts.length )) { %>
+                          <a href="?page=<%= currentPage + 1 %>" class="btn btn-primary">Next</a>
+                        <% } %>
+                      </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- SweetAlert library (Include this in your project) -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+       <!-- Footer Start -->
+       <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
+        <div class="row px-xl-5 pt-5">
+            <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
+                <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed
+                    dolor. Rebum tempor no vero est magna amet no</p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-warning mr-3"></i>123 Street, New York, USA</p>
+                <p class="mb-2"><i class="fa fa-envelope text-warning mr-3"></i>info@example.com</p>
+                <p class="mb-0"><i class="fa fa-phone-alt text-warning mr-3"></i>+012 345 67890</p>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="col-md-4 mb-5">
+                        <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our
+                                Shop</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop
+                                Detail</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping
+                                Cart</a>
+                            <a class="text-secondary mb-2" href="#"><i
+                                    class="fa fa-angle-right mr-2"></i>Checkout</a>
+                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our
+                                Shop</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop
+                                Detail</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping
+                                Cart</a>
+                            <a class="text-secondary mb-2" href="#"><i
+                                    class="fa fa-angle-right mr-2"></i>Checkout</a>
+                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
+                        <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
+                        <form action="">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Your Email Address">
+                                <div class="input-group-append">
+                                    <button class="btn btn-warning">Sign Up</button>
+                                </div>
+                            </div>
+                        </form>
+                        <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+                        <div class="d-flex">
+                            <!-- <a class="btn btn-warning btn-square mr-2" href="#"><i class="fab fa-"></i></a> -->
+                            <a class="btn btn-warning btn-square mr-2" href="#"><i
+                                    class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-warning btn-square mr-2" href="#"><i
+                                    class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-warning btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+            <div class="col-md-6 px-xl-0">
+                <p class="mb-md-0 text-center text-md-left text-secondary">
+                    &copy; <a class="text-warning" href="#">Domain</a>. All Rights Reserved. Designed
+                    by
+                    <a class="text-warning" href="https://htmlcodex.com">HTML Codex</a>
+                </p>
+            </div>
+            <div class="col-md-6 px-xl-0 text-center text-md-right">
+                <img class="img-fluid" src="/NEW TEMP/online-shop-website-template/img/payments.png" alt="">
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
 
-    <script>
-        function showWalletBalance() {
-            Swal.fire({
-                title: 'Wallet Balance',
-                text: 'Your current balance is ₹<%= total %>/-',
-                icon: 'info',
-                confirmButtonColor: '#ffd700'
-            });
-        }
-    </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+  <script src="css-table-12/js/jquery-3.3.1.min.js"></script>
+  <script src="css-table-12/js/popper.min.js"></script>
+  <script src="css-table-12/js/bootstrap.min.js"></script>
+  <script src="css-table-12/js/main.js"></script>
 </body>
+
 </html>

@@ -679,6 +679,7 @@
         });
       } else if (paymentType === 'CashOnDelivery') {
         document.querySelector('#checkOutForm').submit();
+        
       } else if (paymentType === 'Wallet') {
         const totalPriceInRupees = document.querySelector('input[name="totalPrice"]').value;
         const totalPriceInPaise = Math.round(parseFloat(totalPriceInRupees));
@@ -876,3 +877,5 @@ document.querySelector('#applyCouponButton').addEventListener('click', async () 
   <script src="/NEW TEMP/online-shop-website-template/mail/contact.js"></script>
 
   <script src="/NEW TEMP/online-shop-website-template/js/main.js"></script>
+
+  </body>

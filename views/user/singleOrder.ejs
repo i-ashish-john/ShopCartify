@@ -461,10 +461,9 @@ function hideButton() {
 }
 
 window.onload = function() {
-  // Append the item's ID to the localStorage key
-  var itemId = '<%= orderDetails._id %>'; // replace with actual item ID
+  var itemId = '<%= orderDetails._id %>'; 
 
-  // Check if the button has been clicked
+  
   if (localStorage.getItem('buttonClicked_' + itemId)) {
       // If the button has been clicked, hide it
       var returnButton = document.getElementById('returnButton');
@@ -475,12 +474,10 @@ window.onload = function() {
 };
 
 </script>
-      <script>
-          // Assuming you have a variable 'orderStatus' containing the status value
+
+ <script>
           var orderStatus = "<%= orderDetails.orderStatus %>";
-  
-          // Function to update progress bar and status text
-          function updateProgressBar() {
+            function updateProgressBar() {
               var progressBar = document.querySelector('.progress-bar');
               var orderStatusText = document.getElementById('orderStatusText');
   
@@ -506,9 +503,8 @@ window.onload = function() {
   
               orderStatusText.textContent = 'Order Status: ' + orderStatus;
           }
-  
-          // Call the function to update progress bar on page load
-          updateProgressBar();
+            updateProgressBar();
       </script>
+
 </body>
 </html>
