@@ -121,7 +121,7 @@
 
 </head>
 
-<body>
+<body style="background-color: #535f69;" >
     <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row bg-secondary py-1 px-xl-5">
@@ -170,26 +170,13 @@
                 </div>
             </div>
         </div>
-        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+        <div class="row align-items-center  py-3 px-xl-5 d-none d-lg-flex" style="background-color: #535f69;" >
             <div class="col-lg-4">
                 <a href="" class="text-decoration-none">
                     <span class="h1 text-uppercase text-primary bg-dark px-2">Shop</span>
                     <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Cartify</span>
                 </a>
-            </div>
-            <div class="col-lg-4 col-6 text-left">
-                <form action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products">
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-          
+            </div>            
         </div>
     </div>
     <!-- Topbar End -->
@@ -231,13 +218,7 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="/home" class="nav-item nav-link active">Home</a>
                             <a href="/Totallistpro" class="nav-item nav-link">Shop</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
-                                <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                    <a href="/cartload" class="dropdown-item">Shopping Cart</a>
-                                    <a href="/checkout" class="dropdown-item">Checkout</a>
-                                </div>
-                            </div>
+                         
                             <!-- <a href="/NEW TEMP/online-shop-website-template/contact.html" class="nav-item nav-link">Contact</a> -->
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
@@ -277,11 +258,11 @@
 
 
 
- <section class="bg-light py-5 ">
+ <section class=" py-5 mx-xl-5"  style="background-color: #535f69;">
         <div class="container bg-white">
             <div class="row ma">
         <!-- Checkout Details -->
-        <div class="col-xl-8 col-lg-8 mb-4  ">
+        <div class="col-xl-12 col-lg-8 mb-4  ">
           <div class="card mb-4 border shadow-0">
               <!-- Checkout Form -->
 <!-- Item in Cart -->
@@ -413,64 +394,6 @@
         </div>
          <!-- item in check out section part -->
          <!-- summary starts -->
-         
-         <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end border box ">
-          <div class="ms-lg-4 mt-4 mt-lg-0 " style="max-width: 320px;">
-              <h6 class="mb-3 text-dark"><strong>Summary</strong></h6>
-              <div class="d-flex justify-content-between">
-                  <p class="mb-2"><strong>Total price:</strong></p>
-                  <p class="mb-2">₹ <%= cartFound.total %></p>
-              </div>
-              <!-- <div class="d-flex justify-content-between">
-                  <p class="mb-2">Discount:</p>
-                  <p class="mb-2 text-danger">- ₹60.00</p>
-              </div> -->
-              <div class="d-flex justify-content-between">
-                  <p class="mb-2"><strong>Shipping cost:</strong></p>
-                  <p class="mb-2">+ ₹14.00</p>
-              </div>
-            <br>
-
-            <div class="d-flex justify-content-between">
-              <input type="hidden" name="totalPrice" value="<%= cartFound.total+14 %>" />  
-                  <p class="mb-2"><strong>Shipping cost:</strong></p>
-                  <p class="mb-2" id="totalPrice">₹<%= cartFound.total+14 %>/-</p>
-            </div>
-      
-            
-          </form>
-          <div class="input-group mt-3 mb-4">
-              <input type="text" class="form-control border" name="couponCode"    placeholder="Coupon code" />
-              <button class="btn btn-light text-primary border" id="applyCouponButton"  >Apply</button>
-               <p style="color: red;"><%= UsedMessage  %></p>
-          
-          </div>
-        
-            
-      
-              <h6 class="text-dark my-4"><br></h6>
-              <% cartFound.products.forEach((product) => { %>
-              <div class="d-flex align-items-center mb-4">
-      
-                  <div class="me-3 position-relative">
-                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                          <%= product.quantity %>
-                      </span>
-                      <img src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>" style="height: 96px; width: 96x;" class="img-sm rounded border" />
-                  </div>
-      
-                  <div class="">
-                      <a href="#" class="nav-link">
-                          <%= product.productId.name %><br />
-                          <!-- <%= product.productId.description %> -->
-                      </a>
-                      <div class="price text-muted">Price:₹ <%= product.price%></div>
-                  </div>
-              </div>
-              <% }); %>
-      
-          </div>
-      </div>
       
 
       <!-- summary ends -->
@@ -532,12 +455,12 @@
 
 <!-- ------ -->
 <div class="card text-center coupon-card">
-  <div class="card-body">
-    <h5 class="card-title">Available Coupons</h5>
-    <ul class="list-group list-group-flush">
+  <div class="card-body" style="background-color: #5d6a79;">
+    <h5 class="card-title" style="background-color: #ffffff;">Available Coupons</h5>
+    <ul class="list-group list-group-flush" style="background-color: #535f69;">
       <% coupons.forEach((coupon) => { %>
         <li class="list-group-item">
-          <div class="row">
+          <div class="row"  style="background-color: #fff6f6;">
             <div class="col-md-7">
               <h5><%= coupon.couponCode %></h5>
               <p>Discount: <%= coupon.productDiscount%>%</p>
@@ -617,7 +540,7 @@
               <p class="mb-md-0 text-center text-md-left text-secondary">
                   &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved. Designed
                   by
-                  <a class="text-primary" href="https://htmlcodex.com">HTML Codex</a>
+                  <p>ShopCartify</p>
               </p>
           </div>
           <div class="col-md-6 px-xl-0 text-center text-md-right">

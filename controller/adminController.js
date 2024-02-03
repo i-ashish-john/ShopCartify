@@ -854,6 +854,7 @@ const getYearlyData = async(req,res)=>{
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 const excelDownload = async (req, res) => {
   try {
     const startDate = new Date(req.query.startDate);
@@ -863,7 +864,9 @@ const excelDownload = async (req, res) => {
       .find({
         orderDate: { $gte: startDate, $lte: endDate },
       })
-      .populate('productdetails'); // Assuming 'productdetails' is the field referencing the 'collectionOfProduct' model
+      .populate('productdetails'); 
+
+      console.log("orders",orders);// Assuming 'productdetails' is the field referencing the 'collectionOfProduct' model
     if (!orders || orders.length === 0) {
       return res.status(404).send("No orders found");
     }
@@ -874,19 +877,29 @@ const excelDownload = async (req, res) => {
       { header: "Order ID", key: "orderId", width: 12 },
       { header: "Customer Name", key: "username", width: 20 },
       { header: "Email", key: "email", width: 20 },
-      { header: "TotalPrice", key: "TotalPrice", width: 20 },
+      { header: "TotalPrice", key: "totalPrice", width: 20 },
       { header: "OrderStatus", key: "orderStatus", width: 20 },
-      
+      { header: "Street", key: "street", width: 20 },   
+      { header: "Country", key: "country", width: 20 },
+      { header: "City", key: "city", width: 20 },
+      { header: "State", key: "state", width: 20 },
+      { header: "Zip", key: "zip", width: 20 },
     ];
     orders.forEach((order) => {
       worksheet.addRow({
         orderId: order.orderId,
         username: order.username,
         email: order.email,
-        TotalPrice:order.totalPrice,
-        orderStatus:order.orderStatus
+        totalPrice: order.totalPrice,
+        orderStatus: order.orderStatus,
+        street: order.address.street, 
+        country: order.address.country,
+        city: order.address.city,
+        state: order.address.state,
+        zip: order.address.zip,
       });
     });
+    
     const streamifier = new stream.PassThrough();
 
     const buffer = await workbook.xlsx.writeBuffer();

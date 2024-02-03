@@ -71,7 +71,7 @@
 
 </head>
 
-<body>
+<body style="background-color: #535f69;">
     <!-- Topbar Start -->
     <div class="container-fluid ">
         <div class="row bg-secondary py-1 px-xl-5">
@@ -122,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+        <div class="row align-items-center  py-3 px-xl-5 d-none d-lg-flex" style="background-color: #535f69;" >
             <div class="col-lg-4">
                 <a href="" class="text-decoration-none">
                     <span class="h1 text-uppercase text-primary bg-dark px-2">Shop</span>
@@ -131,14 +131,7 @@
             </div>
             <div class="col-lg-4 col-6 text-left">
                 <form action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products">
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
+                   
                 </form>
             </div>
           
@@ -169,7 +162,7 @@
                     </div>
                 </nav>
             </div>
-
+           
             <div class="col-lg-9 ">
                 <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
                     <a href="" class="text-decoration-none d-block d-lg-none">
@@ -206,13 +199,12 @@
                             <!-- Wishlist Icon -->
                             <a href="" class="btn px-0 ml-3">
                                 <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"></span>
                             </a>
                         
                                 <a href="/cartload" class="btn px-0 ml-3">
                                     <i class="fas fa-shopping-cart text-primary"></i>
-                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"> 0</span>
-                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"></span>
                                 </a>
 
                         </div>
@@ -228,10 +220,11 @@
     <!-- Navbar End -->
 
 
-  <section class="mt-5">
+  <section class="mt-5" style="background-color: #535f69;">
     <div class="container element">
       <div class="cart">
-        <div class="table-responsive cart-table">
+        <div class="table-responsive cart-table" style="background-color:#212529;">
+
           <% if (cartDocument && cartDocument.length> 0) { %>
             <table class="table">
               <!-- Table header -->
@@ -281,7 +274,6 @@
                         </div>
 
 
-
                         </td>
 
                         <td>
@@ -296,18 +288,14 @@
                         </td>
                         <!-- Total -->
                         <td>
-
-                          <td>
-                      <div class="product-total">
-                        <% if (product.productId.Discount > 0) { %>
-                          <del>₹<%= (product.quantity * product.price).toFixed(2) %></del>
-                          <ins>₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
-                        <% } else { %>
-                          ₹<%= (product.quantity * product.price).toFixed(2) %>
-                        <% } %>
-                      </div>
-                    </td>          
-                          
+                        <div class="product-total">
+                          <% if (product.productId.Discount > 0) { %>
+                            <del>₹<%= (product.quantity * product.price).toFixed(2) %></del>
+                            <ins>₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
+                          <% } else { %>
+                            ₹<%= (product.quantity * product.price).toFixed(2) %>
+                          <% } %>
+                          </div>
                         </td>
                         <!-- Remove button -->
 
@@ -341,13 +329,19 @@
               </tbody>
 
             </table>
-            <% } else { %>
-              <p>No items in cart</p>
-              <% } %>
+            
         </div>
+        <% } if(cartDocument[0].products.length <= 0 ){ %>
+              <p>No items in cart</p>
+              <img src="/web 2/images/empty-cart.jpg" alt="" style="margin-left: 50px;">
+              
+                <% }else{%>
+                  <!-- <p>No items in cart</p> -->
+                <% } %>
       </div>
     </div>
 
+   
 
 <!-- EJS template code -->
 <div class="container">
@@ -355,19 +349,18 @@
     <div class="col-lg-4 offset-lg-4">
       <!-- Existing code for displaying total price -->
 
-      <h5 class="total-amount" style="background-color: #576570;">Total Amount: ₹ <span id="total-price" style="color: #ffffff;">
+      <h5 class="total-amount" style="color: #fff;">Total Amount: ₹ <span id="total-price" style="color: #ffffff;">
 
         <% let totalPrice = 0; %>
         <% cartDocument.forEach((cart) => { %>
           <% if (cart.products && cart.products.length > 0) { %>
             <% cart.products.forEach((product) => { %>
-              <% totalPrice += parseFloat(product.individualTotal || (product.quantity * product.price).toFixed(2)); %>
+              <% totalPrice += parseFloat( (product.quantity * product.discount_price).toFixed(2)); %>
             <% }); %>
           <% } %>
         <% }); %>
-        <%= totalPrice.toFixed(2) %>
+        <%= totalPrice .toFixed(2)%>
       </span>/-</h5>
-      
 
       <div class="modal fade" id="outOfStockModal" tabindex="-1" role="dialog" aria-labelledby="outOfStockModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -417,7 +410,7 @@
 </div>
 
 
-  </section>
+  </section><br><br><br><br><hr>
   <!-- Footer  -->
  
     <!-- Footer Start -->
@@ -573,7 +566,7 @@
 
     async function updateQuantity(pid, isIncrease) {
       const url = isIncrease ? `/increaseq/${pid}` : `/decreaseq/${pid}`;
-   
+        
       try {
         const response = await fetch(url, {
           method: 'get',
@@ -603,25 +596,7 @@
           } else {
             console.error('Element not found');
           }
-
-
-
-          // const quantityInput = document.querySelector('.quantity[data-product-id="' + pid + '"]');
-          // const productId = quantityInput.dataset.productId;
-          // quantityInput.textContent = data.newQuantity;
-
-          // Update total price and pass the increase/decrease amount to the function
-          // updateTotalPrice(
-          //   productId,
-          //   data.newPrice,
-          //   isIncrease ? data.newPrice - data.oldPrice : 0,
-          //   isIncrease ? 0 : data.oldPrice - data.newPrice
-          // );
-          // } else {
-          //   // Handle error case
-          //   alert(message);
-          // }
-          window.location.reload()
+          // window.location.reload();
         } else {
           alert("item out of stock")
           // showOutOfStockModal();

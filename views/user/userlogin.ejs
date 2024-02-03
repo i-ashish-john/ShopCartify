@@ -1,212 +1,80 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShopCartify</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    .login-form {
-  transform-origin: center;
-  
-}
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Open Sans', sans-serif;
-      background: linear-gradient(to top, #FDD835, #78909C);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      /* Prevent background overflow */
-    }
+<title>Shop Cartify login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Fashion Login Form template Responsive, Login form web template,Flat Pricing tables,Flat Drop downs  Sign up Web Templates, Flat Web Templates, Login sign up Responsive web template, SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Custom Theme files -->
+<!-- <link href="css/style.css" rel="stylesheet" type="text/css" media="all" /> -->
+<link href="/web 2/css/style.css" rel="stylesheet" type="text/css" media="all" />
 
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease-in-out;
-      backdrop-filter: blur(10px);
-      /* Background blur effect */
-    }
+<link href="/web 2/css/font-awesome.css" rel="stylesheet"> <!-- Font-Awesome-Icons-CSS -->
 
-    .login-form {
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 15px;
-      width: 350px;
-      text-align: center;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-      /* Box shadow for depth */
-    }
-
-    .login-form input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #291f1f45;
-      border-radius: 8px;
-      transition: border-color 0.3s ease-in-out;
-      font-size: 16px;
-    }
-
-    .login-form input[type="submit"] {
-      background-color: #FFD600;
-      color: white;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
-    .login-form input:focus {
-      border-color: #616161;
-      /* Highlight input on focus */
-    }
-
-    .login-form p {
-      margin: 15px 0;
-      color: #bd7825;
-      /* Custom color for messages */
-    }
-
-    .create-account-button {
-      background-color: #78909C;
-      color: white;
-      border: none;
-      border-radius: 18px;
-      padding: 12px 25px;
-      text-decoration: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .forgot-password {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #78909C;
-      text-decoration: none;
-      display: block;
-    }
-
-    .eye-toggle {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  background: url('https://img.icons8.com/material-outlined/24/000000/visible.png') no-repeat center center;
-  background-size: cover;
-}
-
-.eye-toggle.hide {
-  background: url('https://img.icons8.com/material-outlined/24/000000/invisible.png') no-repeat center center;
-  background-size: cover;
-}
-.brand-name {
-  position: absolute;
-  top: 20px; 
-  left: 20px; 
-  z-index: 2; 
-}
-
-  </style>
+<!-- //Custom Theme files -->
+<!-- web font --> 
+<link href="//fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet">
+<!-- //web font --> 
 </head>
-
 <body>
-    <div class="overlay" id="loginOverlay">
-      <div class="brand-name">
-        <h1 style="color: #FFFFFF; font-size: 36px;">ShopCartify</h1>
-      </div>
-      <div class="login-form">
-        <h2 style="color: #000000; font-size: 28px;">Welcome back!</h2>
-        <form id="loginForm" action="/login" method="post">
-          <input type="email" name="email" placeholder="Email@example.com" value="johnashish509@gmail.com" >
-          <br>
-          <p style="color: red;">
-            <%= locals.checkEmail %>
-          </p>
-          
-          <div class="password-container">
-            <input type="password" name="password" id="passwordField" placeholder="Password" value="12345678"  >
-            <span toggle="#passwordField" class="eye-toggle" onclick="togglePasswordVisibility();"></span>
-          </div>
+	<!-- main -->
+	<div class="main">
+		<h1>ShopCartify Login </h1>
+		<div class="main-w3lsrow">
+			<!-- login form -->
+			<div class="login-form login-form-left"> 
+				<div class="agile-row">
+					<h2>Login to your site</h2>
+					<span class="fa fa-lock"></span>
+					<div class="clear"></div>
+					<div class="login-agileits-top"> 	
+            <form id="loginForm" action="/login" method="post">
 
-          <p style="color: red;">
-            <%= locals.checkPassword %>
-          </p>
+              <input type="text" name="email" placeholder="Email@example.com" value="johnashish509@gmail.com" >
 
-          <p style="color: red;">
-            <%= locals.blockedMessage %>
-          </p>
-          <br>
-          <!-- <label class="checkbox">
-            <input type="checkbox" name="checkbox" checked="">
-            <i></i> Keep me logged in
-          </label> -->
-          <br>
-          <input type="submit" value="Log in">
-          <p style="color: red;">
-            <%=locals.validation%>
-          </p><br>
+              <p style="color: red;">
+                <%= locals.checkEmail %>
+              </p>
 
-        
-          <a href="signup" class="create-account-button">Create new account</a>
-          <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
-        </form>
-      </div>
-    </div>
-  
-    <script>
-      function togglePasswordVisibility() {
-        const passwordField = document.getElementById("passwordField");
-        const eyeToggle = document.querySelector(".eye-toggle");
-  
-        if (passwordField.type === "password") {
-          passwordField.type = "text";
-          eyeToggle.classList.add("hide");
-        } else {
-          passwordField.type = "password";
-          eyeToggle.classList.remove("hide");
-        }
-      }
-    </script>
-  
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const overlay = document.getElementById('loginOverlay');
-        overlay.style.opacity = 1;
-        overlay.style.pointerEvents = 'auto';
-        overlay.style.transition = 'opacity 0.3s ease-in-out';
-      });
-    </script>
+              <div class="password-container">
+                <input type="password" name="password" id="passwordField" placeholder="Password" value="12345678"  >
+              </div>
 
+              <p style="color: red;">
+                <%= locals.checkPassword %>
+              </p>
+
+              <p style="color: red;">
+                <%= locals.blockedMessage %>
+              </p>
+              <br>
+
+							<input type="submit" value="Login"> 
+              <p style="color: red;">
+                <%=locals.validation%>
+              </p><br>
     
-    <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const loginForm = document.querySelector('.login-form');
-  loginForm.style.transform = 'scale(0)';
-  loginForm.style.opacity = 0;
-  loginForm.style.transition = 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out';
+              <div class="login-agileits-bottom"> 
+                <h6><a href="/forgot-password">Forgot password?</a></h6>
+              </div> <br>
+              <div class="login-agileits-bottom"> 
+                <h6><a href="signup">Create new account</a></h6>
+              </div>
+						</form> 	
+					</div> 
 
-  setTimeout(() => {
-    loginForm.style.transform = 'scale(1)';
-    loginForm.style.opacity = 1;
-  }, 100); // Delay of 100ms to ensure the initial styles are applied
-});
-
-    </script>
+				</div>  
+			</div>  
+		</div>	
+		 
+	</div>	
+	<!-- //main --> 
 </body>
 </html>

@@ -169,12 +169,12 @@
 
                 <% if (fullData && fullData.length>0) { %> 
                     <div class="col-12 tm-block-col">
-                        <div class="tm-bg-primary tm-block tm-block-taller tm-block-scroll" style="background-color:  rgb(217, 217, 217);;">
+                        <div class="tm-bg tm-block tm-block-taller tm-block-scroll" style="background-color:  rgb(217, 217, 217);">
                             <h2 class="tm-block-title">Orders List</h2>
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">ORDER ID</th>
+                                        <th scope="col" >ORDER ID</th>
                                         <th scope="col">TOTAL PRICE</th>
                                         <th scope="col">ORDER STATUS</th>
                                         <th scope="col">ADDRESS</th>
@@ -270,6 +270,18 @@
             datasets: [{
               label: 'ORDER',
               data:['<%=monthlyOrderCounts[0].totalOrders%>'],
+              backgroundColor: [
+        'rgba(255, 99, 132, 10)',   // JAN
+        'rgba(54, 162, 235, 0.2)',  // FEB
+        'rgba(255, 206, 86, 0.2)',  // MAR
+      
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        
+      ],
               borderWidth: 1
             }]
           },
@@ -294,7 +306,19 @@
             labels:['SUN','MON','TUE','WED','THURS','FRI','SAT',],
             datasets: [{
               label: 'Orders',
-              data: weeklyOrderCount,//[12, 19, 3, 5, 2, 3],
+              data: weeklyOrderCount,
+              backgroundColor: [
+        'rgb(88, 190, 238,0.9) ', 
+        'rgba(255, 99, 71, 0.9)',  
+        'rgba(255, 206, 86, 0.9)',  // MAR
+        // 'rgba(255, 99, 71, 0.5)'
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        
+      ],
               borderWidth: 1
             }]
           },
@@ -325,6 +349,18 @@
                 datasets: [{
                   label: 'orders',
                   data: ['<%=yearlyOrderCount[0].totalOrders%>'],
+                  backgroundColor: [
+        'rgba(22, 160, 133,0.9)  ', 
+        'rgba(255, 99, 71, 0.9)',  
+        'rgba(255, 206, 86, 0.9)',  // MAR
+        // 'rgba(255, 99, 71, 0.5)'
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        
+      ],
                   borderWidth: 1
                 }]
               },
@@ -374,7 +410,7 @@
                     try {
                         const response = await fetch(url);
     
-                        if (response.ok) {
+                        if (response.ok) {          
                             const blob = await response.blob();
                                 const a = document.createElement("a");
                             document.body.appendChild(a);

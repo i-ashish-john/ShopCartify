@@ -39,6 +39,13 @@ const home = async (req, res) => {
   }
 };
 
+const redirectLogin = async(req,res)=>{
+  try{
+  res.render('user/userlogin');
+  }catch(error){
+    res.send(error);
+  }
+};
 
 const login = async (req, res) => {
   try {
@@ -597,7 +604,7 @@ const addCheckoutAddressPost = async (req, res) => {
 
 
 module.exports = {
-  login, loginpost, signout,
+  login, loginpost, signout,redirectLogin,
   signupPost, signup, home,
   sendOTPByEmail, back, productdetails,
   MensTotalproductlist, WomensTotalproductlist, checkout,

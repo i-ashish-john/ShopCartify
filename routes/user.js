@@ -12,6 +12,7 @@ const blockedAuth = require('../middleware/user/userBlockedAuth');
 
 router.get('/home', userController.home);
 router.get('/', userController.login)
+router.get('/redirectToLogin',userController.redirectLogin);
 router.post('/login', userController.loginpost)
 router.get('/signout', userController.signout)
 router.get('/signup', userController.signup)

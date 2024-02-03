@@ -61,6 +61,11 @@ const sendOTP = async (email) => {
 
 const forgotPasswordLoadpagePost = async (req, res) => {
   try {
+
+    if (req.body.forgotEmail === ''|| req.body.forgotEmail.trim()==='') {
+      const message = "Field cannot be empty";
+    return  res.render('user/OtpVerification', { message });
+   }
     const { forgotEmail } = req.body;
     req.session.email = forgotEmail;
 

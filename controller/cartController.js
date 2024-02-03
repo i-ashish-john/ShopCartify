@@ -42,8 +42,7 @@ const cartItemRemove = async (req, res) => {
     console.log("HELLO");
     try {
       const { action, productId } = req.body;//discount price also need to take here 
-      // const productId = req.params.productId;
-      // const userId = req.session.user;
+    
       console.log("req.session.user: " + req.session.user);
       console.log("productId: " + productId);
   
@@ -51,10 +50,6 @@ const cartItemRemove = async (req, res) => {
         userId: userId,
         productId: productId
       });
-
-    //  if (productId.stock < 0){
-    //   res.render('')
-    //  }
 
       console.log("cartItem: ", cartItem);
   
@@ -71,7 +66,7 @@ const cartItemRemove = async (req, res) => {
       await cartItem.save();
   
       const totalPrice = cartItem.price * cartItem.quantity;
-  console.log("totalprice",totalPrice);
+  console.log("totalpria;=ce",totalPrice);
       res.json({ message: 'Request handled' });
     } catch (error) {
       console.error(error);
@@ -82,24 +77,29 @@ const cartItemRemove = async (req, res) => {
   
   const incCart = async (req, res) => {
     try {
+      console.log("entered incart");
       const pid = req.params.id;
+      console.log("cart's pid",pid);
       const cart = await cartCollection.findOne({ "products.productId": pid });
       const products=await productCollection.findById(pid)
+      console.log("products",products);
       if (!cart) {
         return res.status(404).send('Cart not found');
       }
   
-      const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
+      const productIndex = cart.products.findIndex(p => p.productId === pid);
   
       // Decrement the quantity of the specific product
+      // console.log("##index", cart.products[productIndex]);
       cart.products[productIndex].quantity++;
-      if(products.stock<cart.products[productIndex].quantity){
+      if(products.stock <= cart.products[productIndex].quantity){
         return res.status(401).send({message:"Out of stock"})
       }
   
       // Recalculate total or perform any other necessary updates
-      cart.total += cart.products[productIndex].price;
-  
+      // cart.total += cart.products[productIndex].price * cart.products[productIndex].quantity;
+      cart.total += cart.products[productIndex].discount_price;
+      console.log("total Is Here:",cart.total);
       await cart.save();
   
       res.send({
@@ -169,37 +169,64 @@ const cartItemRemove = async (req, res) => {
         return res.status(404).send('Product or user not found.');
       }
       const cart = await cartCollection.findOne({ userId: user._id });
+      
       if (cart) {
         const existingProduct = cart.products.find((p) => p.productId.equals(products._id));
         if (existingProduct) {
           const newQuantity = existingProduct.quantity + 1;
+
           if (newQuantity > products.stock) {
               req.flash('error', 'Stock limit exceeded.'); 
-            return res.status(404).send("limit exeeds");
-          }
+              return res.status(404).send("Limit exceeds");
+            }
+          // await cartCollection.findOneAndUpdate(
+          //   { userId: user._id, 'products.productId': products._id },
+          //   { $set: { 'products.$.quantity': newQuantity } }
+          // );
           await cartCollection.findOneAndUpdate(
             { userId: user._id, 'products.productId': products._id },
-            { $set: { 'products.$.quantity': newQuantity } }
+            { 
+              $set: { 
+                'products.$.quantity': newQuantity,
+                'products.$.discount_price': products.price * newQuantity * (1 - products.Discount / 100)
+              }
+            }
           );
+          
         } else {
           const price = products.price;
+          const originalPrice = products.price; // Assuming products is an object with a price property
+          const discountPercentage = products.Discount;
+          const discount = discountPercentage / 100;
   
           cart.products.push({
             productId: products._id,
             price: price,
+            discount_price:originalPrice - (originalPrice * discount),
             images: [products.Images[0]],
             quantity: 1,
           });
         }
+
       } else {
         const price = products.price;
+        if(products.Discount && products.Discount > 0){
+          // price = products.Discoun
+          price = products[i].price - (products[i].price * (products[i].Discount / 100));
+          console.log("@@@@###$$$$_+_+_the cart added new price is :",price);
+        }
+
         const tempStock = products.stock - 1;
+        const originalPrice = products.price; // Assuming products is an object with a price property
+          const discountPercentage = products.Discount;
+          const discount = discountPercentage / 100;
  
         const cartData = {
           userId: user._id,
           products: [{
             productId: products._id,
             price: price,
+            discount_price:originalPrice - (originalPrice * discount),
             images: [products.Images[0]],
             quantity: 1,
             tempStock: tempStock,
