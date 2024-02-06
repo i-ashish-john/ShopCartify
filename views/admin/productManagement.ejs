@@ -13,7 +13,7 @@
  </head>
 
  <body id="reportsPage">
-  <nav class="navbar navbar-expand-xl">
+  <nav class="navbar navbar-expand-xl bg-warning">
         <div class="container h-100">
             <a class="navbar-brand" href="/admin/dashboardForAdmin">
                 <h1 class="tm-site-title mb-0">Product Admin</h1>
@@ -153,13 +153,29 @@
             
               <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                  <% for (let i = 1; i < totalPages; i++) { %>
+                  <% if (currentPage > 1) { %>
+                    <li class="page-item">
+                      <a class="page-link" href="/admin/productlist?page=<%= currentPage - 1 %>">Previous</a>
+                    </li>
+                  <% } %>
+              
+                  <% for (let i = 1; i <= totalPages; i++) { %>
                     <li class="page-item <%= i === currentPage ? 'active' : '' %>">
                       <a class="page-link" href="/admin/productlist?page=<%= i %>"><%= i %></a>
                     </li>
                   <% } %>
+              
+                  <% if (currentPage < totalPages) { %>
+                    <li class="page-item">
+                      <a class="page-link" href="/admin/productlist?page=<%= currentPage + 1 %>">Next</a>
+                    </li>
+                  <% } %>
                 </ul>
               </nav>
+              
+               
+              
+              
               
               <!-- Pagination for Categories -->
           
@@ -210,27 +226,18 @@
               <a  href="categoryadd">  Add new category</a>
             </button>
 
-            <nav aria-label="Page navigation">
-              <ul class="pagination justify-content-center">
-                <% for (let i = 1; i < categories.length; i++) { %>
-                  <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                    <a class="page-link" href="/admin/productlist?page=<%= i %>"><%= i %></a>
-                  </li>
-                <% } %>
-              </ul>
-            </nav>
           </div>
         
         </div>
 
       </div>
     </div>
-    <footer class="tm-footer row tm-mt-small">
+    <footer class="tm-footer row tm-mt-small bg-warning">
       <div class="col-12 font-weight-light">
         <p class="text-center text-white mb-0 px-4 small">
-          Copyright &copy; <b>2018</b> All rights reserved. 
+          Copyright &copy; <b></b> All rights reserved. BY ShopCartify
           
-          Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
+         
         </p>
       </div>
     </footer>

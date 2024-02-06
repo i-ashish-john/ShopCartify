@@ -25,7 +25,7 @@
 
 <body id="reportsPage">
     <div class="" id="home">
-        <nav class="navbar navbar-expand-xl">
+        <nav class="navbar navbar-expand-xl bg-warning">
             <div class="container h-100">
                 <a class="navbar-brand" href="/admin/dashboardForAdmin">
                     <h1 class="tm-site-title mb-0">Product Admin</h1>
@@ -187,6 +187,9 @@
                                             <th scope="row"><b><%= item.orderId %> </b></th>
                                             <td><%= item.totalPrice %> </td>
                                             <td>
+                                                <% if (item.orderStatus === 'Cancelled') { %>
+                                                    <p class="p-3 mb-2 bg-gradient-info text-white">Cancelled</p>
+                                                  <% } else { %>
                                                 <form action="/admin/ordersPost/<%= item._id %>" method="post">
                                                     <select class="form-select" name="orderStatus" onchange="this.form.submit()">
                                                         <option value="Pending" <%= item.orderStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
@@ -196,10 +199,16 @@
                                                         <option value="Delivered" <%= item.orderStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
                                                     </select>
                                                 </form>
+                                                <% } %>
                                             </td>
                                             <td><%= item.address.street %> , <%= item.address.city %> , <%= item.address.state %> - <%= item.address.zip %> , <%= item.address.country %> 
                                             </td>
-                                            <td><%= item.orderDate %> </td>
+                                            <% function orderformat(orderDate) { %>
+                                                <% const dateObject = new Date(orderDate); %>
+                                                <% const formattedDate = `${dateObject.getMonth() + 1}/${dateObject.getDate()}/${dateObject.getFullYear()}`; %>
+                                                <% return formattedDate; %>
+                                            <% } %>
+                                            <td><%= orderformat(item.orderDate ) %> </td>
                                         </tr>
                                     <% }) %>
                                 </tbody>
@@ -211,43 +220,45 @@
             </div>
 
                 <!-- Pagination -->
-                <div class="pagination">
+                <div class="pagination ">
                     <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <% if (currentPage > 1) { %>
-                        <li class="page-item">
-                            <a class="page-link" href="/admin/dashboardForAdmin?page=<%= currentPage - 1 %>" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <% } %>
+                        <ul class="pagination justify-content-center">
+                            <% if (currentPage > 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link bg-warning" href="/admin/dashboardForAdmin?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            <% } %>
                 
-                        <% for (let i = 1; i < fullData.length; i++) { %>
-                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                            <a class="page-link" href="/admin/dashboardForAdmin?page=<%= i %>"><%= i %></a>
-                        </li>
-                        <% } %>
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= i === currentPage ? 'active' : '' %> ">
+                                    <a class="page-link bg-warning" href="/admin/dashboardForAdmin?page=<%= i %> "><%= i %></a>
+                                </li>
+                            <% } %>
                 
-                        <% if (currentPage < fullData.length) { %>
-                        <li class="page-item">
-                            <a class="page-link" href="/admin/dashboardForAdmin?page=<%= currentPage + 1 %>" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        <% } %>
-                    </ul>
+                            <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link bg-warning" href="/admin/dashboardForAdmin?page=<%= currentPage + 1 %>" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            <% } %>
+                        </ul>
                     </nav>
                 </div>
+                
+                
                 
 
 
         </div>
-        <footer class="tm-footer row tm-mt-small">
+        <footer class="tm-footer row tm-mt-small bg-warning">
             <div class="col-12 font-weight-light">
                 <p class="text-center text-white mb-0 px-4 small">
-                    Copyright &copy; <b>2018</b> All rights reserved. 
+                    Copyright &copy; <b></b> All rights reserved.By ShopCartify
                     
-                    Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
+                     
                 </p>
             </div>
         </footer>
@@ -444,6 +455,8 @@
             });
         }
     </script>
+
+
 
 
 

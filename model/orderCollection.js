@@ -22,6 +22,7 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
   productdetails: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'collectionOfProduct', 

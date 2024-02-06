@@ -365,6 +365,26 @@
                                 </div>
                             </div>
 
+<!-- Modal for Limit Exceeded Message -->
+<div class="modal fade" id="limitExceededModal" tabindex="-1" role="dialog" aria-labelledby="limitExceededModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="limitExceededModalLabel">Limit Exceeded</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          The maximum quantity allowed for this product has been reached. Please remove some items from your cart to continue shopping.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
                             <!-- -------here modale------ -->
                             <div class="modal fade" id="addToCartModal" tabindex="-1" role="dialog" aria-labelledby="addToCartModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -620,14 +640,22 @@ function applyPriceFilter() {
         }
     });
 }
-
+</script>
+<script>
 function addToCart(productId) {
     $.get(`/addToCart?id=${productId}`)
         .done(function(response) {
-            $('#addToCartModal').modal('show');
+            console.log(response);
+            if (response=='success') {
+                $('#addToCartModal').modal('show');
+            } else {
+                console.log("else")
+                $('#limitExceededModal').modal('show');
+                $('#limitExceededModal .modal-body').text(response.message);
+            }
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
-            $('#limitExceededModal').modal('show');
+            $('#serverErrorModal').modal('show');
         });
 }
 

@@ -264,7 +264,7 @@
                             <i class="fas fa-minus"></i>
                           </a>
 
-                          <div class="quantity" id="qty" data-product-id="<%= product._id %>">
+                          <div class="quantity total" id='<%=product.productId._id%>' data-product-id="<%= product._id %>">
                             <%= product.quantity %>
                           </div>
 
@@ -288,14 +288,15 @@
                         </td>
                         <!-- Total -->
                         <td>
-                        <div class="product-total">
+                        <div class="product-total" id="p-<%=product.productId._id%>">
                           <% if (product.productId.Discount > 0) { %>
                             <del>₹<%= (product.quantity * product.price).toFixed(2) %></del>
-                            <ins>₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
+                            <ins >₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
                           <% } else { %>
                             ₹<%= (product.quantity * product.price).toFixed(2) %>
                           <% } %>
                           </div>
+
                         </td>
                         <!-- Remove button -->
 
@@ -571,7 +572,7 @@
         const response = await fetch(url, {
           method: 'get',
         });
-
+        console.log(response);
         const data = await response.json();
         console.log("DATA", data);
 
@@ -580,23 +581,25 @@
           const newPrice = data.newPrice
           const newQuantity = data.newQuantity
           const totalPrice = parseInt(newPrice * newQuantity)
-          console.log(totalPrice)
+          console.log(data)
           const productId = data.pid;
           console.log(productId)
              
-
-          console.log("quantity:",newQuantity);
-
-          const totalElement = document.querySelector('.total[data-product-id="' + productId + '"]');
+          const totalElement = document.getElementById(productId);
           console.log('Selected Element:', totalElement);
-
+          const price =  document.getElementById("p-"+productId);
+          console.log('price is :',price);
           if (totalElement) {
-            totalElement.textContent = `₹${totalPrice.toFixed(2)}`;
+
+            totalElement.textContent = newQuantity;
+
+            price.textContent =totalPrice;
+
             console.log("the values of the total price:",totalElement);
           } else {
             console.error('Element not found');
           }
-          // window.location.reload();
+          window.location.reload();
         } else {
           alert("item out of stock")
           // showOutOfStockModal();
@@ -620,7 +623,7 @@
     }
 
     function decreaseQuantity(pid) {
-      const qty=document.getElementById('qty').innerText
+      const qty=document.getElementById(pid).innerText
       console.log("in the decreaseQuantity function");
       console.log("the product's id in the decrease : ",pid);
       if (qty>1) {

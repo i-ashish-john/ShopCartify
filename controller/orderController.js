@@ -163,26 +163,28 @@ const SingleOrderlist = async (req, res) => {
   }
 };
 
-const cancelOrder = async (req, res) => {
+const cancelOrder = async (req, res) => {//here is the cancel order//
   try {
     const orderId = req.params.id;
     const email = req.session.user;
+    // console.log("here  reached the cancel order:",updatedOrder.orderStatus);
     const updatedOrder = await orderCollection.findOneAndUpdate(
       { _id: orderId },
       { $set: { orderStatus: 'Cancelled' } },
       { new: true }
     );
-
     console.log("The updated order in the cancel order is:", updatedOrder);
 
-    if (updatedOrder) {
-      const orders = await orderCollection.find({ email: email });
+    // if (updatedOrder) {
+    //   const orders = await orderCollection.find({ email: email });
 
-      res.render("user/orderList", { orders });
-    } else {
-      console.log("Error in canceling order");
-      res.status(404).json({ error: 'Order not found or error in canceling order' });
-    }
+    //   res.render("user/orderList", { orders });
+
+    // } else {
+    //   console.log("Error in canceling order");
+    //   res.status(404).json({ error: 'Order not found or error in canceling order' });
+    // }
+    res.redirect('/ListOfOrders');
   } catch (error) {
     console.error(error.message);
     res.status(500).send(error.message);
@@ -339,6 +341,7 @@ const checkoutPost = async (req, res) => {
       email: variable.email,
       paymentType: variable.paymentType,
       totalPrice: variable.totalPrice,
+      
       productdetails: productDetailsArray.map(productDetails => productDetails._id),
       address: {
         street: selectedAddress?.street,

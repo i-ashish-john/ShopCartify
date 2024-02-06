@@ -87,8 +87,11 @@ const cartItemRemove = async (req, res) => {
         return res.status(404).send('Cart not found');
       }
   
-      const productIndex = cart.products.findIndex(p => p.productId === pid);
-  
+      const productIndex = cart.products.findIndex(p => p.productId.equals(pid));
+      console.log('product index:',productIndex);
+      console.log('product id:',pid);
+      console.log('product cart',cart.products);
+      console.log('product discount :',productIndex.discount_price);
       // Decrement the quantity of the specific product
       // console.log("##index", cart.products[productIndex]);
       cart.products[productIndex].quantity++;
@@ -150,7 +153,7 @@ const cartItemRemove = async (req, res) => {
       res.send(error.message);
     }
   };
-  
+  //add to cart is here//
   const addToCart = async (req, res) => {
     try {
       const productId = req.query.id;
@@ -166,6 +169,7 @@ const cartItemRemove = async (req, res) => {
       const user = await userCollection.findOne({ email: users });
       console.log("user is :",user);
       if (!products || !user) {
+        console.log(errirrrr);
         return res.status(404).send('Product or user not found.');
       }
       const cart = await cartCollection.findOne({ userId: user._id });
@@ -173,7 +177,8 @@ const cartItemRemove = async (req, res) => {
       if (cart) {
         const existingProduct = cart.products.find((p) => p.productId.equals(products._id));
         if (existingProduct) {
-          const newQuantity = existingProduct.quantity + 1;
+          console.log("existing product is :",existingProduct);
+          const newQuantity = existingProduct.quantity+1;
 
           if (newQuantity > products.stock) {
               req.flash('error', 'Stock limit exceeded.'); 
@@ -183,7 +188,7 @@ const cartItemRemove = async (req, res) => {
           //   { userId: user._id, 'products.productId': products._id },
           //   { $set: { 'products.$.quantity': newQuantity } }
           // );
-          await cartCollection.findOneAndUpdate(
+          let update=await cartCollection.findOneAndUpdate(
             { userId: user._id, 'products.productId': products._id },
             { 
               $set: { 
@@ -192,6 +197,7 @@ const cartItemRemove = async (req, res) => {
               }
             }
           );
+          console.log(update)
           
         } else {
           const price = products.price;
@@ -238,7 +244,8 @@ const cartItemRemove = async (req, res) => {
       cart.calculateTotal();
       await cart.save();
   
-      res.redirect('/Totallistpro');
+      // res.redirect('/Totallistpro');
+      res.status(200).send('success')
     } catch (error) {
       console.error(error.message);
       res.send(error.message);

@@ -8,7 +8,7 @@ const AdminSession = require('../middleware/admin/AdminSession');
 const adminController = require('../controller/adminController');
 const couponController = require('../controller/couponController');
 
-const storage = multer.diskStorage({
+const storage = multer.diskStorage({ 
   destination: (req, file, cb) => {
     cb(null, 'public/uploads');
   },

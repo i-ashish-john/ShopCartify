@@ -116,7 +116,7 @@ const getYearlyOrderCount = async () => {
 
 
 const dashboardForAdmin = async (req, res) => {
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 5;
  const page = parseInt(req.query.page) || 1;
  const skip = (page - 1) * ITEMS_PER_PAGE;
  const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
@@ -135,37 +135,37 @@ const dashboardForAdmin = async (req, res) => {
 }
 
 
-const dashboard = async (req, res) => {
-  try {
-    if (req.session.admin) {  
-      const ITEMS_PER_PAGE = 10;
-      const page = parseInt(req.query.page) || 1;
-      const skip = (page - 1) * ITEMS_PER_PAGE;
-      const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
-      const totalCount = await orderCollection.countDocuments();
-      const weeklyOrderCount = await getWeeklyOrderCount();
-      const monthlyOrderCounts = await getMonthlyOrderCount();
-      const yearlyOrderCount = await getYearlyOrderCount();
-      res.render('admin/dashboard', {
-         fullData,
-         weeklyOrderCount,
-         monthlyOrderCounts,
-         yearlyOrderCount,
-         currentPage: page,
-         totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
-      });
-    } else {
-      res.redirect("/admin/login");
+  const dashboard = async (req, res) => {
+    try {
+      if (req.session.admin) {  
+        const ITEMS_PER_PAGE = 5;
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * ITEMS_PER_PAGE;
+        const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
+        const totalCount = await orderCollection.countDocuments();
+        const weeklyOrderCount = await getWeeklyOrderCount();
+        const monthlyOrderCounts = await getMonthlyOrderCount();
+        const yearlyOrderCount = await getYearlyOrderCount();
+        res.render('admin/dashboard', {
+          fullData,
+          weeklyOrderCount,
+          monthlyOrderCounts,
+          yearlyOrderCount,
+          currentPage: page,
+          totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
+        });
+      } else {
+        res.redirect("/admin/login");
+      }
+    } catch (error) {
+      console.error(error);
+      // res.status(500).render('error', { error: 'An error occurred in the dashboard.' });
     }
-  } catch (error) {
-    console.error(error);
-    // res.status(500).render('error', { error: 'An error occurred in the dashboard.' });
-  }
-};
+  };
 
 const adminlogin = async (req, res) => {
   if (req.session.admin) {
-    const ITEMS_PER_PAGE = 10;
+    const ITEMS_PER_PAGE = 5;
     const page = parseInt(req.query.page) || 1;
     const skip = (page - 1) * ITEMS_PER_PAGE;
     const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
@@ -203,7 +203,7 @@ const postlogin = async (req, res) => {
 
       const users = await userCollection.find();
       console.log("user in the post login", users);
-      const ITEMS_PER_PAGE = 10;
+      const ITEMS_PER_PAGE = 5;
       const page = parseInt(req.query.page) || 1;
       const skip = (page - 1) * ITEMS_PER_PAGE;
       const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
@@ -319,7 +319,7 @@ const productmanage = async (req, res) => {
 //     for (const file of req.files) {
 //       console.log("file is:",file);
 
-//       const croppedImagePath = `public/uploads/cropped${file.filename}`; 
+//       const croppedImagePath  = `public/uploads/cropped${file.filename}`; 
 //       // const croppedImagePath = path.join('public', 'uploads', 'cropped', `${file.filename}`);
 
 //       await sharp(file.path)
@@ -413,13 +413,16 @@ const productlist = async (req, res) => {
     const totalProducts = await productCollection.countDocuments(query);
     const totalPages = Math.ceil(totalProducts / limit);
 
-    const skip = (page - 1) * limit;
+    const currentPage = parseInt(req.query.page) || 1;
+    const skip = (currentPage - 1) * limit;
+
     const products = await productCollection.find(query).skip(skip).limit(limit);
+    console.log('products are :',products);
     res.render("admin/productManagement", {
       categories,
       fullProducts,
       products,
-      currentPage: page,
+      currentPage,
       totalPages,
       searchTerm,
     });
@@ -428,6 +431,7 @@ const productlist = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 const productDelete = async (req, res) => {
@@ -558,30 +562,30 @@ const categorymanage = async (req, res) => {
     // const categories = await CategoryCollection.find({ deleted: false });
     const categories = await CategoryCollection.find();
     const fullProducts = await productCollection.find();
-    let query = {};
-    const searchTerm = req.query.search;
+    // let query = {};
+    // const searchTerm = req.query.search;
  
-    if (searchTerm) {
-      query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }], deleted: false };
-    } else {
-      query = { deleted: false };
-    }
+    // if (searchTerm) {
+    //   query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }], deleted: false };
+    // } else {
+    //   query = { deleted: false };
+    // }
  
-    const page = parseInt(req.query.page) || 1;
-    const limit = 10;
+    // const page = parseInt(req.query.page) || 1;
+    // const limit = 5;
  
-    const totalProducts = await productCollection.countDocuments(query);
-    const totalPages = Math.ceil(totalProducts / limit);
+    // const totalProducts = await productCollection.countDocuments(query);
+    // const totalPages = Math.ceil(totalProducts / limit);
  
-    const skip = (page - 1) * limit;
-    const products = await productCollection.find(query).skip(skip).limit(limit);
+    // const skip = (page - 1) * limit;
+    // const products = await productCollection.find();
     res.render("admin/productManagement", {
       categories,
       fullProducts,
-      products,
-      currentPage: page,
-      totalPages,
-      searchTerm,
+      products:'',
+      currentPage:'',// page,
+      totalPages:'',
+      searchTerm:' ',
     });
   } catch (error) {
     // Handle any errors, for example, log the error and render an error page
@@ -663,7 +667,7 @@ const orders = async (req, res) => {
     const totalOrders = await orderCollection.countDocuments();
 
     // Calculate total pages based on the limit
-    const ITEMS_PER_PAGE = 10;
+    const ITEMS_PER_PAGE = 5;
  const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
  const totalCount = await orderCollection.countDocuments();
  const weeklyOrderCount = await getWeeklyOrderCount();
