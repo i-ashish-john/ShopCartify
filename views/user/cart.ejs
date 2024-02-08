@@ -287,17 +287,17 @@
                           </div>
                         </td>
                         <!-- Total -->
-                        <td>
-                        <div class="product-total" id="p-<%=product.productId._id%>">
-                          <% if (product.productId.Discount > 0) { %>
-                            <del>₹<%= (product.quantity * product.price).toFixed(2) %></del>
-                            <ins >₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
-                          <% } else { %>
-                            ₹<%= (product.quantity * product.price).toFixed(2) %>
-                          <% } %>
-                          </div>
-
-                        </td>
+                        <td >
+                          <div class="product-total" id="p-<%=product.productId._id%>">
+                            <% if (product.productId.Discount > 0) { %>
+                              <del>₹<%= (product.quantity * product.price).toFixed(2) %></del>
+                              <ins >₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
+                            <% } else { %>
+                              ₹<%= (product.quantity * product.price).toFixed(2) %>
+                            <% } %>
+                            </div>
+  
+                          </td>
                         <!-- Remove button -->
 
                         <td>
@@ -565,7 +565,50 @@
     $('#outOfStockModal').modal('show');
   }
 
-    async function updateQuantity(pid, isIncrease) {
+//     async function updateQuantity(pid, isIncrease) {
+//       const url = isIncrease ? `/increaseq/${pid}` : `/decreaseq/${pid}`;
+        
+//       try {
+//         const response = await fetch(url, {
+//           method: 'get',
+//         });
+//         console.log(response);
+//         const data = await response.json();
+//         console.log("DATA", data);
+
+//         if (data.success) {
+//           console.log("success....")
+//           const newPrice = data.newPrice
+//           const newQuantity = data.newQuantity
+//           const productId = data.pid;
+//           const offerPrice = data.discountPrice
+//           const totalPrice = parseInt(newPrice * newQuantity);
+//           console.log('Data',offerPrice);
+//           console.log("IOIOIOIOIO:",productId)
+           
+//           const totalElement = document.getElementById(productId);
+// const price = document.getElementById("p-" + productId);
+// const discountElement = document.getElementById("d-" + productId);
+
+// if (totalElement) {
+//   totalElement.textContent = newQuantity;
+//   price.querySelector('.original-price').textContent = (newPrice * newQuantity).toFixed(2);
+//   discountElement.querySelector('.discounted-price').textContent = offerPrice;
+// } else {
+//   console.error('Element not found');
+// }
+
+//           window.location.reload();
+//         } else {
+//           alert("item out of stock")
+//           // showOutOfStockModal();
+//         }
+//       } catch (error) {
+//         alert("please wait");
+//         console.log("page is reloading in cart quantity",error);
+//       }
+//     };
+async function updateQuantity(pid, isIncrease) {
       const url = isIncrease ? `/increaseq/${pid}` : `/decreaseq/${pid}`;
         
       try {

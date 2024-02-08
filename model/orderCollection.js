@@ -22,11 +22,19 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
-  productdetails: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'collectionOfProduct', 
-  }],
+  productdetails: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'collectionOfProduct',
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+  
   paymentType: {
     type: String,
     required: true,

@@ -234,37 +234,41 @@
 
                     <div class="card shadow-0 border mb-4">
                         <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-2">
-                          <img src="<%= product.images[0]?.slice(6) %>"
-                            class="img-fluid" alt="Phone">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <% console.log('%*^%&*%^^the product images', product); %>
+                                    <img src="<%= product.images[0]?.slice(6) %>" class="img-fluid" alt="Product Image">
+                                </div>
+                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                    <p class="text-muted mb-0"><b><%= product.name %></b></p>
+                                </div>
+                                
+                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                    <p class="text-muted mb-0 small" style="color: #0e0d0e;"><b>price:₹<%= product.price %></b></p>
+                                </div>
+                
+                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                    <p class="text-muted mb-0 small" style="color: #0e0d0e;"><b>Quantity:<%= product.quantity %></b></p>
+                                </div>
+                
+                                <div class="col-md-4 text-center d-flex justify-content-center align-items-center ">
+                                    <p class="text-muted mb-0 small"><b>
+                                        <%= orderDetails.address.city %><br>
+                                        <%= orderDetails.address.street %><br>
+                                        <%= orderDetails.address.state %><br>
+                                        <%= orderDetails.address.zip %></b>
+                                    </p>
+                                </div>
+                            </div>
+                            <hr class="mb-4" style="background-color: #ffffff; opacity: 1;">
+                            <div class="row d-flex align-items-center">
+                                <!-- Additional details or actions can be added here -->
+                            </div>
                         </div>
-                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                          <p class="text-muted mb-0"><%=  product.name %></p>
-                        </div>
-                        <!-- <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                          <p class="text-muted mb-0 small">White</p>
-                        </div> -->
-                        
-                        
-                        
-                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                            <p class="text-muted mb-0 small">₹<%=  product.price %></p>
-                        </div>
-
-                        <div class="col-md-6 text-center d-flex justify-content-center align-items-center ">
-                            <p class="text-muted mb-0 small"><%= orderDetails.address.city %><br><%= orderDetails.address.street %><br><%= orderDetails.address.state %><br><%= orderDetails.address.zip %></p>
-                          </div>
                     </div>
-                    <hr class="mb-4" style="background-color: #ffffff; opacity: 1;">
-                    <div class="row d-flex align-items-center">
-                        <div class="col-md-2">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ........ -->
-            <% } %>
+                
+                <% } %>
+                
             <!-- ........ -->
             <div class="col-md-10">
                 <div class="progress" style="height: 6px; border-radius: 16px;">
@@ -346,121 +350,93 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
-  <script>
+<script>
     function dwnlodInvoice() {
-     const orderId = '<%= orderDetails._id %>';
-   
-    fetch(`/invoice/${orderId}`)
-      .then(response => response.json())
-      .then(data => {
-
-        console.log("data recived for invoice dowload is :",data)
-        
-        const{orderData,orderProducts,userData,addressDetails}=data
-        // console.log("data.username",data.name);
-
-        // console.log("data username is here:",data.usernam)
-
-        console.log("orderProducts",orderProducts);
-        console.log("userData",userData);
-        console.log("addressDetails",addressDetails);
-        console.log("orderData is :",orderData);
-         var data = {
-          "images": {
-        // The logo on top of your invoice
-        "logo": "https://public.budgetinvoice.com/img/logo_en_original.png",
-        // The invoice background
-        "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg"
-    },
-          "sender": {
-            "company": "ShopCartify",
-            "address": "ShopCartify Pvt limited",
-            "zip": "689508",
-            "city": "Kerala",
-            "country": "India"
-          },
-          "client": {
-            // Use orderData.addressId to populate client details
-            "company": userData.name,
-            "address":addressDetails.street + ', ' + addressDetails.country + ', ' + addressDetails.city + ' - ' + addressDetails.state + ' - ' + addressDetails.zip
-          },
-          "information": {
-              "number": orderData.orderId,
-              "date":  new Date(orderData.orderDate).toLocaleDateString(),
-        //         "due-date": (() => {
-        //     const orderDate = new Date(orderData.orderTime);
-        //     const dueDate = new Date(orderDate.setDate(orderDate.getDate() + 15));
-        //     return dueDate.toLocaleDateString();
-        //  })(), // Due date is now 15 days after the order date
-       },
-       "products": orderData.productdetails.map(product => ({
-        "quantity": product.quantity || 1,
-        "description": product.name,
-        "tax-rate": 0,
-        "price": product.price || 0,
-        "total": (product.quantity || 1) * (product.price || 0), // Calculate product total
-        "subtotal": orderData.productdetails.reduce((sum, product) => {
-        return sum + (product.quantity || 1) * (product.price || 0);
-        }, 0),  
-       
-      
-})),
-
-
-          "bottom-notice": "Thank you for Shopping with ShopCartify .",
-          "settings": {
-        "currency": "INR", // See documen'Locales and Currency' for more info. Leave empty for no currency.
-        "locale": "nl-NL", // Defaults to,used for number formatting (See documentation 'Locales and Currency')        
-        "margin-top": 25, // Defaults to "margin-right": 25, // Defaults t          
-        "margin-left": 25, // Defaults to     
-        "margin-bottom": 25, // Defaults   '
-        "format": "A4", // Defaults to A4ons: A3, A4, A5, Legal, Letter, Tabloid
-        "height": "1000px", // allowed unm, cm, in, px
-        "width": "500px", // allowed unit cm, in, px
-        "orientation": "landscape", // po or landscape, defaults to portrait
-    },
-    "translate": {
-        "invoice": "SHOPCARTIFY",  // Default to 'INVOICE'
-        "number": "Order_ID", // Defaults to 'Number'
-        "date": "data",// Default to 'Date'
-       //    "due-date": "Due-Date", // Defaults to 'Due Date'
-       "subtotal": "subtotal",
-        "products": "Products", // Defaults to 'Products'
-        // "quantity": "Quantity", // Default to 'Quantity'
-        "price": "Price", // Defaults to 'Price'
-        "product-total": "total", // Defaults to 'Total'
-        "total": "Grant Total", // Defaults to 'Total'
-        "vat": "btw" // Defaults to 'vat'
-    },
-        };
-        console.log("Downliading started!!!!!!!!!!!!!!!!!!!!!!!!")
-        // Create and download the invoice
-        easyinvoice.createInvoice(data, async function (result) {
-          // The response will contain a base64 encoded PDF file
-          easyinvoice.download("invoice.pdf");
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching order data:', error);
-        // Handle error as needed
-      });
-  }
+      const orderId = '<%= orderDetails._id %>';
   
+      fetch(`/invoice/${orderId}`)
+        .then(response => response.json())
+        .then(data => {
+          const { orderData, orderProducts, userData, addressDetails } = data;
+            console.log("the product data is:",orderProducts);
+          var invoiceData = {
+            "images": {
+              "logo": "https://public.budgetinvoice.com/img/logo_en_original.png",
+              "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg"
+            },
+            "sender": {
+              "company": "ShopCartify",
+              "address": "ShopCartify Pvt limited",
+              "zip": "689508",
+              "city": "Kerala",
+              "country": "India"
+            },
+            "client": {
+              "company": userData.name,
+              "address": `${addressDetails.street}, ${addressDetails.city}, ${addressDetails.state}, ${addressDetails.zip}, ${addressDetails.country}`
+            },
+            "information": {
+              "number": orderData.orderId,
+              "date":  new Date(orderData.orderDate).toLocaleDateString()
+            },
+            "products": orderProducts.map(product => ({
+              "quantity": product.quantity ,
+              "description": product.name,
+              "tax-rate":  0,
+              "price": product.price ||  0,
+              "total": (product.quantity ) * (product.price ||  0),
+              "subtotal": orderData.productdetails.reduce((sum, product) => {
+                return sum + (product.quantity ) * (product.price ||  0);
+              },  0),
+            })),
+            "bottom-notice": "Thank you for Shopping with ShopCartify.",
+            "settings": {
+              "currency": "INR",
+              "locale": "nl-NL",
+              "margin-top":  25,
+              "margin-left":  25,
+              "margin-bottom":  25,
+              "format": "A4",
+              "height": "1000px",
+              "width": "500px",
+              "orientation": "landscape"
+            },
+            "translate": {
+              "invoice": "SHOPCARTIFY",
+              "number": "Order_ID",
+              "date": "data",
+              "subtotal": "subtotal",
+              "products": "Products",
+              "price": "Price",
+              "product-total": "total",
+              "total": "Grant Total",
+              "vat": "btw"
+            },
+          };
+          console.log("Downliading started!!!!!!!!!!!!!!!!!!!!!!!!")
+  
+          easyinvoice.createInvoice(invoiceData, function(result) {
+            easyinvoice.download("invoice.pdf");
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching order data:', error);
+        });
+    }
   </script>
+  
 
 <script>
 function hideButton() {
-  // Append the item's ID to the localStorage key
-  var itemId = '<%= orderDetails._id %>'; // replace with actual item ID
+
+  var itemId = '<%= orderDetails._id %>'; 
   localStorage.setItem('buttonClicked_' + itemId, true);
 
-  // Then hide the button
   var returnButton = document.getElementById('returnButton');
   if (returnButton) {
       returnButton.style.display = 'none';
   }
 
-  // Submit the form
   document.getElementById('returnForm').submit();
 }
 
@@ -469,7 +445,7 @@ window.onload = function() {
 
   
   if (localStorage.getItem('buttonClicked_' + itemId)) {
-      // If the button has been clicked, hide it
+
       var returnButton = document.getElementById('returnButton');
       if (returnButton) {
           returnButton.style.display = 'none';

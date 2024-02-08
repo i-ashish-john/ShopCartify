@@ -88,29 +88,30 @@ const cartItemRemove = async (req, res) => {
       }
   
       const productIndex = cart.products.findIndex(p => p.productId.equals(pid));
-      console.log('product index:',productIndex);
-      console.log('product id:',pid);
-      console.log('product cart',cart.products);
-      console.log('product discount :',productIndex.discount_price);
-      // Decrement the quantity of the specific product
-      // console.log("##index", cart.products[productIndex]);
+      console.log('product index:', productIndex);
+      console.log('product id:', pid);
+      console.log('product cart', cart.products);
+  
       cart.products[productIndex].quantity++;
-      if(products.stock <= cart.products[productIndex].quantity){
-        return res.status(401).send({message:"Out of stock"})
+  
+      if (products.stock <= cart.products[productIndex].quantity) {
+        return res.status(401).send({ message: "Out of stock" });
       }
   
-      // Recalculate total or perform any other necessary updates
-      // cart.total += cart.products[productIndex].price * cart.products[productIndex].quantity;
-      cart.total += cart.products[productIndex].discount_price;
-      console.log("total Is Here:",cart.total);
+      const discountPrice = cart.products[productIndex].discount_price;
+      console.log("discount in he spec crt:",discountPrice);
+
+      cart.total += discountPrice;
+      console.log("total Is Here:", cart.total);
       await cart.save();
-  
+
       res.send({
         success: true,
         newQuantity: cart.products[productIndex].quantity,
         newPrice: cart.products[productIndex].price,
         oldPrice: cart.products[productIndex].price,
         totalPrice: cart.total,
+        discountPrice:discountPrice,
         pid: pid
       });
     } 

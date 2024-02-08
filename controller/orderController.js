@@ -91,11 +91,11 @@ const orderList = async (req, res) => {
 
     const orders = await orderCollection
       .find({ email: user.email })
-      .populate('productdetails')
+      .populate('productdetails.product')
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .exec();
-
+     console.log('theOrderIs:',orders);
     const totalOrders = await orderCollection.countDocuments({ email: user.email });
 
     res.render("user/orderList", { orders, currentPage: page, totalPages: Math.ceil(totalOrders / pageSize) });
@@ -110,6 +110,7 @@ const orderList = async (req, res) => {
 const addCheckoutAddress = async (req, res) => {
   res.render("user/AddingCheckoutAddress");
 };
+
 
 
 const SingleOrderlist = async (req, res) => {
@@ -138,58 +139,58 @@ const SingleOrderlist = async (req, res) => {
 
     const productsWithImages = [];
 
-    for (const productId of orderDetails.productdetails) {
-      // Ensure that the productDetails is not null
+    for (const productDetail of orderDetails.productdetails) {
+      const productId = productDetail.product;
       const productDetails = await productCollection.findById(productId);
-
-      if (productDetails) {
+       
+      if (productDetails && productDetails.Images && productDetails.Images.length >  0) {
         productsWithImages.push({
           name: productDetails.name,
           description: productDetails.description,
-          quantity: 1, // You can modify this based on your data structure
-          price: `${productDetails.price}`,
+          quantity: productDetail.quantity,
+          price: productDetails.price.toFixed(2),
           images: productDetails.Images,
         });
       } else {
         console.warn(`Product not found for productId: ${productId}`);
-        // Handle the case where a product is not found (optional)
       }
     }
-    // console.log("the specialReturn status is :",specificReturnStatus.status);
     res.render('user/singleOrder', { orderDetails, productsWithImages, specificReturnStatus });
+    
   } catch (error) {
     console.error(error.message);
     res.status(500).send(error.message);
   }
 };
 
-const cancelOrder = async (req, res) => {//here is the cancel order//
+const cancelOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
     const email = req.session.user;
-    // console.log("here  reached the cancel order:",updatedOrder.orderStatus);
+    const cancelledOrder = await orderCollection.findOne({ _id: orderId });
     const updatedOrder = await orderCollection.findOneAndUpdate(
       { _id: orderId },
       { $set: { orderStatus: 'Cancelled' } },
       { new: true }
     );
-    console.log("The updated order in the cancel order is:", updatedOrder);
-
-    // if (updatedOrder) {
-    //   const orders = await orderCollection.find({ email: email });
-
-    //   res.render("user/orderList", { orders });
-
-    // } else {
-    //   console.log("Error in canceling order");
-    //   res.status(404).json({ error: 'Order not found or error in canceling order' });
-    // }
+    if (cancelledOrder) {
+      for (const productDetail of cancelledOrder.productdetails) {
+        const product = await productCollection.findById(productDetail.product);
+        if (product) {
+          product.stock += productDetail.quantity;
+          await product.save();
+        }
+      }
+    } else {
+      return res.status(404).json({ message: 'Order not found' });
+    }
     res.redirect('/ListOfOrders');
   } catch (error) {
     console.error(error.message);
     res.status(500).send(error.message);
   }
 };
+
 
 const ReturnTotalProduct = async (req, res) => {
   try {
@@ -341,16 +342,19 @@ const checkoutPost = async (req, res) => {
       email: variable.email,
       paymentType: variable.paymentType,
       totalPrice: variable.totalPrice,
-      
-      productdetails: productDetailsArray.map(productDetails => productDetails._id),
+      productdetails: productDetailsArray.map(productDetails => ({
+        product: productDetails._id,
+        quantity: cartData.products.find(product => product.productId.equals(productDetails._id)).quantity,
+      })),
       address: {
         street: selectedAddress?.street,
         city: selectedAddress?.city,
         state: selectedAddress?.state,
         zip: selectedAddress?.zip,
         country: selectedAddress?.country,
-      },                   
+      },
     });
+    
     console.log("F_U_L_L D_A_T_A",order.username,"|",order.email,"|",order.paymentType,"|",order.totalPrice,"|",order.productdetails,"|",order?.address);
     await order.save();
     await cartCollection.deleteOne({ userId: emailOfUser._id });
@@ -419,40 +423,71 @@ const checkoutPost = async (req, res) => {
     res.send({ success: false, message: error.message });
   }
 };
+// const downloadInvoice = async (req, res) => {
+//   try {
+//      console.log("inside of the downloadInvoice");
+//      const orderId = req.params.orderId;
+//      console.log("the orderID is here:",orderId);
+//      if (!mongoose.Types.ObjectId.isValid(orderId)) {
+//        return res.status(400).send("Not a valid objectId");
+//      }
+ 
+//      const orderData = await orderCollection.findById(orderId).populate('productdetails');
+//      if (!orderData) {
+//        return res.status(404).send("Order not found.");
+//      } 
+//      console.log("%$%$%$%$%$%the orderdata is:",orderData.productdetails.product);
+        
+//      const userData = await userCollection.findOne({ email: req.session.user });
+//      console.log("userdata is :",userData);
+//      const userId = userData._id;
+//      console.log("userId is ",userId);
+//      let addressDetails = {};
+//      if(userData && userData.address){
+//        addressDetails = userData.address[0];
+//        console.log("the addressDetails is :",addressDetails);
+//      } else {
+//        console.log("No address found for this user");
+//      }
+ 
+//      const orderProducts = await productCollection.find({ _id: { $in: orderData.productdetails.product } });
+//      console.log("orderProducts is :",orderProducts);
+//      res.json({ orderData, orderProducts, userData, addressDetails });
+//   } catch (error) {
+//      console.error("Error in downloadInvoice:", error);
+//      res.status(500).send("Internal Server Error");
+//   }
+//  };
 const downloadInvoice = async (req, res) => {
   try {
-     console.log("inside of the downloadInvoice");
-     const orderId = req.params.orderId;
-     console.log("the orderID is here:",orderId);
-     if (!mongoose.Types.ObjectId.isValid(orderId)) {
-       return res.status(400).send("Not a valid objectId");
-     }
- 
-     const orderData = await orderCollection. findById(orderId).populate('productdetails');
-     if (!orderData) {
-       return res.status(404).send("Order not found.");
-     }
- 
-     const userData = await userCollection.findOne({ email: req.session.user });
-     console.log("userdata is :",userData);
-     const userId = userData._id;
-     console.log("userId is ",userId);
-     let addressDetails = {};
-     if(userData && userData.address){
-       addressDetails = userData.address[0];
-       console.log("the addressDetails is :",addressDetails);
-     } else {
-       console.log("No address found for this user");
-     }
- 
-     const orderProducts = await productCollection.find({ _id: { $in: orderData.productdetails } });
-     console.log("orderProducts is :",orderProducts);
-     res.json({ orderData, orderProducts, userData, addressDetails });
+    const orderId = req.params.orderId;
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return res.status(400).send("Not a valid objectId");
+    }
+
+    const orderData = await orderCollection.findById(orderId);
+    if (!orderData) {
+      return res.status(404).send("Order not found.");
+    }
+
+    const userData = await userCollection.findOne({ email: req.session.user });
+    const userId = userData._id;
+    let addressDetails = userData.address || {};
+
+    const productIds = orderData.productdetails.map(detail => detail.product);
+    const orderProducts = await productCollection.find({ _id: { $in: productIds } });
+     
+    console.log("user data is :",userData);
+    console.log("orderData is :",orderData);
+    console.log("orderProducts is",orderProducts);
+    console.log("addressDetails is",addressDetails);
+    res.json({ orderData, orderProducts, userData, addressDetails });
   } catch (error) {
-     console.error("Error in downloadInvoice:", error);
-     res.status(500).send("Internal Server Error");
+    console.error("Error in downloadInvoice:", error);
+    res.status(500).send("Internal Server Error");
   }
- };
+};
+
  
  
 module.exports = {

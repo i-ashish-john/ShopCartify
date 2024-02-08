@@ -289,12 +289,13 @@
                                     <td data-label="Order ID"><%= order.orderId %></td>
                                     <td data-label="Product Image">
                                         <% order.productdetails.forEach(product => { %>
-                                            <img src="<%= product.Images[0]?.slice(6) %>" alt="<%= product.name %>" class="product-image">
+                                            <%console.log('the productdetails',product)%>
+                                            <img src="<%= product.product?.Images?.[0]?.slice(6) %>" alt="<%= product.name %>" class="product-image">
                                         <% }); %>
                                     </td>
                                     <td data-label="Product Name">
                                         <% order.productdetails.forEach(product => { %>
-                                            <%= product.name %><br>
+                                            <%= product.product?.name %><br>
                                         <% }); %>
                                     </td>
                                     <td data-label="Total Price"><%= order.totalPrice %>/-</td>
