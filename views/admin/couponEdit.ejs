@@ -29,7 +29,7 @@
 
  <body id="editCouponPage">
    <!-- Navigation Bar -->
-   <nav class="navbar navbar-expand-xl">
+   <nav class="navbar navbar-expand-xl bg-warning">
      <div class="container h-100">
        <a class="navbar-brand" href="/admin/dashboardForAdmin">
          <h1 class="tm-site-title mb-0">Product Admin</h1>
@@ -47,7 +47,9 @@
    <!-- Coupon Edit Form -->
    <%if(editedCoupon){ %>
    <div class="content card container" style=" background-color:  rgb(217, 217, 217);">
-     <h1 class="mb-4" style="text-align: center;">Update the  coupon</h1>
+     <h1 class="mb-3" style="text-align: center; display: flex;">Update the  coupon</h1><hr>
+    
+     
      <form action="/admin/couponEditBackPost" method="POST">
        <div class="form-row">
 
@@ -89,31 +91,18 @@
                <span class="input-group-text">₹</span>
              </div>
            </div>
+           <% if(errorMessage){ %>
+            <span style="color: red;"><%= errorMessage %></span>
+            <% } %>
          </div>
 
        </div>
+   
 
        <button type="submit" id="updateButton" class="btn btn-primary">Update</button>
      </form>
 <% } %>
-<div class="modal fade" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="validationModalLabel">Validation Error</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Please enter valid values in all fields.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+
    </div>
 
 
@@ -122,7 +111,7 @@
    <footer class="tm-footer row tm-mt-small">
      <div class="col-12 font-weight-light">
        <p class="text-center text-white mb-0 px-4 small">
-         Copyright &copy; <b>2018</b> All rights reserved. Design:
+         Copyright  <b></b> All rights reserved by ShopCartify:
          <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
        </p>
      </div>

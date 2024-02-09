@@ -373,16 +373,18 @@
 
    </div> 
  </div>
+ <div class="input-group">
+     <input type="text" class="form-control border" id="couponInput" name="couponCode" placeholder="Enter your coupon code" />
+     <button type="button" class="btn btn-success apply-coupon-button" id="applyCouponButton">Apply</button>
+ </div>
 </form>
+
+
 
 <div class="coupon-section mt-3 mb-4">
   <h3 class="coupon-heading text-primary">Exclusive Offers Await!</h3>
   <p class="coupon-description">Apply a coupon code to unlock special discounts and promotions.</p>
   
-  <div class="input-group">
-      <input type="text" class="form-control border" name="couponCode" placeholder="Enter your coupon code" />
-      <button class="btn btn-success apply-coupon-button" id="applyCouponButton">Apply</button>
-  </div>
 
   <p class="error-message text-danger"><%= UsedMessage %></p>
 </div>
@@ -442,13 +444,13 @@
                  <div class="form-group">
                     <input type="submit" class="btn btn-primary" value="Submit">
                  </div>
-               </div>
+                 <div class="modal-footer">
+                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  </div>
                 </form>
+              </div>
                 
             
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
         </div>
     </div>
 </div>
@@ -705,7 +707,7 @@ document.addEventListener('click', function (event) {
 
 </script>
 
-<script>//sending request to the coupon checking function in orderController!
+<script>
 document.querySelector('#applyCouponButton').addEventListener('click', async () => {
  console.log("came here ");
  const couponCodeInput = document.querySelector('input[name="couponCode"]');
@@ -734,7 +736,7 @@ document.querySelector('#applyCouponButton').addEventListener('click', async () 
    } else if (!data.message){
      Swal.fire({ icon: 'error', title: 'Nothing Found', text:data.message });
    }
-   // Update the total price in the UI
+  
    if (isNaN(data.newTotalPrice)) {
     console.error(`Invalid new total price: ${data.newTotalPrice}`);
     } else {
@@ -766,6 +768,31 @@ document.querySelector('#applyCouponButton').addEventListener('click', async () 
 });
 
 </script>
+
+<script>
+  document.querySelector('#applyCouponButton').addEventListener('click', async () => {
+  const couponInput = document.querySelector('#couponInput');
+  const couponCode = couponInput.value;
+  console.log("the cp code is:",couponCode);
+  if (couponCode) {
+    const response = await fetch(`/checkoutpost?couponCode=${couponCode}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+      },
+      
+    });
+    if (response.ok) {
+    } else {
+    }
+  } else {
+    alert('Please enter a coupon code.');
+  }
+});
+
+</script>
+
 
 <script>
   var clipboard = new ClipboardJS('.copy-btn');

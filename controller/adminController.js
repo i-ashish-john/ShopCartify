@@ -182,22 +182,25 @@ const adminlogin = async (req, res) => {
        totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
     });
   } else {
-    res.render('admin/login')
+    res.render('admin/login',{errorMessage:''});
   }
 };
+
 const postlogin = async (req, res) => {
   const { username, password } = req.body;
+        
 
   // Check if username or password is not provided or contains only spaces
   if (!username || !password || username.trim() === '' || password.trim() === '') {
     // Render login page with an error message
      res.render('admin/login', { errorMessage: 'Username and password are required.' });
   }
-
   try {
     const admin = await adminCollection.findOne({ username: username, password: password });
     const users = await userCollection.find();
     const fullData  = await orderCollection.find();
+
+
     if (admin && admin.password === password) {
       req.session.admin = username;
 
@@ -226,7 +229,20 @@ const postlogin = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.render('admin/login', { errorMessage: 'An error occurred during login.' });
+  
+    if (error.name === 'MongoError' && error.code === 11000) {
+      // Handle duplicate key error, likely due to existing username in the database
+      res.render('admin/login', { errorMessage: 'Username already exists.' });
+    } else if (error.name === 'ValidationError') {
+      // Handle validation error, likely due to invalid data format
+      res.render('admin/login', { errorMessage: 'Invalid data format. Please check your input.' });
+    } else if (error.name === 'AuthenticationError') {
+      // Handle incorrect password error
+      res.render('admin/login', { errorMessage: 'Incorrect password. Please try again.' });
+    } else {
+      // Handle other errors
+      res.render('admin/login', { errorMessage: 'An error occurred during login.' });
+    }
   }
 };
 

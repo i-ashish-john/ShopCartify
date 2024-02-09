@@ -65,11 +65,14 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required :true,
   },
-
+  coupons: [{
+      type: String
+   }],
   orderStatus: {
     type: String,
     default: 'Pending',
   },
+
   orderDate: {
     type: Date,
     default: Date.now,

@@ -90,9 +90,10 @@ const couponControllerFunction={
         try {
             console.log("reached the getEditCoupon@@!!");
           const couponCode = req.params.code;
+          req.session.coupon = couponCode;
           console.log("* the couponCode",couponCode);
           let editedCoupon = await couponCollection.findOne({ couponCode: couponCode });
-          res.render('admin/couponEdit', { editedCoupon: editedCoupon , message:''});
+          res.render('admin/couponEdit', { editedCoupon: editedCoupon , message:'',errorMessage:''});
         } catch (error) {
           console.error('Error:', error);
           res.status(500).json({ error: 'Internal Server Error' });
@@ -101,12 +102,54 @@ const couponControllerFunction={
     posteditCoupon:async(req,res)=>{//here
         try{
             console.log("Reached");
-
             const DatasToUpdate = { 
                 couponCode: req.body.couponCode,
                 expiryDate: req.body.expiryDate,
                 productDiscount: req.body.productDiscount,
                 minimumPurchaseValue: req.body.minimumPurchaseValue 
+            }
+            const existingCoupon = await couponCollection.findOne({couponCode:DatasToUpdate.couponCode});
+            if (
+                DatasToUpdate.couponCode.trim() === '' ||
+                DatasToUpdate.expiryDate.trim() === '' ||
+                DatasToUpdate.productDiscount.trim() === '' ||
+                DatasToUpdate.minimumPurchaseValue.trim() === ''
+            ) {
+                let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
+               
+                res.render('admin/couponEdit', { errorMessage: 'Please enter values in all the fields' ,editedCoupon:editedCoupon,message:''});
+                return; 
+            }
+            if(req.body.couponCode == existingCoupon){
+                let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
+
+                res.render('admin/couponEdit', { errorMessage: 'This coupon name is already used' ,editedCoupon:editedCoupon,message:''});
+            }
+            if(existingCoupon.productDiscount > 100){
+                let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
+
+                res.render('admin/couponEdit', { errorMessage: 'cannot be greater than 100' ,editedCoupon:editedCoupon,message:''});
+            }
+            if(existingCoupon.productDiscount < 1){
+                let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
+
+                res.render('admin/couponEdit', { errorMessage: 'cannot be less than 1' ,editedCoupon:editedCoupon,message:''});
+            }
+            if (existingCoupon.minimumPurchaseValue < 1) {
+                let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
+
+                console.log("enter or wot??");
+                res.render('admin/couponEdit', { errorMessage: 'minimum purchase cannot be less than 1' ,editedCoupon:editedCoupon,message:''});
+            }
+            const today = new Date();
+            const expiryDate = new Date(existingCoupon.expiryDate);
+            
+            // Check if expiry date is today or in the past
+            if (expiryDate <= today) {
+                let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
+
+                res.render('admin/couponEdit', { errorMessage: 'Expiry date must be a future date ' ,editedCoupon:editedCoupon,message:''});
+
             }
             const updated = await couponCollection.findOneAndUpdate(DatasToUpdate);
             console.log("Updated or not",updated);

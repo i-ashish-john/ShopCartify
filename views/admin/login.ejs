@@ -24,12 +24,12 @@
 	-->
   </head>
 
-  <body>
+  <body style="background-color: #6c757d;">
     <div>
-      <nav class="navbar navbar-expand-xl">
+      <nav class="navbar navbar-expand-xl  bg-warning">
         <div class="container h-100">
           <a class="navbar-brand" href="#">
-            <h1 class="tm-site-title mb-0">Shop Cartify Admin</h1>
+            <h1 class="tm-site-title mb-0 ">Shop Cartify Admin</h1>
           </a>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -42,13 +42,13 @@
       </nav>
     </div>
 
-    <div class="container tm-mt-big tm-mb-big">
+    <div class="container tm-mt-big tm-mb-big ">
       <div class="row">
         <div class="col-12 mx-auto tm-login-col">
-          <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+          <div class="tm-bg-primary-dark tm-block tm-block-h-auto" style="background-color: rgb(217, 217, 217);>
             <div class="row">
               <div class="col-12 text-center">
-                <h2 class="tm-block-title mb-4">Welcome to Dashboard, Login</h2>
+                <h2 class="tm-block-title mb-4">Admin Login</h2>
               </div>
             </div>
             <div class="row mt-2">
@@ -64,9 +64,9 @@
                       class="form-control validate"
                       id="username"
                       value=""
-                      required
+                      
                     />
-                
+            
                   </div>
                   <div class="form-group mt-3">
                     <label for="password">Password</label>
@@ -76,9 +76,14 @@
                       class="form-control validate"
                       id="password"
                       value=""
-                      required
+                      
                     />
                   </div>
+
+                  <% if(errorMessage){ %>
+                    <p  style="color: red;"><%= errorMessage %></p>
+                       <% }  %>
+                       
                   <div class="form-group mt-4">
                     <button
                       type="submit"
@@ -94,15 +99,7 @@
         </div>
       </div>
     </div>
-    <footer class="tm-footer row tm-mt-small">
-      <div class="col-12 font-weight-light">
-        <p class="text-center text-white mb-0 px-4 small">
-          Copyright &copy; <b>2018</b> All rights reserved. 
-          
-          Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
-        </p>
-      </div>
-    </footer>
+
     <script src="/product-admin-master/js/jquery-3.3.1.min.js"></script>
     <!-- https://jquery.com/download/ -->
     <script src="/product-admin-master/js/bootstrap.min.js"></script>

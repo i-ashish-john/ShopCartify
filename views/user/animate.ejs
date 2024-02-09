@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+        }
+
+        /* Common styles for both cursors */
+        .cs_cursor_1, .cs_cursor_2 {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999; /* Make sure it's above other elements */
+            transition: transform 0.2s ease; /* Add a smooth transition effect */
+        }
+
+        /* Custom styles for the first cursor */
+        .cs_cursor_1 {
+            /* Customize the color for the first cursor */
+            border: 2px solid #129393; /* Set border color for cursor 1 */
+            background-color: transparent; /* Make the background transparent */
+
+            /* Add additional styles as needed */
+        }
+
+        /* Custom styles for the second cursor */
+        .cs_cursor_2 {
+            /* Customize the color for the second cursor */
+            background-color: #129393; /* Set background color for cursor 2 */
+            width: 8px; /* Set a smaller width for cursor 2 */
+            height: 8px; /* Set a smaller height for cursor 2 */
+            transition: transform 0.5s ease; /* Slowly transition cursor 2 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="cs_cursor_1"></div>
+    <div class="cs_cursor_2"></div>
+   
+  
+    <script>
+        document.addEventListener('mousemove', function (e) {
+            // Update the position of the first cursor based on mouse movements
+            const cursor1 = document.querySelector('.cs_cursor_1');
+            cursor1.style.transform = `translate(${e.pageX - cursor1.offsetWidth / 2}px, ${e.pageY - cursor1.offsetHeight / 2}px)`;
+
+            // Update the position of the second cursor based on mouse movements with a delay
+            const cursor2 = document.querySelector('.cs_cursor_2');
+            setTimeout(() => {
+                cursor2.style.transform = `translate(${e.pageX - cursor2.offsetWidth / 2}px, ${e.pageY - cursor2.offsetHeight / 2}px)`;
+            }, 200); // 200 milliseconds delay, adjust as needed
+        });
+    </script>
+</body>
+</html>

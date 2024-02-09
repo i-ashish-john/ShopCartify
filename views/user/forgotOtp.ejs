@@ -5,129 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Verification</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background: linear-gradient(to top, #FDD835, #78909C);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .form-container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .form-container img {
-            width: 100%;
-            max-width: 150px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-        }
-    </style>
-</head>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP Verification</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <style>
-        /* Your styles here */
-    </style>
+    <link href="/web 2/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="/web 2/css/font-awesome.css" rel="stylesheet"> <!-- Font-Awesome-Icons-CSS -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet"> <!-- web font -->
 </head>
 
 <body>
-    <div class="form-container">
-        <h1 class="fw-bold mb-5" style="color: #9a3e3e;">OTP Verification</h1>
-
-        <form class="mx-1 mx-md-4" action="/verifyOtp" method="post" id="otpForm">
-
-            <div class="mb-3">
-                <label for="otp" class="form-label" style="color: #000000;">Enter OTP</label>
-                <input type="text" id="otp" class="form-control" name="otp" placeholder="Enter the OTP"  />
-            </div>
-
-            <% if (currentTime > otpExpirationTime) { %>
-                <p style="color: #b03131;">Your OTP has expired. Please request a new OTP.</p>
-            <% } %>
-            
-            <p id="timer" style="color: #b03131;"></p>
-            <p style="color: #ff0000;"><%= wrongOtp %></p>
-
-   
-            <p id="timer" style="color: #b03131;"></p>
-            <p style="color: #ff0000;"><%= validate %></p>
-
-
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg" style="background-color: #000000; border-radius: 10px;">Verify OTP</button>
-            </div>
-
-        </form>
-    </div>
+    <!-- main -->
+    <div class="main">
+        <h1>OTP Verification</h1>
+        <div class="main-w3lsrow">
+            <!-- login form -->
+            <div class="login-form login-form-left">   
+                <div class="agile-row">
+                    <h2>Enter OTP</h2>
+                    <span class="fa fa-lock"></span>
+                    <div class="clear"></div>
+                    <div class="login-agileits-top">   	
+                        <form action="/verifyOtp" method="post" id="otpForm">
+                            <input type="text" name="otp" placeholder="Enter the OTP" required>
+                            <p style="color: red;" id="wrongOtp"><%= wrongOtp %></p>
+                            <p style="color: red;" id="validate"><%= validate %></p>
+                            <p id="timer" style="color: red;"></p>
+                            <input type="submit" value="Verify OTP">   
+                        </form>   	
+                    </div>   
+                </div>   
+            </div>   
+        </div>	
+    </div>	
+    <!-- //main -->   
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Set the countdown time in seconds
-        var countdown = 59;
-    
+        var countdown =  59;
         function startTimer() {
             var timerElement = document.getElementById('timer');
             var timerInterval = setInterval(function () {
-                if (countdown <= 0) {
+                if (countdown <=  0) {
                     clearInterval(timerInterval);
                     timerElement.innerHTML = "Your OTP has expired. Please try again.";
-    
-                    // Allow the form submission to trigger the fetch request
                     document.getElementById('otpForm').addEventListener('submit', function(event) {
-                        fetch('/user/OtpVerification', {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                // Handle success as needed
-                                console.log("Message received");
-                            } else {
-                                // Handle failure as needed
-                                console.error('Fetch failed with status:', response.status);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Fetch error:', error);
-                        });
+                        event.preventDefault();
+                        alert("Your OTP has expired.");
                     });
-    
-                    // Hide the timer element when countdown reaches 0
                     timerElement.style.display = 'none';
                 } else {
                     timerElement.innerHTML = 'Your OTP will expire in ' + countdown + ' seconds';
                     countdown--;
                 }
-            }, 1000);
+            },  1000);
         }
-    
-        // Start the timer when the page loads
         startTimer();
     </script>
-    
 </body>
-
-</html>
 
 </html>

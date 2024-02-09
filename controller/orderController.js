@@ -306,28 +306,91 @@ const payPost = async (req, res) => {
 
 };
 
+// const checkoutPost = async (req, res) => {
+//   try {
+//     const variable = {
+//       username: req.body.username,
+//       email: req.body.email,
+//       paymentType: req.body.paymentType,
+//       selectedAddressId: req.body.selectedAddressId,
+//       totalPrice: req.body.totalPrice,
+//       couponCode:req.body.couponCode
+//     }
+//     const userId = req.session.user;
+//     const emailOfUser = await userCollection.findOne({ email: userId });
+//     const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
+//     if (!cartData) {
+//       return res.status(404).json({ message: 'Cart values not found' });
+//     }
+//     const selectedAddress = emailOfUser.address.find(address => address._id == variable.selectedAddressId);
+//     const productDetailsPromises = cartData.products.map(async product => {
+//       const productDetails = await productCollection.findById(product.productId);
+//       if (productDetails) {
+//         const newStock = productDetails.stock - product.quantity;
+//         if (newStock < 0) {
+//           console.log("Insufficient stock for product: ", productDetails.name);
+//           return null;
+//         }
+//         await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
+//       }
+//       return productDetails;
+//     });
+//     const productDetailsArray = (await Promise.all(productDetailsPromises)).filter(detail => detail !== null);
+
+//     const order = new orderCollection({
+//       username: variable.username,
+//       email: variable.email,
+//       paymentType: variable.paymentType,
+//       totalPrice: variable.totalPrice,
+//       coupons: [variable.couponCode],
+//       productdetails: productDetailsArray.map(productDetails => ({
+//         product: productDetails._id,
+//         quantity: cartData.products.find(product => product.productId.equals(productDetails._id)).quantity,
+//       })),
+//       address: {
+//         street: selectedAddress?.street,
+//         city: selectedAddress?.city,
+//         state: selectedAddress?.state,
+//         zip: selectedAddress?.zip,
+//         country: selectedAddress?.country,
+//       }, 
+//     });
+    
+//     console.log("F_U_L_L D_A_T_A",order.username,"|",order.email,"|",order.paymentType,"|",order.totalPrice,"|",order.productdetails,"|",order?.address);
+//     await order.save();
+//     await cartCollection.deleteOne({ userId: emailOfUser._id });
+//     if (order.paymentType === 'CashOnDelivery' || order.paymentType === 'Wallet') {
+//       return res.render('user/ordersuccess');
+//     }
+//     if (order.paymentType === 'NetBanking') {
+//       return res.render('user/ordersuccess');
+//     }
+//     // res.status(201).json({ message: 'Order saved successfully' });
+//     res.render('user/ordersuccess');
+//   } catch (error) {
+//     console.error(error);
+//     res.send(error);
+//   }
+//  };
 const checkoutPost = async (req, res) => {
   try {
-    const variable = {
-      username: req.body.username,
-      email: req.body.email,
-      paymentType: req.body.paymentType,
-      selectedAddressId: req.body.selectedAddressId,
-      totalPrice: req.body.totalPrice,
-      couponCode:req.body.couponCode
-    }
+    const { username, email, paymentType, selectedAddressId, totalPrice,couponCode } = req.body;
+    // const couponCode = req.query.couponCode;
+    console.log("THE COUPON CODE IS:",req.body.couponCode);
     const userId = req.session.user;
     const emailOfUser = await userCollection.findOne({ email: userId });
     const cartData = await cartCollection.findOne({ userId: emailOfUser._id });
     if (!cartData) {
       return res.status(404).json({ message: 'Cart values not found' });
     }
-    const selectedAddress = emailOfUser.address.find(address => address._id == variable.selectedAddressId);
+    const selectedAddress = emailOfUser.address.find(address => address._id.toString() === selectedAddressId);
+
     const productDetailsPromises = cartData.products.map(async product => {
+      
       const productDetails = await productCollection.findById(product.productId);
       if (productDetails) {
         const newStock = productDetails.stock - product.quantity;
-        if (newStock < 0) {
+        if (newStock <  0) {
           console.log("Insufficient stock for product: ", productDetails.name);
           return null;
         }
@@ -336,12 +399,13 @@ const checkoutPost = async (req, res) => {
       return productDetails;
     });
     const productDetailsArray = (await Promise.all(productDetailsPromises)).filter(detail => detail !== null);
-
+     console.log("**HEY**)",couponCode);
     const order = new orderCollection({
-      username: variable.username,
-      email: variable.email,
-      paymentType: variable.paymentType,
-      totalPrice: variable.totalPrice,
+      username,
+      email,
+      paymentType,
+      totalPrice,
+      coupons: [couponCode],
       productdetails: productDetailsArray.map(productDetails => ({
         product: productDetails._id,
         quantity: cartData.products.find(product => product.productId.equals(productDetails._id)).quantity,
@@ -352,77 +416,70 @@ const checkoutPost = async (req, res) => {
         state: selectedAddress?.state,
         zip: selectedAddress?.zip,
         country: selectedAddress?.country,
-      },
+      },  
     });
-    
-    console.log("F_U_L_L D_A_T_A",order.username,"|",order.email,"|",order.paymentType,"|",order.totalPrice,"|",order.productdetails,"|",order?.address);
+      
+    // const ordersWithCoupon = await orderCollection.find({
+    //   coupons: { $elemMatch: { $eq: couponCode } },
+    //   email: emailOfUser.email
+    // });
+
+    // if (ordersWithCoupon.length >  0) {
+    //     console.log("GOING TO REACH COUPON CHECKING ROUTE BY REDIRECTING");
+    //   return res.redirect('couponChecking');
+    // }
+
     await order.save();
     await cartCollection.deleteOne({ userId: emailOfUser._id });
-    if (order.paymentType === 'CashOnDelivery' || order.paymentType === 'Wallet') {
-      return res.render('user/ordersuccess');
-    }
-    if (order.paymentType === 'NetBanking') {
-      return res.render('user/ordersuccess');
-    }
-    // res.status(201).json({ message: 'Order saved successfully' });
     res.render('user/ordersuccess');
   } catch (error) {
     console.error(error);
-    res.send(error);
+    res.status(500).send(error.message);
   }
- };
- 
+};
+
  const couponChecking = async(req, res) => {
   try {
-   
-    console.log("came here couponchecking");
-    const coupons = await couponCollection.find();
     const email = req.session.user;
     const variable = {
-      couponCode:req.body.couponCode,
-      totalPrice:req.body.totalPrice
+      couponCode: req.body.couponCode,
+      totalPrice: req.body.totalPrice
     };
- 
+
     const user = await userCollection.findOne({ email: email });
     if (!user) {
       return res.status(404).send('User not found or missing in the session.');
-    };
- 
-    const redeemedArrayChecking = user.redeemedCoupons.map(c => c.couponCode);
+    }
+
+    const ordersWithEmail = await orderCollection.find({ email: email });
+    const redeemedCouponsFromOrders = ordersWithEmail.flatMap(order => order.coupons);
+    const redeemedArrayChecking = redeemedCouponsFromOrders.includes(variable.couponCode);
+    console.log("the ^orders:",redeemedCouponsFromOrders);
     let UsedMessage;
- 
+
     const couponCheck = await couponCollection.findOne({ couponCode: variable.couponCode });
-    if(variable.couponCode){
-      if(!couponCheck){
+    if (variable.couponCode) {   
+      if (!couponCheck) {
         UsedMessage = 'this coupon does not exist';
-      } else if(redeemedArrayChecking.includes(variable.couponCode)){
+      } else if (redeemedArrayChecking) {
         UsedMessage = 'This coupon is used ';
-      }else if (!couponCheck ){
-        UsedMessage = 'Nothing Found';
-      }else if ( variable.totalPrice < couponCheck.minimumPurchaseValue ) {
-        UsedMessage = 'Need more more purchase value';
+      } else if (variable.totalPrice < couponCheck.minimumPurchaseValue) {
+        UsedMessage = 'Need more purchase value';
       } else {
         UsedMessage = 'Coupon applied successfully';
-        await userCollection.updateOne(//adding coupon to the redeemed array
-          { email: email },
-          { $push: { redeemedCoupons: { couponCode: variable.couponCode, redeemedAt: new Date() } } }
-        );
       }
     }
-    console.log("the vaiable amount is :",variable.totalPrice,variable.couponCode);
     let order = {};
-
-    if(UsedMessage === 'Coupon applied successfully'){
+    if (UsedMessage === 'Coupon applied successfully') {
       order.appliedCoupon = variable.couponCode;
-      order.totalAmount = variable.totalPrice - (variable.totalPrice * (couponCheck.productDiscount / 100));
-      console.log("The details is here :",order.totalAmount);
+      order.totalAmount = variable.totalPrice - (variable.totalPrice * (couponCheck.productDiscount /  100));
     }
-
     res.send({ success: true, message: UsedMessage, newTotalPrice: order.totalAmount });
   } catch (error) {
     res.send({ success: false, message: error.message });
   }
 };
+
 // const downloadInvoice = async (req, res) => {
 //   try {
 //      console.log("inside of the downloadInvoice");

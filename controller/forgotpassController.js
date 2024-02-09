@@ -87,12 +87,19 @@ const verifyOtp = (req, res) => {
     const storedOTP = req.session.forgotPasswordOTP;
     const otpTimestamp = req.session.otpTimestamp;
 
+    console.log(`Received OTP: ${otp}`);
+    console.log(`Stored OTP: ${storedOTP}`);
+    console.log(`OTP Timestamp: ${otpTimestamp}`);
+
     if (!storedOTP || !otpTimestamp) {
       return res.render('user/forgotOtp', { validate: '', otpExpirationTime: "", currentTime: "", email: req.session.email, wrongOtp: 'Timeout please try again' });
     }
 
     const currentTime = new Date().getTime();
-    const otpExpirationTime = otpTimestamp + 1 * 60 * 1000;
+    const otpExpirationTime = otpTimestamp +  1 *  60 *  1000;
+
+    console.log(`Current Time: ${currentTime}`);
+    console.log(`OTP Expiration Time: ${otpExpirationTime}`);
 
     if (currentTime > otpExpirationTime) {
       req.session.usedOTP = false;

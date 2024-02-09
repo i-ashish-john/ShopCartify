@@ -6,34 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OTP Verification</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="/web 2/css/style.css" rel="stylesheet" type="text/css" media="all" />
+  <link href="/web 2/css/font-awesome.css" rel="stylesheet">
+  <link href="//fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet">
   <script src="sweetalert2.min.js"></script>
-<link rel="stylesheet" href="sweetalert2.min.css">
-
+  <link rel="stylesheet" href="sweetalert2.min.css">
   <style>
-    body {
-      background: linear-gradient(to top, #FDD835, #78909C);
-      color: #000;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
     .container {
-      margin-top: 50px;
+      margin-top:  50px;
     }
 
     .form-container {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255,  255,  255,  0.8); /* Semi-transparent white */
+      padding:  20px;
+      border-radius:  10px;
+      box-shadow:  0  0  10px rgba(0,  0,  0,  0.1);
     }
 
     .btn-primary {
-      background-color: #FFD600;
+      background-color: #ff4400;
       border-color: #FFD600;
     }
 
@@ -65,7 +56,7 @@
 
             <div>
               <% if (error) { %>
-                <p style="color: red;padding: 10px;">
+                <p style="color: red;padding:  10px;">
                   <%= error %> <a href="user/signup" style="color: #FFD600;">Signup again to continue</a>
                 </p>
               <% } %>
@@ -81,7 +72,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    let seconds = 59;
+    let seconds =  59;
     let submitBtn = document.getElementById('sub');
 
     function countdown() {
@@ -89,7 +80,7 @@
       const interval = setInterval(function () {
         countdownDisplay.textContent = formatTime(seconds);
 
-        if (seconds === 0) {
+        if (seconds ===  0) {
           clearInterval(interval);
           submitBtn.setAttribute("disabled", true);
           countdownDisplay.textContent = "OTP expired. Try Resend";
@@ -97,12 +88,12 @@
         } else {
           seconds--;
         }
-      }, 1000);
+      },  1000);
     }
 
     function formatTime(seconds) {
-      const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
+      const minutes = Math.floor(seconds /  60);
+      const remainingSeconds = seconds %  60;
       return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     }
 
@@ -110,17 +101,14 @@
       const hiddenButton = document.getElementById('hiddenButton');
       hiddenButton.style.display = 'block';
       submitBtn.removeAttribute("disabled");
-      seconds = 59; // Reset the countdown
+      seconds =  59; // Reset the countdown
       countdown(); // Start the countdown again
     }
 
     countdown();  // Start the countdown
   </script>
 
-
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -23,7 +23,7 @@
   </head>
 
   <body id="reportsPage">
-    <nav class="navbar navbar-expand-xl">
+    <nav class="navbar navbar-expand-xl bg-warning">
       <div class="container h-100">
           <a class="navbar-brand" href="/admin/dashboardForAdmin">
               <h1 class="tm-site-title mb-0">Product Admin</h1>
@@ -110,7 +110,7 @@
       <div class="container mt-5">
         <div class="row tm-content-row">
           <div class="col-12 tm-block-col">
-            <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+            <div class="tm-block tm-block-h-auto" style="background-color: rgb(217, 217, 217);>
               <h2 class="tm-block-title">List of Accounts</h2>
               <p class="text-white">Accounts</p>
               
@@ -121,7 +121,7 @@
         <!-- User Display Box -->
         <div class="row tm-content-row">
           <div class="col-12 tm-block-col">
-            <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+            <div class=" tm-block tm-block-h-auto" style="background-color: rgb(217, 217, 217);">
               <h2 class="tm-block-title">User Display Box</h2>
     
               <!-- Default User Box Template -->
@@ -168,7 +168,7 @@
          </li>
        <% } %>
  
-       <% for (let i = 1; i < users.length; i++) { %>
+       <% for (let i = 1; i < currentPage; i++) { %>
          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
            <a class="page-link" href="/admin/usermanage?page=<%= i %>"><%= i %></a>
          </li>
@@ -190,15 +190,7 @@
         </div>
       </div>
 
-      <footer class="tm-footer row tm-mt-small">
-        <div class="col-12 font-weight-light">
-          <p class="text-center text-white mb-0 px-4 small">
-            Copyright &copy; <b>2018</b> All rights reserved. 
-            
-            Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
-          </p>
-        </div>
-      </footer>
+    
     </div>
 
       
