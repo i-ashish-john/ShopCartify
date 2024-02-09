@@ -65,6 +65,7 @@
     } */
 </style>
 <body  style="background-color: #6c757d;">
+    <%- include('animate.ejs') %> 
     <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row bg-secondary py-1 px-xl-5">
@@ -219,13 +220,14 @@
 
     <body>
         <div class="container">
-<!--filtering part is here-->
 
+<!--filtering part is here-->
 <div class="d-flex align-items-center justify-content-center mt-2 col-6 " style="align-content: start;">
     <input type="number" id="minPrice" class="form-control mr-2" placeholder="Min Price" min="0" step="0.01">
     <input type="number" id="maxPrice" class="form-control mr-2" placeholder="Max Price" min="0" step="0.01">
     <button type="button" class="btn btn-warning" onclick="applyPriceFilter()">Apply</button>
 </div>
+
                <div class="row">
                 <!-- Shop Product Start -->
                 <div class="col-lg-12 col-md-8"><hr
@@ -248,7 +250,7 @@
                         </div>
                 <!-- <div class="not-found">not found</div> -->
                 <% if (products) { %>
-                    <div class="row">
+                    <div class="row" id="product-listing">  
                         <% for (let i = 0; i < products.length; i++) { %>
                             <div class="col-lg-3 col-md-6 col-sm-6 pb-1">
                                 <div class="card border-0 h-100 hover"> <!-- Add the 'hover' class for the hover effect -->
@@ -607,7 +609,7 @@ const searchableItems = document.querySelectorAll('.searchable-item-all');
 searchInput.addEventListener('input', () => {
     const searchText = searchInput.value.toLowerCase();
     let found = false;
-
+  console.log("hello reached");
     searchableItems.forEach(item => {
         const itemText = item.textContent.toLowerCase();
 
@@ -620,27 +622,28 @@ searchInput.addEventListener('input', () => {
     });
 });
 
-function applyPriceFilter() {
-    const minPrice = parseFloat(document.getElementById('minPrice').value);
-    const maxPrice = parseFloat(document.getElementById('maxPrice').value);
+// function applyPriceFilter() {
+//     const minPrice = parseFloat(document.getElementById('minPrice').value);
+//     const maxPrice = parseFloat(document.getElementById('maxPrice').value);
 
-    // Hide all products initially
-    searchableItems.forEach(item => {
-        item.style.display = 'none';
-    });
+//     // Hide all products initially
+//     searchableItems.forEach(item => {
+//         item.style.display = 'none';
+//     });
 
-    // Show products within the price range
-    searchableItems.forEach(item => {
-        const priceElement = item.querySelector('.fs-5');
-        if (!priceElement) return;
-        const price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g,""));
+//     // Show products within the price range
+//     searchableItems.forEach(item => {
+//         const priceElement = item.querySelector('.fs-5');
+//         if (!priceElement) return;
+//         const price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g,""));
 
-        if (price >= minPrice && price <= maxPrice) {
-            item.style.display = 'block';
-        }
-    });
-}
+//         if (price >= minPrice && price <= maxPrice) {
+//             item.style.display = 'block';
+//         }
+//     });
+// }
 </script>
+<!-- /////////////// -->
 <script>
 function addToCart(productId) {
     $.get(`/addToCart?id=${productId}`)
@@ -664,24 +667,25 @@ function addToCart(productId) {
 
 <!--  here filtering-->
 <script>
-    function applyPriceFilter() {
+function applyPriceFilter() {
     const minPrice = parseFloat(document.getElementById('minPrice').value);
     const maxPrice = parseFloat(document.getElementById('maxPrice').value);
+    const products = document.querySelectorAll('.card.hover');
 
-    // Hide all products initially
-    searchableItems.forEach(item => {
-        item.style.display = 'none';
-    });
+    products.forEach(product => {
+        const priceElement = product.querySelector('.fs-5');
+        if (!priceElement) return;
+        const price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g,""));
 
-    // Show products within the price range
-    searchableItems.forEach(item => {
-        const price = parseFloat(item.querySelector('.price').textContent.replace('₹', ''));
-
-        if (price >= minPrice && price <= maxPrice) {
-            item.style.display = 'block';
+        if ((isNaN(minPrice) || price >= minPrice) && (isNaN(maxPrice) || price <= maxPrice)) {
+            product.style.display = 'block';
+        } else {
+            product.style.display = 'none';
         }
     });
 }
+
+
 </script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

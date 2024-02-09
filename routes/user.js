@@ -21,7 +21,7 @@ router.post('/signup', userController.signupPost)
 
 
 // router.get('/OTP',userController.otpGet)
-router.post('/OTP', userController.sendOTPByEmail)
+router.post('/OTP', userController.sendOTPByEmail);
 router.get('/productdetails', Usersession, blockedAuth, userController.productdetails);
 router.get('/backToHome', Usersession, blockedAuth, userController.back);
 
