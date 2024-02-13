@@ -91,21 +91,7 @@
                           <span class="sr-only">(current)</span>
                       </a>
                   </li>
-                  <li class="nav-item dropdown">
-
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
-                          <i class="far fa-file-alt"></i>
-                          <span>
-                              Reports <i class="fas fa-angle-down"></i>
-                          </span>
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="#">Daily Report</a>
-                          <a class="dropdown-item" href="#">Weekly Report</a>
-                          <a class="dropdown-item" href="#">Yearly Report</a>
-                      </div>
-                  </li>
+                
                   <li class="nav-item">
                       <a class="nav-link" href="/admin/productlist">
                           <i class="fas fa-shopping-cart"></i>
@@ -206,6 +192,25 @@
           <% }) %>
         </tbody>
       </table>
+<!----pagination-->
+
+<div class="pagination">
+  <% if (currentPage > 1) { %>
+    <a href="?page=1&search=<%= searchTerm %>">First</a>
+    <a href="?page=<%= currentPage - 1 %>&search=<%= searchTerm %>">Previous</a>
+  <% } %>
+
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="?page=<%= i %>&search=<%= searchTerm %>" <%= currentPage === i ? 'class="active"' : '' %>><%= i %></a>
+  <% } %>
+
+  <% if (currentPage < totalPages) { %>
+    <a href="?page=<%= currentPage + 1 %>&search=<%= searchTerm %>">Next</a>
+    <a href="?page=<%= totalPages %>&search=<%= searchTerm %>">Last</a>
+  <% } %>
+</div>
+
+
       </div>
   
       </div>

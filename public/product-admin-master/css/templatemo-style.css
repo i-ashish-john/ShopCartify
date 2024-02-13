@@ -12,7 +12,7 @@ html {
 }
 body {
   font-family: Roboto, Helvetica, Arial, sans-serif;
-  background-color: #4e657a;
+  background-color: #6c757d;
   overflow-x: hidden;
 }
 a {
@@ -202,7 +202,7 @@ button:focus {
   font-size: 90%;
 }
 .table {
-  background-color: #50697f;
+  background-color: #6c757d;
   color: #fff;
   font-size: 85%;
   margin-bottom: 0;
@@ -358,7 +358,7 @@ thead {
 }
 .table td,
 .table th {
-  border-top: 1px solid #415a70;
+  border-top: 1px solid #6c757d;
   padding: 15px 25px;
   vertical-align: middle;
 }
@@ -374,7 +374,7 @@ thead {
   color: #a0c0de;
 }
 .tm-bg-primary-dark {
-  background-color: #435c70;
+  background-color: #6c757d;
 }
 .tm-bg-gray {
   background-color: rgba(0, 0, 0, 0.05);
@@ -442,6 +442,7 @@ input[type="checkbox"]:focus {
 }
 .tm-product-table tr {
   font-weight: 600;
+  background-color: #aaa;
 }
 .tm-product-name {
   font-size: 0.95rem;

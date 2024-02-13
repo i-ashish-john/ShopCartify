@@ -45,7 +45,7 @@
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
  </head>
 
- <body id="returnOrdersPage">
+ <body id="returnOrdersPage"  style="background-color: #6c757d;">
    <!-- Navigation Bar -->
    <nav class="navbar navbar-expand-xl bg-warning" >
     <div class="container h-100">
@@ -68,13 +68,7 @@
                 </li>
                 <li class="nav-item dropdown">
 
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="far fa-file-alt"></i>
-                        <span>
-                            Reports <i class="fas fa-angle-down"></i>
-                        </span>
-                    </a>
+                    
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="#">Daily Report</a>
                         <a class="dropdown-item" href="#">Weekly Report</a>
@@ -133,7 +127,7 @@
 <div class="container mt-5">
     <div class="row tm-content-row">
       <div class="col-12 tm-block-col" >
-        <div class="tm tm-block tm-block-h-auto" style="background-color: rgb(222, 217, 176);">
+        <div class="tm tm-block tm-block-h-auto" style="background-color:  rgb(217, 217, 217);;">
           <h2 class="tm-block-title">Coupon Management</h2>
           <p class="text-white">Coupon Management</p>
           <table class="table table-bordered">
@@ -151,7 +145,7 @@
             <tbody>
                 
               <% couponDetails.forEach((coupon, index) => { %>
-                <tr   style=" background-color:  rgb(217, 217, 217);">
+                <tr   style=" background-color:  rgb(191, 192, 192);">
                   <td><%= index + 1 %></td>
                   <td><%= coupon.couponCode %></td>
                   <td><%= coupon.expiryDate %></td>

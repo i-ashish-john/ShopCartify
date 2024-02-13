@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add Category</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
   <link rel="stylesheet" href="/product-admin-master/css/fontawesome.min.css" />
   <link rel="stylesheet" href="/product-admin-master/css/bootstrap.min.css" />
@@ -44,9 +45,9 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: #45a049;
-    }
+    /* button:hover {
+      background-color: #c0e712;
+    } */
 
     .error-message {
       color: red;
@@ -61,22 +62,25 @@
     <form action="/admin/categoryadd" method="post">
       <!-- Category Name -->
       <label for="categoryName">Category Name:</label>
-      <input type="text" id="categoryName" name="categoryName" required />
+      <input type="text" id="categoryName" name="categoryName"  />
       <!-- Category Description -->
       <label for="categoryDescription">Category Description:</label>
-      <textarea id="categoryDescription" name="categoryDescription" rows="4" required></textarea>
+      <textarea id="categoryDescription" name="categoryDescription" rows="4" ></textarea>
       <!-- Deleted -->
       <label for="deleted">Deleted:</label>
       <input type="checkbox" id="deleted" name="deleted" />
       <!-- Error Message -->
       <div class="error-message">
-        <p><%= locals.categoryError %></p>
+        <p style="color: red;"><%= locals.categoryError %></p>
       </div>
       <!-- Submit Button -->
-      <button type="submit">Add Category</button>
+      <button type="submit" class="bg-warning">Add Category</button>
     </form>
 
   </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="/product-admin-master/js/jquery-3.3.1.min.js"></script>
   <script src="/product-admin-master/js/bootstrap.min.js"></script>
  </body>

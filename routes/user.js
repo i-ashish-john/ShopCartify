@@ -33,6 +33,11 @@ router.post('/Userdetails', Usersession, blockedAuth, userController.UserDetails
 router.get('/profile', Usersession, blockedAuth, userController.profile)//this is for updating the user profile values
 router.get('/addAddressUser', Usersession, blockedAuth, userController.addAddressUserPage);
 router.post('/NewAddressAddedForUser', Usersession, blockedAuth, userController.NewAddressAddedForUser);
+//whishlist in here 
+
+router.get('/whishlist-get', Usersession, blockedAuth, userController.whishlistGet);
+router.get('/Add-to-whishlist',Usersession, blockedAuth, userController.AddToWhishlist);
+router.post('/whishlistRemove/:id',Usersession, blockedAuth, userController.whishlistRemove);
 
 router.get('/cartload', Usersession, blockedAuth, cartController.cartload)
 router.get('/addToCart', Usersession, blockedAuth, cartController.addToCart);

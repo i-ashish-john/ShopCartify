@@ -89,7 +89,7 @@
                 </div>
 
                 <div class="d-inline-flex align-items-center d-block d-lg-none">
-                    <a href="" class="btn px-0 ml-2">
+                    <a href="/whishlist-get" class="btn px-0 ml-2">
                         <i class="fas fa-heart text-dark"></i>
                         <span class="badge text-dark border border-dark rounded-circle"
                             style="padding-bottom: 2px;"></span>
@@ -191,7 +191,7 @@
                             </a>
 
                             <!-- Wishlist Icon -->
-                            <a href="" class="btn px-0 ml-3">
+                            <a href="/whishlist-get" class="btn px-0 ml-3">
                                 <i class="fas fa-heart text-warning"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
                                     style="padding-bottom: 2px;"></span>
@@ -273,9 +273,9 @@
                                         <% } else { %>
                                             <button class="btn btn-secondary" disabled>Out of Stock</button>
                                         <% } %>
-                                        <a class="btn btn-outline-dark" href="/wishlist">
+                                        <a class="btn btn-outline-dark" id="whishlist" href="#" onclick="addToWishlist('<%= products[i].id %>')">
                                             <i class="far fa-heart"></i>
-                                        </a>
+                                          </a>
 
                                         <a class="btn btn-outline-dark" href="/productdetails?id=<%= products[i].id %>">
                                             <i class="fa fa-search"></i>
@@ -662,9 +662,29 @@ function addToCart(productId) {
         });
 }
 
-      </script>
+     </script>
 
-
+<script>
+    function addToWishlist(productId) {
+        console.log('reached');
+      fetch(`/Add-to-whishlist?id=${productId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Product added to wishlist successfully!');
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+  
 <!--  here filtering-->
 <script>
 function applyPriceFilter() {

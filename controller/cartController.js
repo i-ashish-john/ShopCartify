@@ -72,7 +72,7 @@ const cartItemRemove = async (req, res) => {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
-  };
+  };  
   
   
   const incCart = async (req, res) => {
@@ -85,7 +85,7 @@ const cartItemRemove = async (req, res) => {
       console.log("products",products);
       if (!cart) {
         return res.status(404).send('Cart not found');
-      }
+      }   
   
       const productIndex = cart.products.findIndex(p => p.productId.equals(pid));
       console.log('product index:', productIndex);
@@ -118,7 +118,7 @@ const cartItemRemove = async (req, res) => {
      catch (error) {
     console.error(error.stack);
     res.send(error.stack);
-  }
+  }  
 };
   
   const decCart = async (req, res) => {
@@ -157,6 +157,7 @@ const cartItemRemove = async (req, res) => {
   //add to cart is here//
   const addToCart = async (req, res) => {
     try {
+      console.log("reached form whishlist");
       const productId = req.query.id;
       const users = req.session.user;
      console.log("product's id is:",productId);
@@ -182,8 +183,8 @@ const cartItemRemove = async (req, res) => {
           const newQuantity = existingProduct.quantity+1;
 
           if (newQuantity > products.stock) {
-              req.flash('error', 'Stock limit exceeded.'); 
-              return res.status(404).send("Limit exceeds");
+            req.flash('error', 'Stock limit exceeded.'); 
+            return res.status(404).send("Limit exceeds");
             }
           // await cartCollection.findOneAndUpdate(
           //   { userId: user._id, 'products.productId': products._id },

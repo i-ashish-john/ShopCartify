@@ -13,8 +13,9 @@ const addressCollection = require('../model/addressCollection');
 const orderCollection = require('../model/orderCollection');
 const { log } = require('console');
 const mongoose = require('mongoose');
-const Swal = require('sweetalert2'); 
+const Swal = require('sweetalert2');
 const couponCollection = require('../model/couponCollection');
+const whishlistCollection = require('../model/whishlistCollection');
 // const flash = require('express-flash');
 require('dotenv').config();
 
@@ -600,15 +601,90 @@ const addCheckoutAddressPost = async (req, res) => {
   }
 };
 
+const AddToWhishlist = async (req, res) => {
+  try {
+    const productId = req.query.id;
+    const email = req.session.user;
+    const user = await userCollection.findOne({ email: email });
+    const product = await productCollection.findById(productId);
+    console.log("user is :",user);
+    console.log("product is :",product)
+    if (!user || !product) {
+      return res.status(404).json({ message: "User or product not found." });
+    }
+    let wishlist = await whishlistCollection.findOne({ userId: user._id });
+    if (!wishlist) {
+      wishlist = new whishlistCollection({
+        userId: user._id,
+        items: []
+      });
+    }
+    const itemExistsInWishlist = wishlist.items.some(item => item.productId.toString() === productId);
+
+    if (itemExistsInWishlist) {
+      return res.status(400).json({ message: "Product already exists in wishlist." });
+    }
+    wishlist.items.push({ productId: product._id });
+    await wishlist.save();
+    res.status(200).json({ success: true, message: "Product added to wishlist." });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
+
+const whishlistGet = async(req, res) => {
+  try {
+    const email = req.session.user;
+    const user = await userCollection.findOne({ email: email });
+    const whishlist = await whishlistCollection.findOne({ userId: user._id }).populate('items.productId');
+    res.render('user/whishlist', { wishlistItems: whishlist ? whishlist.items : [] });
+    console.log("whishlist",whishlist);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error occurred');
+  }
+};
+
+const whishlistRemove = async (req, res) => {
+  try {
+    console.log("In the wishlist removing section");
+    const email = req.session.user;
+    const user = await userCollection.findOne({email:email});
+    console.log("user",user);
+    console.log("Email:", email);
+    const productIdToRemove = req.params.id;
+    console.log("Product ID to remove:", productIdToRemove);
+    const data = await whishlistCollection.findOneAndUpdate(
+      { userId: user._id }, // Use userId instead of email for better security
+      { $pull: { items: { productId: productIdToRemove } } },
+      { new: true }
+    );
+    console.log("Updated Wishlist Data:", data);
+    if (data) {
+      console.log("Product removed successfully");
+      res.redirect('/whishlist-get');
+      // res.status(200).json({ message: 'Product removed from wishlist successfully' });
+    } else {
+      console.log("Product not found in the wishlist");
+      // res.status(404).json({ error: 'Product not found in the wishlist' });
+    }
+  } catch (error) {
+    console.error('Error removing product from wishlist:', error);
+    // res.status(500).json({ error: 'Internal server error' });
+  }
+};
 // --------forgott
 
 
 module.exports = {
   login, loginpost, signout,redirectLogin,
-  signupPost, signup, home,
+  signupPost, signup, home,whishlistGet,
   sendOTPByEmail, back, productdetails,
-  MensTotalproductlist, WomensTotalproductlist, checkout,
-  UserDetails, profile,
+  MensTotalproductlist, WomensTotalproductlist,
+   checkout,whishlistRemove,
+  UserDetails, profile,AddToWhishlist,
   addAddressUserPage, NewAddressAddedForUser,
   addCheckoutAddressPost,
 

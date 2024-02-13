@@ -12,7 +12,6 @@
        min-height: 100vh;
        margin: 0;
      }
-
      .content {
        flex: 1;
      }
@@ -37,7 +36,6 @@
        <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
          <i class="fas fa-bars tm-nav-icon"></i>
        </button>
-
        <div class="collapse navbar-collapse" id="navbarSupportedContent">
          <!-- Your existing navbar content... -->
        </div>
@@ -52,12 +50,9 @@
      
      <form action="/admin/couponEditBackPost" method="POST">
        <div class="form-row">
-
          <div class="form-group col-md-6">
-            
            <label for="couponCode">Coupon Code:</label>
            <input type="text" id="couponCode" name="couponCode" class="form-control" placeholder="Enter coupon code" value="<%= editedCoupon.couponCode %>"  />
-
          </div>
 
          <div class="form-group col-md-6">
@@ -66,13 +61,10 @@
            <% if(message){%>
             <span style="color: red;"><%= message %></span>
             <%}%>
-
          </div>
-
        </div>
 
        <div class="form-row">
-        
          <div class="form-group col-md-6">
            <label for="productDiscount">productDiscount:</label>
            <div class="input-group">
@@ -95,7 +87,6 @@
             <span style="color: red;"><%= errorMessage %></span>
             <% } %>
          </div>
-
        </div>
    
 

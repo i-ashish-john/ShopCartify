@@ -18,20 +18,23 @@
  <link rel="stylesheet" href="/product-admin-master/css/templatemo-style.css">
 </head>
 <body>
- <nav class="navbar navbar-expand-xl">
+ <nav class="navbar navbar-expand-xl bg-warning">
    <!-- Navbar code here -->
  </nav>
  
  <div class="container tm-mt-big tm-mb-big">
    <div class="row">
      <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
-       <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+       <div class="tm-block tm-block-h-auto"  style="background-color: #6c757d;" >
          <div class="row">
            <div class="col-12">
+            <% if (productError) { %>
+             <h4  class="p-1 mb-2 bg-danger text-white"><%= productError %></h4>
+            <% } %>
              <h2 class="tm-block-title d-inline-block">Add Product</h2>
            </div>
          </div>
-         <div class="row tm-edit-product-row">
+         <div class="row product-row">
            <div class="col-xl-6 col-lg-6 col-md-12">
 
              <form action="/admin/productmanagePost" method="post" enctype="multipart/form-data">
@@ -53,6 +56,10 @@
                 <label for="productPrice">Product Price:</label>
                 <input type="number" id="productPrice" name="price" step="0.01" class="form-control validate" >
                </div>
+               <% if (priceError) { %>
+                <h5 style="color: red;"><%= priceError %></h5>           
+            <% } %> 
+            
                <!-- Category, Stock, Description -->
                <div class="form-group mb-3">
                 <label for="category">Category:</label>
@@ -65,7 +72,10 @@
                <div class="form-group mb-3">
                 <label for="stock">Stock:</label>
                 <input type="number" id="stock" name="stock" class="form-control validate" >
-               </div>
+            </div>
+            <% if (stockError) { %>
+                <h5 style="color: red;"><%= stockError %></h5>           
+            <% } %> 
 
                <div class="form-group mb-3">
                 <label for="Discount">Product Discount:</label>
@@ -191,7 +201,7 @@
       </div>
   </div>
 
- <footer class="tm-footer row tm-mt-small">
+ <footer class="tm-footer row tm-mt-small bg-warning">
    <!-- Footer code here -->
  </footer>
 

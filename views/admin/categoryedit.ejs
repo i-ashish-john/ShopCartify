@@ -62,14 +62,19 @@
       <!-- Category Name -->
       <label for="categoryName">Category Name:</label>
       <input type="text" id="categoryName" name="categoryName"  value="<%=categoriesData.categoryName%>" required />
+      <% if (nameagn) { %>
+       <p class="text-danger"><%= nameagn%></p>
+      <% } %>
       <!-- Category Description -->
       <label for="categoryDescription">Category Description:</label>
       <input id="categoryDescription"  type="text"  name="categoryDescription"  value="<%= categoriesData.categoryDescription %>" required/ >
-      <!-- Deleted -->
-    
+      <!--  -->
+      <% if (spaceError) { %>
+        <p class="text-danger"><%= spaceError%></p>
+       <% } %>
       <!-- Error Message -->
       <div class="error-message">
-        <p><%= locals.categoryError %></p>
+        <p><%= locals.spaceError %></p>
       </div>
       <!-- Submit Button -->
       <button type="submit">edit Category</button>

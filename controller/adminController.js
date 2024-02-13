@@ -316,7 +316,9 @@ const logout = (req, res) => {
 
 const productmanage = async (req, res) => {
   try {
-    res.render("admin/productAdd");
+    // res.render("admin/productAdd",{productError:''});
+    return res.render('admin/productAdd', { productError:'',stockError:'',priceError:''});
+
   } catch (error) {
     console.log("error in productlist", error);
   }
@@ -378,7 +380,13 @@ const productmanagePost = async (req, res) => {
     const images = req.files.map(file => `public/uploads/${file.filename}`);
 
     if (!req.body.Name.trim() || !req.body.price.trim() || !req.body.category.trim() || !req.body.stock.trim() || !req.body.description.trim() ) {
-      return res.render('admin/productAdd', { productError: 'All fields are required and cannot be just spaces' });
+      return res.render('admin/productAdd', { productError: 'All fields are required and cannot be just spaces',stockError:'',priceError:''});
+    }
+    if(req.body.stock<1){
+      return res.render('admin/productAdd', { stockError: 'stock cannot be add less than 1',productError:'',priceError:'' });
+    }
+    if(req.body.price < 1){
+      return res.render('admin/productAdd',{ priceError: 'price must be 1 or greater',productError:'',stockError:'' });
     }
 
     console.log('body', req.body);
@@ -392,7 +400,6 @@ const productmanagePost = async (req, res) => {
       Discount:req.body.Discount,
       Images:images,
     };
-
     const Product = await productCollection.insertMany([productDetails]);
     if (productDetails && Product) {
       res.redirect('/admin/productlist');
@@ -418,7 +425,7 @@ const productlist = async (req, res) => {
     const searchTerm = req.query.search;
 
     if (searchTerm) {
-      query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }], deleted: false };
+      query = { $and: [{ name: { $regex: searchTerm, $options: 'i' } }, { deleted: false }] };
     } else {
       query = { deleted: false };
     }
@@ -433,7 +440,7 @@ const productlist = async (req, res) => {
     const skip = (currentPage - 1) * limit;
 
     const products = await productCollection.find(query).skip(skip).limit(limit);
-    console.log('products are :',products);
+
     res.render("admin/productManagement", {
       categories,
       fullProducts,
@@ -447,6 +454,8 @@ const productlist = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+
 
 
 
@@ -538,73 +547,58 @@ const editproduct = async (req, res) => {
 
 
 const categoryadd = async (req, res) => {
-  res.render('admin/categoryAdd');
+  try{
+    res.render('admin/categoryAdd');
+
+  }catch(error){
+    console.log(error.message);
+    res.status(500).json({ error: ' Category adding Backend error' });  }
 };
 
 const categoryaddPost = async (req, res) => {
-  const datas = {
-    categoryName: req.body.categoryName,
-    categoryDescription: req.body.categoryDescription,
-  };
-    // Check if category name or category description is empty
-    if (!datas.categoryName || !datas.categoryDescription) {
+  try {
+    console.log("Reached categoryaddPost");
+    const categoryName = req.body.categoryName;
+    const categoryDescription = req.body.categoryDescription;
+
+    console.log("datas value", categoryDescription, categoryName);
+    if (!categoryName || !categoryDescription) {//empty checking
       return res.render('admin/categoryAdd', { categoryError: 'Category name and description are required' });
     }
-    if (!datas.categoryName.trim() || !datas.categoryDescription.trim()) {
+    if (!categoryName.trim() || !categoryDescription.trim()) {
       return res.render('admin/categoryAdd', { categoryError: 'Category name and description are required and cannot be just spaces' });
     }
-    
 
-  try {
-    const existingCategory = await CategoryCollection.findOne({ categoryName: { $regex: new RegExp('^' + datas.categoryName + '$', 'i') } });
-    const categories = existingCategory;
+    const existingCategory = await CategoryCollection.find({ categoryName: categoryName });
     if (existingCategory) {
-      // Category with the same name already exists
-      return res.render('admin/categoryAdd', { categoryError: 'Category with the same name already exists', categories });
+     return res.render('admin/categoryAdd', { categoryError: 'Category with the same name already exists' });
+    } else {
+      await CategoryCollection.create({ categoryName, categoryDescription });
+      console.log("new category created");
     }
 
-    await CategoryCollection.create(datas);
     res.redirect("/admin/categorymanage");
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     res.status(500).send('Internal Server Error');
   }
 };
 
 
-const categorymanage = async (req, res) => {
+const categorymanage = async (req, Res) => {
   try {
-    // Assuming categoryCollection is your MongoDB collection
-    // const categories = await CategoryCollection.find({ deleted: false });
-    const categories = await CategoryCollection.find();
-    const fullProducts = await productCollection.find();
-    // let query = {};
-    // const searchTerm = req.query.search;
- 
-    // if (searchTerm) {
-    //   query = { $or: [{ name: { $regex: searchTerm, $options: 'i' } }], deleted: false };
-    // } else {
-    //   query = { deleted: false };
-    // }
- 
-    // const page = parseInt(req.query.page) || 1;
-    // const limit = 5;
- 
-    // const totalProducts = await productCollection.countDocuments(query);
-    // const totalPages = Math.ceil(totalProducts / limit);
- 
-    // const skip = (page - 1) * limit;
-    // const products = await productCollection.find();
-    res.render("admin/productManagement", {
-      categories,
-      fullProducts,
-      products:'',
-      currentPage:'',// page,
-      totalPages:'',
-      searchTerm:' ',
-    });
+    // const categories = await CategoryCollection.find();
+    // const fullProducts = await productCollection.find();
+    // res.render("admin/productManagement", {
+    //   categories,
+    //   fullProducts,
+    //   products:'',
+    //   currentPage:'',
+    //   totalPages:'',
+    //   searchTerm:'',
+    // });
+    Res.redirect('/admin/productlist');
   } catch (error) {
-    // Handle any errors, for example, log the error and render an error page
     console.error("Error fetching categories:", error);
   }
 };
@@ -625,8 +619,7 @@ const categorydelete = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
-const categoryeditpage = async (req, res) => {
+const categoryeditpage = async (req, res) => {//this function is for rendering the category details 
   console.log('editpage');
   try {
     console.log("the data  is here 1211212");
@@ -635,7 +628,7 @@ const categoryeditpage = async (req, res) => {
     const allCategories = await CategoryCollection.find();
 
     if (allCategories.length > 0) {
-      res.render('admin/categoryedit', { categoriesData });
+      res.render('admin/categoryedit', { categoriesData ,nameagn:'',spaceError:''});
       console.log(categoriesData);
     } else {
       console.log('No categories found');
@@ -645,16 +638,53 @@ const categoryeditpage = async (req, res) => {
   }
 };
 
-const categoryedit = async (req, res) => {
+const categoryedit = async (req, res) => {//this function is for updating the category editted data
   try {
-    const categoryId = req.params.id;
-    const updates = req.body; // Assuming updates are coming from the request body
+    console.log("hello reached in the category edit updation ^^^^^^")
+    const param = req.params.id;
+    console.log('## id',param);
+    const categoriesData = await CategoryCollection.findById(param);
+    console.log("## cate data",categoriesData);
+    // const allCategories = await CategoryCollection.find();
 
-    const result = await CategoryCollection.findByIdAndUpdate(categoryId, updates);
+    const categoryName = req.body.categoryName;
+    const categoryDescription = req.body.categoryDescription;
 
+    if (categoryName === '' || categoryDescription === '') {
+      const spaceError = 'All fields must be filled out';
+      return res.render('admin/categoryedit', {
+        spaceError,
+        nameagn: '',
+        categoriesData,
+      });
+    }
+
+    const existingCategory = await CategoryCollection.findOne({ categoryName:categoryName });
+    console.log("existing category:",existingCategory);
+
+    if (existingCategory ){//&& existingCategory._id != param) {
+      const nameagn = 'This name is already in use';
+      return res.render('admin/categoryedit', {
+        nameagn,
+        categoriesData,
+        spaceError: '',
+      });
+    }
+
+    const updates = {
+      categoryName,
+      categoryDescription,
+    };
+
+    const result = await CategoryCollection.findByIdAndUpdate(
+      param,
+      updates
+    );
     if (result) {
-      // Category updated successfully
-      res.redirect("/admin/categorymanage"); // Redirect to the category management page
+      console.log('Category updated successfully');
+      res.redirect('/admin/productlist');
+      // res.redirect('/admin/categorymanagement');
+      // res.redirect('categorymanage');
     } else {
       console.log('Error updating category');
     }
@@ -663,6 +693,26 @@ const categoryedit = async (req, res) => {
     // Handle the error
   }
 };
+
+//below is orginal above i testing
+// const categoryedit = async (req, res) => {
+//   try {
+//     const categoryId = req.params.id;
+//     const updates = req.body; // Assuming updates are coming from the request body
+
+//     const result = await CategoryCollection.findByIdAndUpdate(categoryId, updates);
+
+//     if (result) {
+//       // Category updated successfully
+//       res.redirect("/admin/categorymanage"); // Redirect to the category management page
+//     } else {
+//       console.log('Error updating category');
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     // Handle the error
+//   }
+// };
 
 const orders = async (req, res) => {
   try {
