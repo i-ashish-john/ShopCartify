@@ -601,47 +601,18 @@
         
 
 <script>
-    
-   // Define searchableItems globally
+// Define searchableItems globally
 const searchInput = document.getElementById('userSearch-all');
-const searchableItems = document.querySelectorAll('.searchable-item-all');
+const searchableItems = document.querySelectorAll('.card.hover');
 
 searchInput.addEventListener('input', () => {
     const searchText = searchInput.value.toLowerCase();
-    let found = false;
-  console.log("hello reached");
     searchableItems.forEach(item => {
-        const itemText = item.textContent.toLowerCase();
-
-        if (itemText.includes(searchText)) {
-            item.style.display = 'block';
-            found = true;
-        } else {
-            item.style.display = 'none';
-        }
+        const itemText = item.querySelector('.fw-bolder').textContent.toLowerCase();
+        item.style.display = itemText.includes(searchText) ? 'block' : 'none';
     });
 });
 
-// function applyPriceFilter() {
-//     const minPrice = parseFloat(document.getElementById('minPrice').value);
-//     const maxPrice = parseFloat(document.getElementById('maxPrice').value);
-
-//     // Hide all products initially
-//     searchableItems.forEach(item => {
-//         item.style.display = 'none';
-//     });
-
-//     // Show products within the price range
-//     searchableItems.forEach(item => {
-//         const priceElement = item.querySelector('.fs-5');
-//         if (!priceElement) return;
-//         const price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g,""));
-
-//         if (price >= minPrice && price <= maxPrice) {
-//             item.style.display = 'block';
-//         }
-//     });
-// }
 </script>
 <!-- /////////////// -->
 <script>
