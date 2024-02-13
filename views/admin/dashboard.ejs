@@ -113,7 +113,7 @@
             <div class="row tm-content-row" style="color: aquamarine;">
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
                     <div class="tm-bg-pr tm-block" style="background-color:  rgb(217, 217, 217);">
-                        <h2 class="tm-block-title">Weekly </h2>
+                        <h2 class="tm-block-title">Daily </h2>
                         <canvas id="weeklyChart">Weekly chart</canvas>
                     </div>
                 </div>
@@ -261,7 +261,7 @@
       
       <script>
          // Monthly Chart
-        const monthlyOrderCounts ='<%= JSON.stringify(monthlyOrderCounts) %>';
+        const orders ='<%= orders %>';
        
         // const monthlyLabels = monthlyOrderCounts.map(entry => entry.month);
         // const monthlyValues = monthlyOrderCounts.map(entry => entry.totalOrders);
@@ -269,24 +269,23 @@
             const monthlyChartCanvas = document.getElementById('monthlyChart');
       
         new Chart(monthlyChartCanvas, {
-          type: 'bar',
+          type: 'radar',
           data: {
             labels: ['JAN','FEB','MAR','APR','MAY','JUN','JULY','AUG','SEP','OCT','NOV','DEC'],
             datasets: [{
-              label: 'ORDER',
-              data:['<%=monthlyOrderCounts[0].totalOrders%>'],
+              label: 'orders',
+              data:orders,
               backgroundColor: [
-        'rgba(255, 99, 132, 10)',   // JAN
-        'rgba(54, 162, 235, 0.2)',  // FEB
-        'rgba(255, 206, 86, 0.2)',  // MAR
-      
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        
-      ],
+                'rgba(75, 192, 192, 0.2)',   // JAN - Teal
+                'rgba(255, 99, 132, 0.2)',   // FEB - Red
+                'rgba(255, 206, 86, 0.2)',   // MAR - Yellow
+                ],
+                borderColor: [
+                'rgba(75, 192, 192, 1)',    // JAN - Teal
+                'rgba(255, 99, 132, 1)',    // FEB - Red
+                'rgba(255, 206, 86, 1)',    // MAR - Yellow
+                ],
+
               borderWidth: 1
             }]
           },
@@ -298,20 +297,17 @@
             }
           }
         });
-
-
-
             // Weekly Chart
-    const weeklyOrderCount = '<%= JSON.stringify(weeklyOrderCount) %>';
-    console.log('<%=weeklyOrderCount%>')
+    const dayOfWeek = '<%= (dayOfWeek) %>';
+    const count= '<%=(count) %>';
     const weeklyChartCanvas = document.getElementById('weeklyChart');
     new Chart(weeklyChartCanvas, {
-          type: 'bar',
+          type: 'line',
           data: {
-            labels:['SUN','MON','TUE','WED','THURS','FRI','SAT',],
+            labels:dayOfWeek.split(','),
             datasets: [{
               label: 'Orders',
-              data: weeklyOrderCount,
+              data:count.split(','),
               backgroundColor: [
         'rgb(88, 190, 238,0.9) ', 
         'rgba(255, 99, 71, 0.9)',  
@@ -336,9 +332,7 @@
           }
         });
       </script> 
-        <% 
-        console.log(weeklyOrderCount);
-        %>
+       
       <script>
   
         // Yearly Chart

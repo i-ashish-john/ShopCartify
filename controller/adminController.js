@@ -29,33 +29,44 @@ const getWeeklyOrderCount = async () => {
     const endOfWeek = new Date();
     endOfWeek.setHours(23, 59, 59, 999);
     endOfWeek.setDate(endOfWeek.getDate() + (6 - endOfWeek.getDay()));
-
+    console.log("strat week",startOfWeek);
+    console.log("END week",endOfWeek);
+   
     const orderCount = await orderCollection.aggregate([
       {
-        $match: {
-          orderDate: {
-            $gte: startOfWeek,
-            $lte: endOfWeek,
-          },
-        },
-      },
-      {
         $group: {
-          _id: null,
+            _id: { $dateToString: { format: '%Y-%m-%d', date: '$orderDate' } },
           totalOrders: { $sum: 1 },
         },
       },
-      {
-        $project: {
-          _id: 0,
-          totalOrders: 1,
-        },
-      },
     ]);
+    console.log("orderscount",orderCount);
+
+    let date=[]
+    orderCount.forEach((order)=>{
+   date.push(order._id)
+    })
+    console.log('date is :',date);
+
+    let dayOfWeek = date.map(item => {
+      const day = new Date(item).toLocaleDateString('en-US', { weekday: 'short' });
+      return day;
+    });
+    console.log("dayOfWeek",dayOfWeek);
+
+   
+
+    let count=[]
+
+    orderCount.forEach((order)=>{
+      count.push(order.totalOrders)
+       })
+ 
+       console.log("count",count);
 
     if (orderCount && orderCount.length > 0 && orderCount[0].totalOrders !== undefined) {
       const [{ totalOrders }] = orderCount;
-      return orderCount;
+      return {dayOfWeek,count};
     } else {
       return 0; // Handle the case where totalOrders is not available
     }
@@ -68,7 +79,7 @@ const getWeeklyOrderCount = async () => {
 const getMonthlyOrderCount = async () => {
   const currentYear = new Date().getFullYear();
   console.log("reached");
-
+  console.log("currentYear",currentYear);
   const monthlyCounts = await orderCollection.aggregate([
     {
       $match: {
@@ -83,7 +94,7 @@ const getMonthlyOrderCount = async () => {
         _id: { $dateToString: { format: '%Y-%m', date: '$orderDate' } },
         totalOrders: { $sum: 1 },
       },
-    },
+    },  
     {
       $project: {
         _id: 0,
@@ -92,7 +103,20 @@ const getMonthlyOrderCount = async () => {
       },
     },
   ]);
-  return monthlyCounts;
+console.log("monthlyCounts",monthlyCounts);
+  let orders=[];
+  monthlyCounts.forEach((months)=>{
+    orders.push(months.totalOrders);
+  })
+console.log('the orders of the month is here :',orders);
+
+let months=[];
+monthlyCounts.forEach((orderMonths)=>{
+  months.push(orderMonths.month)
+})
+// const month
+  console.log("monthly",months);
+  return {orders,months};
 };
 
 const getYearlyOrderCount = async () => {
@@ -116,18 +140,26 @@ const getYearlyOrderCount = async () => {
 
 
 const dashboardForAdmin = async (req, res) => {
+  console.log("1");
   const ITEMS_PER_PAGE = 5;
  const page = parseInt(req.query.page) || 1;
  const skip = (page - 1) * ITEMS_PER_PAGE;
  const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
  const totalCount = await orderCollection.countDocuments();
- const weeklyOrderCount = await getWeeklyOrderCount();
- const monthlyOrderCounts = await getMonthlyOrderCount();
+ const {dayOfWeek,count} = await getWeeklyOrderCount();
+ console.log("gffg");
+ console.log("date",dayOfWeek,count);
+ const {orders,months}= await getMonthlyOrderCount();
+ console.log("orders",orders,months);
  const yearlyOrderCount = await getYearlyOrderCount();
+ 
  res.render('admin/dashboard', {
     fullData,
-    weeklyOrderCount,
-    monthlyOrderCounts,
+    dayOfWeek,
+    count,
+    orders,
+    months,
+    
     yearlyOrderCount,
     currentPage: page,
     totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
@@ -137,6 +169,7 @@ const dashboardForAdmin = async (req, res) => {
 
   const dashboard = async (req, res) => {
     try {
+      console.log("2");
       if (req.session.admin) {  
         const ITEMS_PER_PAGE = 5;
         const page = parseInt(req.query.page) || 1;
@@ -144,12 +177,14 @@ const dashboardForAdmin = async (req, res) => {
         const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
         const totalCount = await orderCollection.countDocuments();
         const weeklyOrderCount = await getWeeklyOrderCount();
-        const monthlyOrderCounts = await getMonthlyOrderCount();
+        const{orders,months} = await getMonthlyOrderCount();
         const yearlyOrderCount = await getYearlyOrderCount();
+ 
         res.render('admin/dashboard', {
           fullData,
           weeklyOrderCount,
-          monthlyOrderCounts,
+          orders,
+          months,
           yearlyOrderCount,
           currentPage: page,
           totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
@@ -164,6 +199,7 @@ const dashboardForAdmin = async (req, res) => {
   };
 
 const adminlogin = async (req, res) => {
+  console.log("3");
   if (req.session.admin) {
     const ITEMS_PER_PAGE = 5;
     const page = parseInt(req.query.page) || 1;
@@ -171,12 +207,14 @@ const adminlogin = async (req, res) => {
     const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
     const totalCount = await orderCollection.countDocuments();
     const weeklyOrderCount = await getWeeklyOrderCount();
-    const monthlyOrderCounts = await getMonthlyOrderCount();
+    const {orders,months} = await getMonthlyOrderCount();
     const yearlyOrderCount = await getYearlyOrderCount();
     res.render('admin/dashboard', {
        fullData,
        weeklyOrderCount,
        monthlyOrderCounts,
+       orders,
+       months,
        yearlyOrderCount,
        currentPage: page,
        totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
@@ -187,8 +225,8 @@ const adminlogin = async (req, res) => {
 };
 
 const postlogin = async (req, res) => {
-  const { username, password } = req.body;
-        
+  console.log("4");
+  const { username, password } = req.body;    
 
   // Check if username or password is not provided or contains only spaces
   if (!username || !password || username.trim() === '' || password.trim() === '') {
@@ -205,20 +243,27 @@ const postlogin = async (req, res) => {
       req.session.admin = username;
 
       const users = await userCollection.find();
-      console.log("user in the post login", users);
+      // console.log("user in the post login", users);
       const ITEMS_PER_PAGE = 5;
       const page = parseInt(req.query.page) || 1;
       const skip = (page - 1) * ITEMS_PER_PAGE;
       const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
       const totalCount = await orderCollection.countDocuments();
-      const weeklyOrderCount = await getWeeklyOrderCount();
-      const monthlyOrderCounts = await getMonthlyOrderCount();
+      // const date0f = await getWeeklyOrderCount();
+      const {dayOfWeek,count} = await getWeeklyOrderCount();
+      console.log("gffg");
+      console.log("date",dayOfWeek,count);
+   
+      const {orders,months} = await getMonthlyOrderCount();
       const yearlyOrderCount = await getYearlyOrderCount();
+      console.log("monthlyCount:>",orders,months);
       res.render('admin/dashboard', {
          fullData,
          users,
-         weeklyOrderCount,
-         monthlyOrderCounts,
+         dayOfWeek,
+         count,
+         orders,
+         months,
          yearlyOrderCount,
          currentPage: page,
          totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
