@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controller/userController');
-const cartController = require('../controller/cartController');
-const orderController = require('../controller/orderController');
-const forgotpassController = require('../controller/forgotpassController');
-const returnController = require('../controller/returnController');
+const userController = require('../controller/UsersController/userController');
+
+const cartController = require('../controller/UsersController/cartController');
+const orderController = require('../controller/UsersController/orderController');
+const forgotpassController = require('../controller/UsersController/forgotpassController');
+const returnController = require('../controller/UsersController/returnController');
 
 const Usersession = require('../middleware/user/userAuth');
 const blockedAuth = require('../middleware/user/userBlockedAuth');

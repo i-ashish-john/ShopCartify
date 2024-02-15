@@ -1,14 +1,14 @@
 const session = require('express-session');
 const mongoose = require('mongoose');
-const adminCollection = require('../model/adminCollection')
-const userCollection = require('../model/userCollection');
-const productCollection = require('../model/productCollection');
-const CategoryCollection = require('../model/categoryCollection');
-const orderCollection = require('../model/orderCollection');
-const addressCollection = require('../model/addressCollection');
-const returnCollection = require('../model/returnCollection');
-const walletCollection = require('../model/walletCollection');
-const couponCollection = require('../model/couponCollection');
+const adminCollection = require('../../model/adminCollection')
+const userCollection = require('../../model/userCollection');
+const productCollection = require('../../model/productCollection');
+const CategoryCollection = require('../../model/categoryCollection');
+const orderCollection = require('../../model/orderCollection');
+const addressCollection = require('../../model/addressCollection');
+const returnCollection = require('../../model/returnCollection');
+const walletCollection = require('../../model/walletCollection');
+const couponCollection = require('../../model/couponCollection');
 const moment = require('moment');
 const excel = require('exceljs');
 const stream = require('stream');
@@ -176,15 +176,16 @@ const dashboardForAdmin = async (req, res) => {
         const skip = (page - 1) * ITEMS_PER_PAGE;
         const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
         const totalCount = await orderCollection.countDocuments();
-        const weeklyOrderCount = await getWeeklyOrderCount();
+        const {dayOfWeek,count}  = await getWeeklyOrderCount();
         const{orders,months} = await getMonthlyOrderCount();
         const yearlyOrderCount = await getYearlyOrderCount();
  
         res.render('admin/dashboard', {
           fullData,
-          weeklyOrderCount,
           orders,
           months,
+          dayOfWeek,
+          count, 
           yearlyOrderCount,
           currentPage: page,
           totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE)
@@ -206,13 +207,15 @@ const adminlogin = async (req, res) => {
     const skip = (page - 1) * ITEMS_PER_PAGE;
     const fullData = await orderCollection.find().skip(skip).limit(ITEMS_PER_PAGE);
     const totalCount = await orderCollection.countDocuments();
-    const weeklyOrderCount = await getWeeklyOrderCount();
+    const {dayOfWeek,count} = await getWeeklyOrderCount();
     const {orders,months} = await getMonthlyOrderCount();
     const yearlyOrderCount = await getYearlyOrderCount();
     res.render('admin/dashboard', {
        fullData,
-       weeklyOrderCount,
-       monthlyOrderCounts,
+       dayOfWeek,
+       count ,
+      orders,
+      months,
        orders,
        months,
        yearlyOrderCount,

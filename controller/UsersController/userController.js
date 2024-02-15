@@ -1,21 +1,22 @@
 const { verify } = require('crypto');
 // const session = require('session');
 const session = require('express-session');
-const userCollection = require('../model/userCollection');
-const productCollection = require('../model/productCollection');
-const walletCollection = require('../model/walletCollection');
+const userCollection = require('../../model/userCollection');
+const productCollection = require('../../model/productCollection');
+const walletCollection = require('../../model/walletCollection');
 // const categoryCollection = require('../model/categoryCollection');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const generateOtp = require('generate-otp');
-const cartCollection = require('../model/cartCollection');
-const addressCollection = require('../model/addressCollection');
-const orderCollection = require('../model/orderCollection');
+const cartCollection = require('../../model/cartCollection');
+const addressCollection = require('../../model/addressCollection');
+const orderCollection = require('../../model/orderCollection');
 const { log } = require('console');
 const mongoose = require('mongoose');
 const Swal = require('sweetalert2');
-const couponCollection = require('../model/couponCollection');
-const whishlistCollection = require('../model/whishlistCollection');
+const couponCollection = require('../../model/couponCollection');
+const whishlistCollection = require('../../model/whishlistCollection');
+const bannerCollection = require('../../model/bannerCollection');
 // const flash = require('express-flash');
 require('dotenv').config();
 
@@ -30,9 +31,10 @@ const home = async (req, res) => {
     const loguser = req.session.user;
     const fetchedUser = await userCollection.find();
     const productsOfUser = await productCollection.find();
+    const banners = await bannerCollection.find();
     const CartData = await cartCollection.findOne({ email: loguser });
     console.log("cart datas were :", CartData);
-    return res.render("user/home", { user: fetchedUser, products: productsOfUser, cart: CartData });
+    return res.render("user/home", { user: fetchedUser,banners:banners, products: productsOfUser, cart: CartData });
 
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -53,7 +55,8 @@ const login = async (req, res) => {
     if (req.url == "/") {
       const fetchedUser = await userCollection.find();
       const products = await productCollection.find();
-      res.render('user/home', { user: fetchedUser, products: products });
+      const banners = await bannerCollection.find();
+      res.render('user/home', { user: fetchedUser, banners:banners,products: products });
 
     } else {
       res.render('user/userlogin');
@@ -87,7 +90,8 @@ const loginpost = async (req, res) => {
       req.session.user = req.body.email;
       const fetchedUser = await userCollection.find();
       const products = await productCollection.find();
-      res.render('user/home', { user: fetchedUser, products: products });
+      const banners = await bannerCollection.find();
+      res.render('user/home', { user: fetchedUser, banners:banners,products: products });
 
     } else {
       res.render('user/userlogin', { validation: 'Invalid username or password' });
@@ -292,7 +296,8 @@ const back = async (req, res) => {
 
   const fetchedUser = await userCollection.find();
   const products = await productCollection.find();
-  res.render("user/home", { user: fetchedUser, products: products });
+  const banners = await bannerCollection.find();
+  res.render("user/home", { user: fetchedUser,banners:banners, products: products });
 };
 
 
@@ -554,7 +559,7 @@ const NewAddressAddedForUser = async (req, res) => {
 //   res.render("user/AddingCheckoutAddress");
 // }
 
-const addCheckoutAddressPost = async (req, res) => {
+const addCheckoutAddressPost = async (req, res) => {  
   try {
     const { street, country, city, state, zip } = req.body;
 

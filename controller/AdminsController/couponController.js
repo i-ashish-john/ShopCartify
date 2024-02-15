@@ -1,15 +1,16 @@
 const session = require('express-session');
 const mongoose = require('mongoose');
 const { ObjectId } = require('mongodb');
-const adminCollection = require('../model/adminCollection')
-const userCollection = require('../model/userCollection');
-const productCollection = require('../model/productCollection');
-const CategoryCollection = require('../model/categoryCollection');
-const orderCollection = require('../model/orderCollection');
-const addressCollection = require('../model/addressCollection');
-const returnCollection = require('../model/returnCollection');
-const walletCollection = require('../model/walletCollection');
-const couponCollection = require('../model/couponCollection');
+const adminCollection = require('../../model/adminCollection')
+const userCollection = require('../../model/userCollection');
+const productCollection = require('../../model/productCollection');
+const CategoryCollection = require('../../model/categoryCollection');
+const orderCollection = require('../../model/orderCollection');
+const addressCollection = require('../../model/addressCollection');
+const returnCollection = require('../../model/returnCollection');
+const walletCollection = require('../../model/walletCollection');
+const couponCollection = require('../../model/couponCollection');
+
 
 
 const couponControllerFunction={
@@ -122,22 +123,22 @@ const couponControllerFunction={
               res.render('admin/couponEdit', { errorMessage: 'Please enter values in all the fields' ,editedCoupon:editedCoupon,message:''});
               return; 
           }
-          if(req.body.couponCode == existingCoupon){
+          if(DatasToUpdate.couponCode == existingCoupon){
               let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
 
               res.render('admin/couponEdit', { errorMessage: 'This coupon name is already used' ,editedCoupon:editedCoupon,message:''});
           }
-          if(existingCoupon.productDiscount > 100){
+          if(DatasToUpdate.productDiscount > 100){
               let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
 
               res.render('admin/couponEdit', { errorMessage: 'cannot be greater than 100' ,editedCoupon:editedCoupon,message:''});
           }
-          if(existingCoupon.productDiscount < 1){
+          if(DatasToUpdate.productDiscount < 1){
               let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
 
               res.render('admin/couponEdit', { errorMessage: 'cannot be less than 1' ,editedCoupon:editedCoupon,message:''});
           }
-          if (existingCoupon.minimumPurchaseValue < 1) {
+          if (DatasToUpdate.minimumPurchaseValue < 1) {
               let editedCoupon = await couponCollection.findOne({ couponCode: req.session.coupon });
 
               console.log("enter or wot??");

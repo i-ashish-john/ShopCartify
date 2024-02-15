@@ -5,8 +5,10 @@ const router = express.Router();
 router.use(express.urlencoded({ extended: true }))
 const multer = require('multer')
 const AdminSession = require('../middleware/admin/AdminSession');
-const adminController = require('../controller/adminController');
-const couponController = require('../controller/couponController');
+const bannerCollection = require('../model/bannerCollection');
+const adminController = require('../controller/AdminsController/adminController');
+const couponController = require('../controller/AdminsController/couponController');
+const bannerController = require("../controller/AdminsController/bannerController");
 
 const storage = multer.diskStorage({ 
   destination: (req, file, cb) => {
@@ -48,23 +50,24 @@ router.post('/categoryManagementdelete/:id',AdminSession, adminController.catego
 router.post('/categoryeditpage/:id',AdminSession, adminController.categoryeditpage);
 router.post('/categoryManagementedit/:id',AdminSession, adminController.categoryedit);
 router.get('/orders',AdminSession,adminController.orders);
-//herer
+//banner section starts--->
+router.get('/bannerLoadPage',AdminSession,bannerController.BannerLoadPageInAdminSide);
+router.get('/AddBannerPage',AdminSession,bannerController.AddBannerPageLoadInAdminSide)
+router.post('/InsertingBannerDetails', AdminSession, upload.fields([{ name: 'image', maxCount: 1 }]), bannerController.ForInsertingDetailsOfBanner);
+router.post('/BannerDeletePageLoad/:id', AdminSession, bannerController.EditBannerPageLoadingInAdminSide);
+//banner section ends--->
 router.post('/ordersPost/:id',AdminSession,adminController.ordersPost);//this is the code
-
 router.get('/couponmanage',AdminSession,couponController.couponPageLoad);
 router.get('/couponAddingGet',AdminSession,couponController.couponAdding);
 router.post('/couponmanagePost',AdminSession,couponController.couponAddingPost);
 router.get('/couponEdit/:code',AdminSession,couponController.geteditCoupon);
 router.post('/couponEditBackPost', AdminSession, couponController.posteditCoupon);
-
 router.get('/couponDelete/:code',AdminSession,couponController.getDeleteCoupon)
-
 //chart js route
 router.get('/getMonthlyData',AdminSession,adminController.getMonthlyData);
 router.get('/getYearlyData',AdminSession,adminController.getYearlyData);
 
 router.get('/exportOrdersToExcel',AdminSession,adminController.excelDownload)
-
 router.get('/returnOrderManage',adminController.returnManage);
 router.post('/returnApproved/:id',adminController.Approved);
 router.post('/returnDenyed/:id',adminController.Denyed);

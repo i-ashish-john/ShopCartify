@@ -108,6 +108,11 @@
             </div>
 
 
+            <div class="container mt-5">
+                <form action="bannerLoadPage" method="GET">
+                  <button type="submit" class="btn btn-warning ">Send GET Request</button>
+                </form>
+              </div>
 
             <!-- row -->
             <div class="row tm-content-row" style="color: aquamarine;">
@@ -298,6 +303,7 @@
           }
         });
             // Weekly Chart
+        
     const dayOfWeek = '<%= (dayOfWeek) %>';
     const count= '<%=(count) %>';
     const weeklyChartCanvas = document.getElementById('weeklyChart');

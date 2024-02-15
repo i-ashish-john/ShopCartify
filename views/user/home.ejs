@@ -205,32 +205,20 @@
             <li data-target="#header-carousel" data-slide-to="2"></li>
         </ol>
         <div class="carousel-inner">
-            <div class="carousel-item active" style="height: 430px;">
-                <img src="/NEW TEMP/online-shop-website-template/img/carousel-1.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                    <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Men Fashion</h1>
-                    <!-- <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p> -->
-                    <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="/Totallistpro">Shop Now</a>
+            <% for (let i = 0; i < banners.length; i++) { %>
+                <div class="carousel-item <%= i === 0 ? 'active' : '' %>" style="height: 430px;">
+                    <img src="<%= banners[i].image.data.slice(6) %>" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown"><%= banners[i].bannerTittle %></h1>
+                        <!-- <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p> -->
+                        <a class= "btn btn-outline-light  py-2 px-4 mt-3 animate__animated"  style="border-radius: 20px;" href="<%= banners[i].bannerUrl %>">Shop Now</a>
+                    </div>
                 </div>
-            </div>
-    
-            <div class="carousel-item" style="height: 430px;">
-                <img src="/NEW TEMP/online-shop-website-template/img/carousel-2.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                    <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Women Fashion</h1>
-                    <!-- <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p> -->
-                    <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="/WomensTotallistpro">Shop Now</a>
-                </div>
-            </div>
-    
-            <div class="carousel-item" style="height: 430px;">
-                <img src="/NEW TEMP/online-shop-website-template/img/carousel-3.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                    <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Kids Fashion</h1>
-                    <!-- <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p> -->
-                    <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="/KidsTotallistpro">Shop Now</a>
-                </div>
-            </div>
+            <% } %>
+        </div>
+
+            
+     
         </div>
         <a class="carousel-control-prev" href="#header-carousel" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
