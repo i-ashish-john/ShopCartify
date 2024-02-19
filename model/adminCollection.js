@@ -1,7 +1,8 @@
 const mongoose= require("mongoose")
-mongoose.connect("mongodb://127.0.0.1:27017/ShopCartify")
+mongoose.connect('mongodb+srv://johnashish509:ASHISH(123)(123)@shopcartify.kqkbee3.mongodb.net/ShopCartify')
 .then(()=>{
-    console.log("admin's mongoDB connected");
+    console.log("admin's mongoDB connected");   
+
 }).catch(()=>{
     console.log("failed to connect admin's mongoDB");
 })

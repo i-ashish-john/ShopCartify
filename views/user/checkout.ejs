@@ -258,7 +258,7 @@
     <!-- Navbar End -->
 
 
-
+<% if(!cartFound.product){%>
  <section class=" py-5 mx-xl-5"  style="background-color: #535f69;">
         <div class="container bg-white">
             <div class="row ma">
@@ -267,34 +267,34 @@
           <div class="card mb-4 border shadow-0">
               <!-- Checkout Form -->
 <!-- Item in Cart -->
-<div class="card">
- <div class="card-header">
-   Items  In The CheckOut
- </div>
- <ul class="list-group list-group-flush">
-   <% cartFound.products.forEach((product) => { %>
-   <li class="list-group-item">
-     <div class="row">
-       <div class="col-md-2">
-         <img src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>" class="img-thumbnail" alt="Product Image">
-       </div>
-       <div class="col-md-10">
-         <h5><%= product.productId.name %></h5>
-         <p>Quantity: <%= product.quantity %></p>
-         <div class="product-total">
-          <% if (product.productId.Discount > 0) { %>
-            <del>₹<%= (product.quantity * product.price).toFixed(2) %></del>
-            <ins>₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
-          <% } else { %>
-            ₹<%= (product.quantity * product.price).toFixed(2) %>
-          <% } %>
-        </div>
-       </div>
-     </div>
-   </li>
-   <% }); %>
- </ul>
-</div>
+      <div class="card">
+      <div class="card-header">
+        Items  In The CheckOut
+      </div>
+      <ul class="list-group list-group-flush">
+        <% cartFound.products.forEach((product) => { %>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-md-2">
+              <img src="<%= product.images && product.images[0]?.slice(6).length > 0 ? product.images[0]?.slice(6) : 'default-image-url' %>" class="img-thumbnail" alt="Product Image">
+            </div>
+            <div class="col-md-10">
+              <h5><%= product.productId.name %></h5>
+              <p>Quantity: <%= product.quantity %></p>
+              <div class="product-total">
+                <% if (product.productId.Discount > 0) { %>
+                  <del>₹<%= (product.quantity * product.price).toFixed(2) %></del>
+                  <ins>₹<%= ((1 - product.productId.Discount / 100) * product.quantity * product.price).toFixed(2) %></ins>
+                <% } else { %>
+                  ₹<%= (product.quantity * product.price).toFixed(2) %>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </li>
+        <% }); %>
+      </ul>
+      </div>
 
 <!-- Checkout Form -->
 <form id="checkOutForm" action="/checkoutpost" method="post">
@@ -480,7 +480,10 @@
  </div>
 
   </section>
- 
+ <%}else{%>
+  <img src="/web 2/images/checkout empty 3.jpg" alt="Product Image">
+<h5 style="color: #e0e0e0;">Checkout is empty</h5>
+  <%}%>
    
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-secondary mt-5 pt-5">

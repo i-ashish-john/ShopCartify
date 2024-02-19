@@ -13,8 +13,9 @@ exports.BannerLoadPageInAdminSide = async(req,res)=>{
         }
     }catch(error){
         console.log("erro in banner load");
-        console.log(error.message);
-        res.JSON.send({message:'error'});
+        res.render('user/404');
+        // console.log(error.message);
+        // res.JSON.send({message:'error'});
     }
 };
 exports.AddBannerPageLoadInAdminSide = async(req,res)=>{
@@ -44,8 +45,9 @@ exports.ForInsertingDetailsOfBanner = async(req,res)=>{
         console.log("added successfully (banner)");
         // res.status(201).json({ message: 'Banner added successfully!' });
     } catch (error) {
-        console.error(error.message);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.render('user/404');
+        // console.error(error.message);
+        // res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 exports.EditBannerPageLoadingInAdminSide = async(req,res)=>{
@@ -57,8 +59,9 @@ exports.EditBannerPageLoadingInAdminSide = async(req,res)=>{
         res.redirect('/admin/bannerLoadPage')//redirecting to the banner listing page itself
         
     }catch(error){
-    console.error(error);
-    console.log(error.message);
+        res.render('user/404');
+    // console.error(error);
+    // console.log(error.message);
 
     }
 }

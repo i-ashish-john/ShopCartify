@@ -1,6 +1,6 @@
 const mongoose=require ('mongoose');
 
-mongoose.connect('mongodb://127.0.0.1:27017/ShopCartify', {
+mongoose.connect('mongodb+srv://johnashish509:ASHISH(123)(123)@shopcartify.kqkbee3.mongodb.net/ShopCartify', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -8,6 +8,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/ShopCartify', {
     console.log(" user's mongoDB connected")
 }).catch(() => {
     console.log("failed to connect user's mongoDB");
+    // console.log(error.mess);
 });
 const UserSchema=new mongoose.Schema({
     name:{

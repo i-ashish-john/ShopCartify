@@ -29,7 +29,8 @@ const couponControllerFunction={
     
             res.render('admin/couponList', { couponDetails, totalPages, currentPage: page });
         }catch(error){
-            res.send(error);
+            res.render('user/404');
+            // res.send(error);
         }
     },
     couponAdding:async(re,res)=>{
@@ -38,19 +39,22 @@ const couponControllerFunction={
             // }
             res.render('admin/couponAdd',{error:'',discounterror:'',message:'',minimumPurchaseValueError:''});
         }catch(error){
-            res.send(error.message);
+            res.render('user/404');
+            // res.send(error.message);
         }
 
     },
     couponAddingPost: async (req, res) => {
-        try {
+        try {   
             console.log("ENTERED IN TO THE ADDING COUPON PAGE GET");
-            const existingCoupon = await couponCollection.findOne({ couponCode: req.body.couponCode });
+            // const existingCoupon = await couponCollection.findOne({ couponCode: req.body.couponCode });
+            const existingCoupon = await couponCollection.findOne({ couponCode: { $regex: new RegExp("^" + req.body.couponCode + "$", "i") } });
 
             if (existingCoupon) {
                 const error = "Coupon is already added. Please try a different code.";
                 return res.render('admin/couponAdd', { error ,discounterror:'',message:'',minimumPurchaseValueError:''});
             }
+
             if(req.body.productDiscount > 100){
                  const discounterror = "coupon discount cannot be greater than 100";
                  return res.render('admin/couponAdd', { discounterror ,error:'',message:'',minimumPurchaseValueError:''});
@@ -85,7 +89,8 @@ const couponControllerFunction={
             await newCoupon.save();
             res.redirect('/admin/couponmanage');
         } catch (error) {
-            res.status(500).send(error);
+            res.render('user/404');
+            // res.status(500).send(error);
         }
      },
      geteditCoupon: async(req,res) => {
@@ -98,8 +103,9 @@ const couponControllerFunction={
           console.log("the edittedCoupon",editedCoupon);
           res.render('admin/couponEdit', { editedCoupon: editedCoupon , message:'',errorMessage:''});
         } catch (error) {
-          console.error('Error:', error);
-          res.status(500).json({ error: 'Internal Server Error' });
+            res.render('user/404');
+        //   console.error('Error:', error);
+        //   res.status(500).json({ error: 'Internal Server Error' });
         }
     },
     posteditCoupon:async(req,res)=>{//here
@@ -167,7 +173,8 @@ const couponControllerFunction={
           const totalPages = Math.ceil(totalCoupons / limit);
           res.render('admin/couponList',{couponDetails, totalPages, currentPage: page});
       }catch(error){
-        console.error(error);
+        res.render('user/404');
+        // console.error(error);
       }
   },
     
@@ -180,7 +187,8 @@ const couponControllerFunction={
         const updated = await couponCollection.findOneAndDelete(DeleteList);
         res.redirect('/admin/couponmanage');    
         }catch(error){
-            console.error('Error:', error);
+            res.render('user/404');
+            // console.error('Error:', error);
 
         } 
     }
