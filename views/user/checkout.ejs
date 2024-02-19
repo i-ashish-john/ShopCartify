@@ -258,8 +258,8 @@
     <!-- Navbar End -->
 
 
-<% if(!cartFound.product){%>
- <section class=" py-5 mx-xl-5"  style="background-color: #535f69;">
+    <% if(cartFound.products && cartFound.products.length > 0){ %>
+        <section class=" py-5 mx-xl-5"  style="background-color: #535f69;">
         <div class="container bg-white">
             <div class="row ma">
         <!-- Checkout Details -->
@@ -479,12 +479,14 @@
   </div>
  </div>
 
-  </section>
- <%}else{%>
-  <img src="/web 2/images/checkout empty 3.jpg" alt="Product Image">
-<h5 style="color: #e0e0e0;">Checkout is empty</h5>
-  <%}%>
-   
+  
+  <% } else { %>
+    <p class="text-dark">Nothing is inside the checkout</p>
+    <img src="/web 2/images/product ordered checkout page .jpg" alt="Empty Wishlist" style="margin-left: 500px; width:800px; height: 400px;">
+    <% } %>
+    
+</section>
+
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
       <div class="row px-xl-5 pt-5">
