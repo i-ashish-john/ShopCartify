@@ -255,6 +255,7 @@
                             <div class="col-lg-3 col-md-6 col-sm-6 pb-1">
                                 <div class="card border-0 h-100 hover"> <!-- Add the 'hover' class for the hover effect -->
                                     <div class="card-body text-center">
+                                        <a href="/productdetails?id=<%= products[i].id %>"></a>
                                         <div class="mb-3">
                                             <img class="img-fluid mb-4" src="<%= products[i].Images[0]?.slice(6) %>" alt="">
                                         </div>
@@ -275,8 +276,7 @@
                                         <% } %>
                                         <a class="btn btn-outline-dark" id="whishlist" href="#" onclick="addToWishlist('<%= products[i].id %>')">
                                             <i class="far fa-heart"></i>
-                                          </a>
-
+                                        </a>
                                         <a class="btn btn-outline-dark" href="/productdetails?id=<%= products[i].id %>">
                                             <i class="fa fa-search"></i>
                                         </a>
@@ -286,10 +286,10 @@
                         <% } %>
                     </div>
                 <% } else if(products=='') { %>
-                    <img src="/NEW TEMP/online-shop-website-template/img/no-product-found.jpg" alt="">
+                    <img class="img-fluid" src="/NEW TEMP/online-shop-website-template/img/no-product-found.jpg" alt="">
                 <% } else { %>
                     <p>No products were found.</p>
-                    <img src="/NEW TEMP/online-shop-website-template/img/no-product-found.jpg" alt="">
+                    <img class="img-fluid" src="/NEW TEMP/online-shop-website-template/img/no-product-found.jpg" alt="">
                 <% } %>
                 
                 
