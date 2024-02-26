@@ -376,16 +376,27 @@ const checkout = async (req, res) => {
       return res.status(404).send('User not found or missing in the session.');
     }
     // Fetch the user's wallet balance
-// Fetch the user's wallet balance
-const wallet = await walletCollection.findOne({ userId: user._id }) || {};
-const walletBalance = wallet.amounts !== undefined ? wallet.amounts : 0;
-console.log("========",walletBalance);
-
     let cartFound = await cartCollection.findOne({ userId: user._id }).populate({
       path: 'products.productId',
       model: 'collectionOfProduct',
     });
-
+    
+    if (cartFound.products && cartFound.products.length > 0) {
+      for (const cartProduct of cartFound.products) {
+        const productId = cartProduct.productId;
+        const stock = await productCollection.findOne({ _id: productId });
+        const productCurrentStock = stock.get('stock'); // Use get method to access stock property
+        console.log("(((((((stock))))))", productCurrentStock);
+    
+        if (productCurrentStock <= 0) {
+          console.log("hello");
+          res.redirect('/cartload');
+        }
+      }
+    }
+const wallet = await walletCollection.findOne({ userId: user._id }) || {};
+const walletBalance = wallet.amounts !== undefined ? wallet.amounts : 0;
+console.log("========",walletBalance);
     console.log("cartFound is:", cartFound);
     if (cartFound) {
       cartFound.total = totalPrice;
@@ -405,8 +416,8 @@ console.log("========",walletBalance);
     await cartFound.calculateTotal();
     res.render('user/checkout', { user, addresses, cartFound, walletBalance, UsedMessage:'',coupons });
   } catch (error) {
+    // res.send(error.message);
     console.error(error.message);
-    res.send(error.message);
   }
 };
 

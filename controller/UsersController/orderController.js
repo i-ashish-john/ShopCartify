@@ -388,6 +388,8 @@ const checkoutPost = async (req, res) => {
     const productDetailsPromises = cartData.products.map(async product => {
       
       const productDetails = await productCollection.findById(product.productId);
+      console.log("the product details is !!!:",productDetails);
+      
       if (productDetails) {
         const newStock = productDetails.stock - product.quantity;
         if (newStock <  0) {

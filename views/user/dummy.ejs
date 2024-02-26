@@ -28,7 +28,7 @@
 
               .product-image {
                 max-width: 100px;
-                max-height: 100px;  
+                max-height: 100px;
            } 
            .cart-table {
     background-color: #3D464D ; /* Dark background color */
@@ -48,49 +48,6 @@
   }#remove{
     color: #FFD333 ;
   }
-  body {
-            font-family: Arial, sans-serif;
-            align-items: center;
-            margin: 0;
-            padding: 0;
-            /* display: fex; */
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-
-        .modal {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 300px;
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-        } 
-
-        .modal h5 {
-            color: #333;
-        }
-
-        .close-btn {
-            cursor: pointer;
-            font-size: 20px;
-            color: #999;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-        /* Add styles for disabled buttons */
-        .fas.fa-arrow-down.disabled,
-        .fas.fa-arrow-up.disabled {
-          color: #999;
-          pointer-events: none;
-          cursor: not-allowed;
-         
-        } 
-
      </style>
 
     <!-- Favicon -->
@@ -184,7 +141,7 @@
     <!-- Topbar End -->
 
 
-   <!-- Navbar Start -->
+    <!-- Navbar Start -->
     <div class="container-fluid bg-dark mb-30">
         <div class="row px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
@@ -263,6 +220,26 @@
     </div>
     <!-- Navbar End -->
 
+
+    <% if (stockError=='this product is out of stock'){ %>
+      <%console.log('reached in the modal stockError')%>
+      <div class="modal fade" id="stockModal" tabindex="-1" role="dialog" aria-labelledby="stockModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header light-yellow-bg white-glacier-border">
+              <h5 class="modal-title" id="stockModalLabel">Product Out of Stock</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Some products in your cart are currently out of stock. Please remove them from your cart or try again later.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
     <div id="lottieAnimations//" style="height: 300px;"></div>  
  
 
@@ -305,21 +282,22 @@
 
                         <td>
                           <!-- Quantity -->
-                      <!--updating the quantity is here--> 
+                                          <!-- Quantity -->
+                        <!-- Quantity -->
                         <div class="quantity-container">
-                          <a href="javascript:void(0);" onclick="decreaseQuantity('<%=product.productId._id%>', '<%=product.productId.stock%>')">
-                            <i class="fas fa-arrow-down <%= product.productId.stock <= 0 ? 'disabled' : '' %>"></i>
+                          <a href="javascript:void(0);" onclick="decreaseQuantity('<%=product.productId._id%>')">
+                            <i class="fas fa-minus"></i>
                           </a>
-                        
+
                           <div class="quantity total" id='<%=product.productId._id%>' data-product-id="<%= product._id %>">
                             <%= product.quantity %>
                           </div>
-                        
-                          <a href="javascript:void(0);" onclick="increaseQuantity('<%=product.productId._id%>', '<%=product.productId.stock%>')">
-                            <i class="fas fa-arrow-up <%= product.productId.stock <= 0 ? 'disabled' : '' %>"></i>
+
+                          <a href="javascript:void(0);" onclick="increaseQuantity('<%=product.productId._id%>')">
+                            <i class="fas fa-plus"></i>
                           </a>
                         </div>
-                        <!---ends-->
+
 
                         </td>
 
@@ -332,14 +310,6 @@
                               </h6>
                             </div>
                           </div>
-                          <% if( product.productId.stock <= 0 ) { %>
-                            <% console.log("reached!@#$%^&*********&^%$#@!")%>
-                            <div id="stockMessage" style="background-color: #000000; border: 1px solid #ff0000; padding: 10px; border-radius: 5px; text-align: center;">
-                              <span style="color: #fff201; font-size: 20px; font-weight: bold;" onclick="closeMessage('stockMessage')">&times;</span>
-                              <p style="font-weight: bold; margin-top: 10px;">THIS PRODUCT IS OUT OF STOCK</p>
-                              <p>THIS PRODUCT IN YOUR CART IS OUT OF STOCK. PLEASE REMOVE IT FROM YOUR CART OR TRY AGAIN LATER.</p>
-                            </div>
-                          <% } %>
                         </td>
                         <!-- Total -->
                         <td >
@@ -351,32 +321,34 @@
                               ₹<%= (product.quantity * product.price).toFixed(2) %>
                              <% } %>
                             </div>
-                         </td>  
-                      <!-- </tr> -->
+                         </td>
+                        <!-- Remove button -->
+                        <td>
+                          <div class="remove-button">
+                            <form action="/removeitems/<%= product.productId._id %>" method="post">
+                              <input type="hidden" name="cartId" value="<%= cart._id %>">
+                              <!-- <input type="hidden" name="productId" value="<%= product.productId._id %>"> -->
+                              <button type="submit" style="color: #ffffff ;background-color: #FFD333;" class="btn btn-danger">Remove</button>
+                            </form>
+                            <!-- --- ---- -- -->
 
-                      <td>
-                        <div class="remove-button">
-                          <form onsubmit="return confirmRemove()"action="/removeitems/<%= product.productId._id %>" method="post">
-                            <input type="hidden" name="cartId" value="<%= cart._id %>">
-                            <button type="submit" style="color: #ffffff; background-color: #FFD333;" class="btn btn-danger">Remove</button>
-                          </form>
-                      
-                          <% if (product.productId.stock < 0) { %>
-                            <p id="out-of-stock-message-<%= product.productId._id %>">This product is out of stock</p>
-                          <% } else { %>
-                            <!-- Display the add to cart button or other relevant actions -->
-                            <p></p>
-                          <% } %>
-                      
-                        </div>
-                      </td>
-                    </tr>
+                            <% if (product.productId.stock < 0 ) { %>
+                              <p id="out-of-stock-message-<%= product.productId._id %>">This product is out of stock</p>
+                              <% } else { %>
+                              <!-- Display the add to cart button or other relevant actions -->
+                              <p></p>
+                            <% } %>
+                            <!-- ---- -->
+                            
+                          </div>
+
+                        </td>
+
+                      </tr>
                       <% }); %>
                         <% } %>
                           <% }); %>
                           
-                          
-
               </tbody>
 
             </table>
@@ -549,11 +521,12 @@
   </div>
   <!-- Footer End -->
 
-   
 
   <!-- Back to Top -->
   <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
   <!-- JavaScript Libraries -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -596,27 +569,16 @@ window.onload = function() {
   },  1000); 
 };
   </script>
-<!--removing the modal of the product out of stock-->
+
 <script>
-  function closeMessage(modalId) {
-    var modal = document.getElementById(modalId);
-    if (modal) {
-      modal.parentNode.removeChild(modal);
+  document.addEventListener('DOMContentLoaded', function () {
+    if (stockError == 'this product is out of stock') {
+      $('#stockModal').modal('show');
     }
-  }
+  });
 </script>
-<!--removing confirmation-->
-<script>
-  function confirmRemove() {
-    var isConfirmed = confirm("Are you sure you want to remove this item from your cart?");
-    
-    // Return true to proceed with form submission, false to cancel
-    return isConfirmed;
-  }
-</script>
-<!--removing confirmation ends-->
 
-
+  
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // Get all elements with the class "element"
@@ -766,10 +728,7 @@ async function updateQuantity(pid, isIncrease) {
     };
 
 
-   function increaseQuantity(pid,stock) {
-    if (stock <= 0) {
-      return;
-     }
+   function increaseQuantity(pid) {
       console.log("in the increaseQuantity function");
       console.log("the product's id in the increase : ",pid);
     //   if (productDetails.stock > 0) {
@@ -780,10 +739,7 @@ async function updateQuantity(pid, isIncrease) {
       updateQuantity(pid, true);
     }
 
-    function decreaseQuantity(pid,stock) {
-      if (stock <= 0) {
-         return; 
-      }
+    function decreaseQuantity(pid) {
       const qty=document.getElementById(pid).innerText
       console.log("in the decreaseQuantity function");
       console.log("the product's id in the decrease : ",pid);
@@ -800,9 +756,9 @@ async function updateQuantity(pid, isIncrease) {
         // Load the Lottie animation
         var animation = bodymovin.loadAnimation({
             container: document.getElementById('lottieAnimation'),
-            renderer: 'svg', 
-            loop: true, 
-            autoplay: true, 
+            renderer: 'svg', // Set the renderer type
+            loop: true, // Whether the animation should loop
+            autoplay: true, // Whether the animation should automatically play
             path: 'Animations.file/emptycart.json' // Path to your Lottie animation JSON file
         });
     });
@@ -813,13 +769,8 @@ async function updateQuantity(pid, isIncrease) {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.13/lottie.min.js"></script>
 
-
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -167,7 +167,7 @@ const cartItemRemove = async (req, res) => {
         return res.status(401).send('Unauthorized. Log in to continue.');
       }
       const products = await productCollection.findById(productId);
-      console.log("product document is :",products);
+      // console.log("product document is :",products);
       const user = await userCollection.findOne({ email: users });
       console.log("user is :",user);
       if (!products || !user) {
@@ -221,7 +221,7 @@ const cartItemRemove = async (req, res) => {
         if(products.Discount && products.Discount > 0){
           // price = products.Discoun
           price = products[i].price - (products[i].price * (products[i].Discount / 100));
-          console.log("@@@@###$$$$_+_+_the cart added new price is :",price);
+          // console.log("@@@@###$$$$_+_+_the cart added new price is :",price);
         }
 
         const tempStock = products.stock - 1;
@@ -259,16 +259,45 @@ const cartItemRemove = async (req, res) => {
       if (req.session.user) {
         const userId = req.session.user;
         const userData = await userCollection.findOne({ email: userId });
-        const cartDocument = await cartCollection.find({ userId: userData._id })
-          .populate({
+        const cartDocument =await cartCollection.find({ userId:userData._id }) .populate({
+          path: 'products.productId',
+          model: 'collectionOfProduct'
+        });
+        const cartDocument1 = await cartCollection.findOne({ userId: userData._id })
+           .populate({
             path: 'products.productId',
             model: 'collectionOfProduct'
           });
-        // Add this line for debugging
+          console.log("Jus t cartDocument  is :",cartDocument);
+          console.log("cartDocument is just $$:",cartDocument1);
+      
+        if (cartDocument1.products && cartDocument1.products.length > 0) {
+          console.log("the cartDocument1 redirected @@@");
+          for (const cartProduct of cartDocument1.products) {
+            const productId = cartProduct.productId;
+            const stock = await productCollection.findOne({ _id: productId });
+            const productCurrentStock = stock.get('stock'); // Use get method to access stock property
+            console.log("(((((((stock from the cartload))))))", productCurrentStock);
+        
+            if (productCurrentStock <= 0) {
+              console.log("HELKLO FORM THE CARTLOAD:", productCurrentStock);
+             const stockError ='this product is out of stock';
+             return res.render('user/cart', { userData, cartDocument,stockError});
+            //   // const stockError = 'The product is out of stock';
+            //   // res.render("user/cart", { stockError ,userData:'', cartDocument:'',message:''});
+            // res.redirect('/user/cartload');
+    
+            //   // console.log("SJCDVHP", stockError);
+            }
+          }
+        }
+
         if (!cartDocument || cartDocument.length === 0) {
-          res.render('user/cart', { userData, cartDocument, message: 'No items in cart' });
+          console.log("res 1");
+          res.render('user/cart', { userData, cartDocument,stockError:false, message: 'No items in cart' ,stockError:''});
         } else {
-          res.render('user/cart', { userData, cartDocument });
+          res.render('user/cart', { userData, cartDocument,stockError:false });
+          console.log("res 2");
         }
       } else {
         res.status(401).send('You must be logged in to view your cart');
