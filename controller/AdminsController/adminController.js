@@ -365,7 +365,7 @@ const logout = (req, res) => {
 const productmanage = async (req, res) => {
   try {
     // res.render("admin/productAdd",{productError:''});
-    return res.render('admin/productAdd', { productError:'',stockError:'',priceError:''});
+    return res.render('admin/productAdd', { productError:'',stockError:'',priceError:'',imageError:''});
 
   } catch (error) {
     console.log("error in productlist", error);
@@ -427,14 +427,20 @@ const productmanagePost = async (req, res) => {
     console.log("Product management Post Image is updating");
     const images = req.files.map(file => `public/uploads/${file.filename}`);
 
+    if (!req.body.Name && !req.body.price && !req.body.category && !req.body.stock && !req.body.description) {
+      return res.render('admin/productAdd', { productError: 'Please fill in all the fields', stockError: '', priceError: '', imageError: '' });
+    }
+     if (!req.files ||req.files.length == 0){
+      return res.render('admin/productAdd', { imageError: 'Please upload at least one image', productError: '', stockError: '', priceError: '' });
+    }
     if (!req.body.Name.trim() || !req.body.price.trim() || !req.body.category.trim() || !req.body.stock.trim() || !req.body.description.trim() ) {
-      return res.render('admin/productAdd', { productError: 'All fields are required and cannot be just spaces',stockError:'',priceError:''});
+      return res.render('admin/productAdd', { productError: 'All fields are required and cannot be just spaces',stockError:'',priceError:'',imageError:''});
     }
     if(req.body.stock<1){
-      return res.render('admin/productAdd', { stockError: 'stock cannot be add less than 1',productError:'',priceError:'' });
+      return res.render('admin/productAdd', { stockError: 'stock cannot be add less than 1',productError:'',priceError:'',imageError:'' });
     }
     if(req.body.price < 1){
-      return res.render('admin/productAdd',{ priceError: 'price must be 1 or greater',productError:'',stockError:'' });
+      return res.render('admin/productAdd',{ priceError: 'price must be 1 or greater',productError:'',stockError:'' ,imageError:''});
     }
     console.log('body', req.body);
    console.log("name of the product in the productManagePost",req.body.Name);
@@ -516,24 +522,21 @@ const productDelete = async (req, res) => {
       return res.status(400).send("Invalid product ID");
     }
 
-    // Soft delete by updating the 'deleted' field
-    const newResult = await productCollection.findByIdAndUpdate(
-      productId,
-      { $set: { deleted: true } },
-      { new: true }
-    );
+    // Remove the product by ID
+    const deletedProduct = await productCollection.findByIdAndDelete(productId);
 
-    if (newResult) {
+    if (deletedProduct) {
       res.redirect('/admin/productlist');
     } else {
-      console.log("Product not found");
-      res.status(404).send("Product not found");
+      console.log("Product not found or not deleted");
+      res.status(404).send("Product not found or not deleted");
     }
   } catch (error) {
     console.error("Error deleting product:", error);
-    res.send(error.message)
+    res.status(500).send(error.message);
   }
 };
+
 
 const updateproduct = async (req, res) => {
   try {

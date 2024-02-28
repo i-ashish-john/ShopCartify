@@ -153,6 +153,7 @@
 
 
 <div class="table">
+
   <table class="table product-table">
         <thead>
           <tr>
@@ -182,8 +183,8 @@
               <td><%= product.Discount %>%</td>
               <td>
                 <form action="/admin/deleteproduct/<%= product.id %>" method="post">
-                  <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
+                  <button type="submit" class="btn btn-secondary">Delete</button>
+                </form><br>
                 <form action="/admin/editproduct/<%= product.id %>" method="get">
                   <button type="submit" class="btn btn-primary">Edit</button>
                 </form>
@@ -192,6 +193,8 @@
           <% }) %>
         </tbody>
       </table>
+
+
 <!----pagination-->
 
 <div class="pagination">

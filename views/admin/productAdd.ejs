@@ -28,10 +28,13 @@
        <div class="tm-block tm-block-h-auto"  style="background-color: #6c757d;" >
          <div class="row">
            <div class="col-12">
-            <% if (productError) { %>
-             <h4  class="p-1 mb-2 bg-danger text-white"><%= productError %></h4>
-            <% } %>
-             <h2 class="tm-block-title d-inline-block">Add Product</h2>
+
+               
+               <h2 class="tm-block-title d-inline-block">Add Product</h2>
+               <% if (productError) { %>
+                <h4 style="color: red;"><%= productError %></h4>
+               <% } %>
+               
            </div>
          </div>
          <div class="row product-row">
@@ -46,6 +49,11 @@
                 <div id="cropperContainer"></div>
                </div>
                
+               <% if (imageError) { %>
+                <h4 style="color: rgb(236, 62, 62);"><%= imageError %></h4>
+               <% } %>
+   
+
                <!-- Product Name -->
                <div class="form-group mb-3">
                 <label for="productName">Product Name:</label>
@@ -73,6 +81,7 @@
                 <label for="stock">Stock:</label>
                 <input type="number" id="stock" name="stock" class="form-control validate" >
             </div>
+
             <% if (stockError) { %>
                 <h5 style="color: red;"><%= stockError %></h5>           
             <% } %> 
