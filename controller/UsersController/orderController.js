@@ -384,17 +384,16 @@ const checkoutPost = async (req, res) => {
       return res.status(404).json({ message: 'Cart values not found' });
     }
     const selectedAddress = emailOfUser.address.find(address => address._id.toString() === selectedAddressId);
-
     const productDetailsPromises = cartData.products.map(async product => {
-      
       const productDetails = await productCollection.findById(product.productId);
       console.log("the product details is !!!:",productDetails);
       
       if (productDetails) {
         const newStock = productDetails.stock - product.quantity;
         if (newStock <  0) {
-          console.log("Insufficient stock for product: ", productDetails.name);
-          return null;
+          // console.log("Insufficient stock for product: ", productDetails.name);
+          // return null;
+          res.redirect('/cartload');
         }
         await productCollection.findByIdAndUpdate(product.productId, { stock: newStock });
       }
@@ -432,14 +431,17 @@ const checkoutPost = async (req, res) => {
     // }
 
     await order.save();
-    await cartCollection.deleteOne({ userId: emailOfUser._id });
+    // await cartCollection.deleteOne({ userId: emailOfUser._id });       
+    await cartCollection.updateOne(
+      { userId:  emailOfUser._id},
+      { $set: { products: [], total: 0 } }
+  );
     res.render('user/ordersuccess');
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);
   }
 };
-
  const couponChecking = async(req, res) => {
   try {
     const email = req.session.user;

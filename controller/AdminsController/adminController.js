@@ -436,7 +436,6 @@ const productmanagePost = async (req, res) => {
     if(req.body.price < 1){
       return res.render('admin/productAdd',{ priceError: 'price must be 1 or greater',productError:'',stockError:'' });
     }
-
     console.log('body', req.body);
    console.log("name of the product in the productManagePost",req.body.Name);
     const productDetails = {

@@ -259,10 +259,19 @@ const cartItemRemove = async (req, res) => {
       if (req.session.user) {
         const userId = req.session.user;
         const userData = await userCollection.findOne({ email: userId });
-        const cartDocument =await cartCollection.find({ userId:userData._id }) .populate({
+        let cartDocument =await cartCollection.find({ userId:userData._id }).populate({
           path: 'products.productId',
           model: 'collectionOfProduct'
         });
+        // ______________
+        // console.log("DATA OF DOC" + cartDocument);
+        // if(!cartDocument.userId){
+        // console.log("DATA OF vhfgfhhv" );
+        // cartDocument = 0
+        //   return res.render('user/cart', { userData, cartDocument,stockError:""});
+          
+        // }
+        // ______________
         const cartDocument1 = await cartCollection.findOne({ userId: userData._id })
            .populate({
             path: 'products.productId',
@@ -303,8 +312,8 @@ const cartItemRemove = async (req, res) => {
         res.status(401).send('You must be logged in to view your cart');
       }
     } catch (error) {
-      console.error(error.message);
-      res.send(error.message);
+      console.error(error);
+      res.send(error);
     }
   };
 

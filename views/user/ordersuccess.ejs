@@ -101,8 +101,21 @@
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }  
+        #lottieAnimations {
+          width: 300px;  
+          height: 300px;
+           
+        }
+        #container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Adjust the height of the container as needed */
+      }
      </style>
 
+<!-- Include Lottie Library from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.2/lottie.min.js"></script>
 
  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
  <!-- Favicon -->
@@ -136,35 +149,10 @@
 
               </div>
           </div>
-          <div class="col-lg-6 text-center text-lg-right">
-              <div class="d-inline-flex align-items-center">
-                  <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My
-                          Account</button>
-                      <div class="dropdown-menu dropdown-menu-right">
-                          <a href="/signout" class="dropdown-item">Logout</a>
-                      </div>
-                  </div>
-
-              </div>
-
-              <div class="d-inline-flex align-items-center d-block d-lg-none">
-                  <a href="" class="btn px-0 ml-2">
-                      <i class="fas fa-heart text-dark"></i>
-                      <span class="badge text-dark border border-dark rounded-circle"
-                          style="padding-bottom: 2px;"></span>
-                  </a>
-                  <a href="" class="btn px-0 ml-2">
-                      <i class="fas fa-shopping-cart text-dark"></i>
-                      <span class="badge text-dark border border-dark rounded-circle"
-                          style="padding-bottom: 2px;"></span>
-                  </a>
-              </div>
-
-          </div>
+         
       </div>
 
-      <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+      <div class="row align-items-center bg py-3 px-xl-5 d-none d-lg-flex" style="background-color: #535f69;">
           <div class="col-lg-4">    
               <a href="" class="text-decoration-none">
                   <span class="h1 text-uppercase text-primary bg-dark px-2">Shop</span>
@@ -247,9 +235,16 @@
     </div>
 </div>
 
-     <div class="container">
-       <h1>Order Successful!</h1>
-       <p>Your order has been placed successfully.</p>
+      <div class="container">
+        <div class="success-message">
+          <h1>Success!</h1>
+          <p>Your order has been placed successfully.</p>
+        </div>
+
+        <div id="container">
+          <div id="lottieAnimations"></div>
+        </div>
+
        <div class="order-history">
          <p>Order History</p>
          <button class="btn btn-light" >
@@ -266,15 +261,46 @@
        </div>
      </div>
 
-     <div class="container">
-      <div class="success-message">
-        <h1>Success!</h1>
-        <p>Your order has been placed successfully.</p>
-      </div>
+
+   <!-- Footer Start -->
+   <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
+    <div class="row px-xl-5 pt-5">
+        <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+            <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
+            <p class="mb-4">Shop cartify is a user-friendly e-commerce platform for buying the most-liked products.</p>
+            <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, shopcartify trivandrum kerala</p>
+            <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>shopcartify.shop</p>
+            <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+        </div>
+        <div class="col-lg-8 col-md-12">
+            <div class="row">
+                <!-- Your content in the second column -->
+            </div>
+        </div>
     </div>
-
-
-
+    <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+        <div class="col-md-6 px-xl-0 mb-3 text-center text-md-left">
+            <p class="mb-md-0 text-secondary">
+                &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved. Designed
+                by
+                <a class="text-primary" href="https://htmlcodex.com">ShopCartify</a>
+            </p>
+        </div>
+        <div class="col-md-6 px-xl-0 text-center text-md-right">
+            <img class="img-fluid" src="/NEW TEMP/online-shop-website-template/img/payments.png" alt="">
+        </div>
+    </div>
+  </div>
+  <!-- Footer End -->
+  <script>
+  var animation = bodymovin.loadAnimation({
+      container: document.getElementById('lottieAnimations'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'Animations.file/doneanimation.json'
+  });
+</script>
 
   </body>
 </html>

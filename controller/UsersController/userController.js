@@ -300,57 +300,88 @@ const back = async (req, res) => {
   res.render("user/home", { user: fetchedUser,banners:banners, products: products });
 };
 
-
-const MensTotalproductlist = async (req, res) => {
-  try {
-      const page = parseInt(req.query.page) || 1; 
-      const pageSize = 10; 
-      const products = await productCollection.find({ category: "Mens" , deleted: false })
-          .skip((page - 1) * pageSize)
-          .limit(pageSize);
-      if (products.length > 0) {
-        const category = products[0].category; 
-        console.log("The men's product is here#:", category);
-        const totalProducts = await productCollection.countDocuments({ category: "Mens" });
-        const totalPages = Math.ceil(totalProducts / pageSize);
-        res.render('user/Totalproductlisting', { products, currentPage: page, totalPages, category});
-      } else {
-        res.render('user/Totalproductlisting', { products: [], currentPage: page, totalPages: 0, category: null });
-      }
-    } catch (error) {
-      console.log(error.message);
-      res.send(error.message);
-  }
- };
- 
-
-const WomensTotalproductlist = async (req, res) => {
+///
+const renderTotalProductListing = async (req, res, category) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = 10;
-    // const errorMessage = req.flash('error')[0]; 
 
-    // Example: Fetch products for the requested page
-    const products = await productCollection.find({ category: "Womens" , deleted: false })
+    const products = await productCollection.find({ category, deleted: false })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-      if (products.length > 0) {
-        const category = products[0].category; // Extract category from the first product
-        console.log("The women's product is here#:", category);
-  
-        const totalProducts = await productCollection.countDocuments({ category: "Womens" });
-        const totalPages = Math.ceil(totalProducts / pageSize);
-  
-        res.render('user/Totalproductlisting', { products, currentPage: page, totalPages, category });
-      } else {
-        // Handle the case where no products are found
-        res.render('user/Totalproductlisting', { products: [], currentPage: page, totalPages: 0, category: null });
-      }
+
+    if (products.length > 0) {
+      const totalProducts = await productCollection.countDocuments({ category });
+      const totalPages = Math.ceil(totalProducts / pageSize);
+
+      res.render('user/Totalproductlisting', { products, currentPage: page, totalPages, category });
+    } else {
+      res.render('user/Totalproductlisting', { products: [], currentPage: page, totalPages: 0, category: null });
+    }
   } catch (error) {
     console.log(error.message);
     res.send(error.message);
   }
 };
+
+const MensTotalproductlist = async (req, res) => {
+  await renderTotalProductListing(req, res, 'Mens');
+};
+
+const WomensTotalproductlist = async (req, res) => {
+  await renderTotalProductListing(req, res, 'Womens');
+};
+///////
+// const MensTotalproductlist = async (req, res) => {
+//   try {
+//       const page = parseInt(req.query.page) || 1; 
+//       const pageSize = 10; 
+//       const products = await productCollection.find({ category: "Mens" , deleted: false })
+//           .skip((page - 1) * pageSize)
+//           .limit(pageSize);
+//       if (products.length > 0) {
+//         const category = products[0].category; 
+//         console.log("The men's product is here#:", category);
+//         const totalProducts = await productCollection.countDocuments({ category: "Mens" });
+//         const totalPages = Math.ceil(totalProducts / pageSize);
+//         res.render('user/Totalproductlisting', { products, currentPage: page, totalPages, category});
+//       } else {
+//         res.render('user/Totalproductlisting', { products: [], currentPage: page, totalPages: 0, category: null });
+//       }
+//     } catch (error) {
+//       console.log(error.message);
+//       res.send(error.message);
+//   }
+//  };
+ 
+
+// const WomensTotalproductlist = async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const pageSize = 10;
+//     // const errorMessage = req.flash('error')[0]; 
+
+//     // Example: Fetch products for the requested page
+//     const products = await productCollection.find({ category: "Womens" , deleted: false })
+//       .skip((page - 1) * pageSize)
+//       .limit(pageSize);
+//       if (products.length > 0) {
+//         const category = products[0].category; // Extract category from the first product
+//         console.log("The women's product is here#:", category);
+  
+//         const totalProducts = await productCollection.countDocuments({ category: "Womens" });
+//         const totalPages = Math.ceil(totalProducts / pageSize);
+  
+//         res.render('user/Totalproductlisting', { products, currentPage: page, totalPages, category });
+//       } else {
+//         // Handle the case where no products are found
+//         res.render('user/Totalproductlisting', { products: [], currentPage: page, totalPages: 0, category: null });
+//       }
+//   } catch (error) {
+//     console.log(error.message);
+//     res.send(error.message);
+//   }
+// };
 
 
 // Function to calculate overall total price
